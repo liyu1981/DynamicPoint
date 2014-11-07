@@ -8,6 +8,4 @@ autopublish
 insecure
 underscore
 jquery
-iron:router
 neo:reveal-js
-
