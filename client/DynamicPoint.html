@@ -1,0 +1,21 @@
+<head>
+  <link rel="stylesheet" href="packages/neo_reveal-js/reveal.js/css/theme/solarized.css" id="theme"/>
+  <title>DynamicPoint</title>
+</head>
+
+<body>
+  {{> keynote}}
+</body>
+
+<template name="keynote">
+<div name="" class="reveal">
+  <div class="slides">
+    {{#each slides}}
+    <section>{{ content }}</section>
+    {{/each}}
+  </div>
+</div>
+</template>
+
+<template name="authorDeck">
+</template>
