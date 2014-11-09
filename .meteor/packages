@@ -9,3 +9,6 @@ insecure
 underscore
 jquery
 neo:reveal-js
+bootstrap
+iron:router
+

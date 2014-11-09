@@ -7,6 +7,10 @@ Template.keynote.helpers({
 
 Meteor.startup(function () {
   // code to run on client at startup
-  Reveal.initialize();
+  if (dpMode === 'keynote') {
+    yepnope.injectCss('packages/neo_reveal-js/reveal.js/css/theme/solarized.css', function() {
+      Reveal.initialize();
+    }, { id: 'theme' }, 5000);
+  }
 });
 
