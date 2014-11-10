@@ -19,7 +19,7 @@
               <li><a href="#">Another action</a></li>
               <li><a href="#">Something else here</a></li>
               <li class="divider"></li>
-              <li><a href="#">Separated link</a></li>
+              <li><a href="https://github.com/liyu1981/DynamicPoint" target="_blank">Fork me on Github!</a></li>
             </ul>
             </li>
           </ul>
@@ -33,6 +33,8 @@
     </nav>
 
     <div class="row">
+
+      {{#each indexedSlides}}
       <div class="col-md-6">
         <div class="panel panel-default dp-panel">
           <div class="panel-heading">
@@ -47,21 +49,26 @@
               </div>
             </div>
             <div>
-              1.
               <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Type <span class="caret"></span></button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Dropdown link</a></li>
-                  <li><a href="#">Dropdown link</a></li>
-                </ul>
+                <button type="button" class="btn btn-default" disabled>{{ index }}</button>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Type <span class="caret"></span></button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Dropdown link</a></li>
+                    <li><a href="#">Dropdown link</a></li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
           <div class="panel-body">
-            Panel content
+            <div class="editable">
+              {{ content }}
+            </div>
           </div>
         </div>
       </div>
+      {{/each}}
 
       <div class="col-md-6">
         <div class="panel panel-default dp-panel">

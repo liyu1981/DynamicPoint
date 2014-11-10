@@ -1,0 +1,20 @@
+{
+  "name": "DynamicPoint",
+  "version": "0.0.0",
+  "homepage": "https://github.com/liyu1981/DynamicPoint",
+  "authors": [
+    "Yu LI <liyu1981@gmail.com>"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "medium-editor-insert-plugin": "~0.3.2",
+    "medium-editor": "~1.9.8",
+    "reveal.js": "~2.6.2"
+  }
+}
