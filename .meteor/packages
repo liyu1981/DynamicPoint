@@ -9,6 +9,9 @@ insecure
 underscore
 jquery
 neo:reveal-js
-bootstrap
 iron:router
+mrt:external-file-loader
+mrt:bootstrap-3
+chrismbeckett:fontawesome4
+less
 
