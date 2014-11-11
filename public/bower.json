@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "medium-editor-insert-plugin": "~0.3.2",
-    "medium-editor": "~1.9.8",
-    "reveal.js": "~2.6.2"
+    "reveal.js": "~2.6.2",
+    "medium-editor": "git@github.com:liyu1981/medium-editor.git#de6687cf9ddf1a5b9a586d21acac306bb5a176e2"
   }
 }

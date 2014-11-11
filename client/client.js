@@ -3,9 +3,21 @@ dpTheDeck = null;
 
 function genEmptySlide(type) {
   switch(type) {
-    default: return { type: 'normal', content: 'hello' }
+    default: return {
+      id: Random.id(),
+      type: 'normal',
+      content: 'hello'
+    };
   }
 }
+
+Template.registerHelper('isEmpty', function(target) {
+  if (target) {
+    return _.isEmpty(target);
+  } else {
+    return false;
+  }
+});
 
 Router.route('/', function() {
   var self = this;
@@ -40,8 +52,11 @@ Router.route('/author', function() {
   dpMode = 'author';
   Meteor.Loader.loadCss('bower_components/medium-editor/dist/css/medium-editor.min.css');
   Meteor.Loader.loadCss('bower_components/medium-editor/dist/css/themes/default.min.css');
+  Meteor.Loader.loadCss('bower_components/alertify-js/build/css/alertify.min.css');
+  Meteor.Loader.loadCss('bower_components/alertify-js/build/css/themes/default.css');
   async.series([
-      function(cb) { Meteor.Loader.loadJs('bower_components/medium-editor/dist/js/medium-editor.min.js', cb); }
+      function(cb) { Meteor.Loader.loadJs('bower_components/medium-editor/dist/js/medium-editor.min.js', function() { cb(); }); },
+      function(cb) { Meteor.Loader.loadJs('bower_components/alertify-js/build/alertify.min.js', function() { cb(); }); }
     ],
     function() {
       self.render('author', {
@@ -77,14 +92,31 @@ Template.author.rendered = function() {
   if (!this.rendered) {
     $(function() {
       $('body').addClass('dp-author'); // add the global dp-author class
-      //var e = new MediumEditor('.editable'); // start all editableContent
+
+      // init alertify
+      alertify.defaults.transition = 'pulse';
     });
     this.rendered = true;
   }
 };
 
 Template.author.events({
-  'click #newSlide': function(event) {
+  'click #newDeckBtn': function(event) {
+    Decks.insert({
+      author: 'John Smith',
+      title: 'New DynamicPoint Deck',
+      created: (new Date()).getTime(),
+      lastModified: (new Date()).getTime(),
+      slides: [ genEmptySlide() ]
+    }, function(err, id) {
+      if (err) {
+        return alertify.alert('Error: ' + JSON.stringify(err));
+      }
+      Router.go(window.location.pathname + '?id=' + id);
+    });
+  },
+
+  'click #newSlideBtn': function(event) {
     Decks.update({ _id: dpTheDeck._id }, { $push: { slides: genEmptySlide() } });
   },
 
@@ -107,6 +139,7 @@ Template.author.events({
 
 Template.authorSlide.helpers({
   editableContent: function() {
+    // have to do this to overcome the contenteditable issue of meteor now
     // ref: https://github.com/meteor/meteor/issues/1964
     return '<div class="content editable" slideIndex="' + this.index + '">' + this.content + '</div>';
   }
@@ -121,6 +154,17 @@ Template.authorSlide.rendered = function() {
     this.rendered = true;
   }
 };
+
+Template.authorSlide.events({
+  'click #deleteThisSlide': function(event) {
+    var s = $(event.currentTarget).closest('.slide');
+    var id = s.attr('slideId');
+    var index = s.attr('slideIndex');
+    alertify.confirm('Do you want ot delete slide: ' + index + ' ?', function() {
+      Decks.update({ _id: dpTheDeck._id }, { $pull: { 'slides': { 'id': id } } });
+    });
+  }
+});
 
 Meteor.startup(function () {
 });
