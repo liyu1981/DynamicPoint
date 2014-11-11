@@ -6,11 +6,16 @@
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-          <a class="navbar-brand" href="#">DynamicPoint</a>
+          <a class="navbar-brand dp-brand" href="#" title="DynamicPoint">
+            <span class="fa-stack fa-lg">
+              <i class="fa fa-laptop fa-stack-2x"></i>
+              <i class="fa fa-child fa-stack-1x"></i>
+            </span>
+          </a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify"></span></a>
@@ -25,6 +30,7 @@
           </ul>
           <form class="navbar-form navbar-right" role="search">
             <div class="form-group">
+              <button type="button" class="btn" id="saveBtn"><i class="fa fa-save"></i></button>
               <input type="text" class="form-control" placeholder="Type to search...">
             </div>
           </form>
@@ -32,54 +38,62 @@
       </div><!-- /.container-fluid -->
     </nav>
 
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <strong>Title</strong> : <input type="text" class="form-control" value="{{ title }}" />
+        <br>
+        <strong>Author</strong> : <input type="text" class="form-control" value="{{ author }}" />
+      </div>
+    </div>
+
     <div class="row">
 
       {{#each indexedSlides}}
-      <div class="col-md-6">
-        <div class="panel panel-default dp-panel">
-          <div class="panel-heading">
-            <div class="btn-group pull-right">
-              <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-move"></span></button>
-              <div class="btn-group pull-right">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></button>
-                <ul class="dropdown-menu" role="menu">
-                  <li><a href="#">Dropdown link</a></li>
-                  <li><a href="#">Dropdown link</a></li>
-                </ul>
-              </div>
-            </div>
-            <div>
-              <div class="btn-group">
-                <button type="button" class="btn btn-default" disabled>{{ index }}</button>
-                <div class="btn-group">
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Type <span class="caret"></span></button>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">Dropdown link</a></li>
-                    <li><a href="#">Dropdown link</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="panel-body">
-            <div class="editable">
-              {{ content }}
-            </div>
-          </div>
-        </div>
-      </div>
+        {{> authorSlide}}
       {{/each}}
 
       <div class="col-md-6">
         <div class="panel panel-default dp-panel">
           <div class="panel-body">
-            <center style="line-height: 500px;"><a href="#" title="Add New Slide"><i class="fa fa-plus-circle fa-5x"></i></a></center>
+            <div class="new-slide"><a id="newSlide" href="#" title="Add New Slide"><i class="fa fa-plus-circle fa-5x"></i></a></div>
           </div>
         </div>
       </div>
 
      </div>
 
+  </div>
+</div>
+</template>
+
+<template name="authorSlide">
+<div class="col-md-6 slide">
+  <div class="panel panel-default dp-panel">
+    <div class="panel-heading">
+      <div class="btn-group pull-right">
+        <div class="btn-group pull-right">
+          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></button>
+          <ul class="dropdown-menu" role="menu">
+            <li><a href="#"><span class="glyphicon glyphicon-remove"></span> Delete This Slide</a></li>
+          </ul>
+        </div>
+      </div>
+      <div>
+        <div class="btn-group">
+          <button type="button" class="btn" disabled>{{ index }}</button>
+          <div class="btn-group">
+            <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">{{ type }} <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">Action 1</a></li>
+              <li><a href="#">Action 2</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body">
+      {{{editableContent}}}
+    </div>
   </div>
 </div>
 </template>

@@ -13,3 +13,5 @@ mrt:external-file-loader
 mrt:bootstrap-3
 chrismbeckett:fontawesome4
 less
+peerlibrary:async
+

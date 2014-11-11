@@ -46,6 +46,7 @@ mrt:bootstrap-3@0.3.8
 mrt:external-file-loader@0.1.4
 observe-sequence@1.0.3
 ordered-dict@1.0.1
+peerlibrary:async@0.9.0_3
 random@1.0.1
 reactive-dict@1.0.4
 reactive-var@1.0.3
