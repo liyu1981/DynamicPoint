@@ -28,11 +28,14 @@
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="divider"></li>
-              <li><a href="https://github.com/liyu1981/DynamicPoint" target="_blank">Fork me on Github!</a></li>
+              {{#if isEmpty indexedSlides}}
+              {{else}}
+              <li><a href="/export?id={{ _id }}" target="_blank"><span class="glyphicon glyphicon-floppy-save"></span> Export To File</a></li>
+              {{/if}}
+              <li><a href="#" id="importMenu"><span class="glyphicon glyphicon-floppy-open"></span> Import From File</a>
+                <form class="hidden"><input type="file" id="importMenuFileSelector" /></form>
+              </li>
+              <li><a href="https://github.com/liyu1981/DynamicPoint" target="_blank"><i class="fa fa-github-square"></i> Fork me on Github!</a></li>
             </ul>
             </li>
           </ul>

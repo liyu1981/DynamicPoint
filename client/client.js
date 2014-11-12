@@ -1,16 +1,6 @@
 dpMode = null;
 dpTheDeck = null;
 
-function genEmptySlide(type) {
-  switch(type) {
-    default: return {
-      id: Random.id(),
-      type: 'normal',
-      content: 'hello'
-    };
-  }
-}
-
 function waitfor(selector, callback) {
   var r = $(selector);
   if (r.length <= 0) {
@@ -18,6 +8,11 @@ function waitfor(selector, callback) {
   } else {
     callback();
   }
+}
+
+function getExt(file) {
+  // ext algorithm taken from http://stackoverflow.com/a/12900504
+  return file.substr((~-file.lastIndexOf('.') >>> 0) + 2);
 }
 
 Template.registerHelper('isEmpty', function(target) {
@@ -28,13 +23,32 @@ Template.registerHelper('isEmpty', function(target) {
   }
 });
 
+Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
+  function _genLoadCssTask(file) {
+    return function(cb) { Meteor.Loader.loadCss(file); cb(); };
+  }
+  function _genLoadJsTask(file) {
+    return function(cb) { Meteor.Loader.loadJs(file, function() { cb(); }); }
+  }
+  var tasks = [];
+  _.each(assetArray, function(file, index) {
+    switch (getExt(file).toLowerCase()) {
+      case 'css': tasks.push(_genLoadCssTask(file)); break;
+      case 'js': tasks.push(_genLoadJsTask(file)); break;
+      default: break;
+    }
+  });
+  console.log('tasks is:', tasks);
+  async.series(tasks, callback);
+};
+
 Router.route('/speaker', function() {
   var self = this;
   dpMode = 'speaker';
-  Meteor.Loader.loadCss('bower_components/reveal.js/css/reveal.min.css');
-  Meteor.Loader.loadCss('bower_components/reveal.js/css/theme/solarized.css');
-  async.series([
-      function(cb) { Meteor.Loader.loadJs('bower_components/reveal.js/js/reveal.min.js', function() { cb(); }); }
+  Meteor.Loader.loadJsAndCss([
+      'bower_components/reveal.js/css/reveal.min.css',
+      'bower_components/reveal.js/css/theme/solarized.css',
+      'bower_components/reveal.js/js/reveal.min.js'
     ],
     function() {
       self.render('speaker', {
@@ -54,36 +68,59 @@ Router.route('/speaker', function() {
 Router.route('/author', function() {
   var self = this;
   dpMode = 'author';
-  Meteor.Loader.loadCss('bower_components/medium-editor/dist/css/medium-editor.min.css');
-  Meteor.Loader.loadCss('bower_components/medium-editor/dist/css/themes/default.min.css');
-  Meteor.Loader.loadCss('bower_components/alertify-js/build/css/alertify.min.css');
-  Meteor.Loader.loadCss('bower_components/alertify-js/build/css/themes/default.css');
-  async.series([
-      function(cb) { Meteor.Loader.loadJs('bower_components/medium-editor/dist/js/medium-editor.min.js', function() { cb(); }); },
-      function(cb) { Meteor.Loader.loadJs('bower_components/alertify-js/build/alertify.min.js', function() { cb(); }); }
+  Meteor.Loader.loadJsAndCss([
+      'bower_components/medium-editor/dist/css/medium-editor.min.css',
+      'bower_components/medium-editor/dist/css/themes/default.min.css',
+      'bower_components/alertify-js/build/css/alertify.min.css',
+      'bower_components/alertify-js/build/css/themes/default.css',
+      'bower_components/medium-editor/dist/js/medium-editor.min.js',
+      'bower_components/alertify-js/build/alertify.min.js',
     ],
     function() {
       self.render('author', {
         data: function() {
-          var filter = (self.params.query.id ? { _id: self.params.query.id } : {});
-          dpTheDeck = Decks.findOne(filter);
-          console.log('find the deck:', dpTheDeck);
-          if (!dpTheDeck) {
+          if (self.params.query.id) {
+            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+          } else {
             dpTheDeck = {};
           }
-          return dpTheDeck;
+          console.log('find the deck:', dpTheDeck);
+          return dpTheDeck || {};
         }
       });
+    });
+});
+
+Router.route('/export', function() {
+  var self = this;
+  dpMode = 'export';
+  Meteor.Loader.loadJsAndCss([
+      'bower_components/blob/Blob.js',
+      'bower_components/FileSaver/FileSaver.min.js'
+    ],
+    function() {
+      if (self.params.query.id) {
+        dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+        console.log('find the deck:', dpTheDeck);
+        if (dpTheDeck) {
+          var datastr = JSON.stringify(_.pick(dpTheDeck, 'author', 'title', 'created', 'lastModified', 'slides'), null, '  ');
+          var blob = new Blob([datastr], { type: "text/plain;charset=utf-8" });
+          saveAs(blob, dpTheDeck._id + '.dp');
+          setTimeout(function() { window.close(); }, 1000); // auto-close window after 1s
+        }
+      } else {
+        Router.go('/author');
+      }
     });
 });
 
 Router.route('/', function() {
   var self = this;
   dpMode = 'audience';
-  Meteor.Loader.loadCss('bower_components/reveal.js/css/reveal.min.css');
-  Meteor.Loader.loadCss('bower_components/reveal.js/css/theme/solarized.css');
-  async.series([
-      function(cb) { Meteor.Loader.loadJs('bower_components/reveal.js/js/reveal.min.js', function() { cb(); }); }
+  Meteor.Loader.loadJsAndCss([
+      'bower_components/reveal.js/css/reveal.min.css',
+      'bower_components/reveal.js/css/theme/solarized.css',
+      'bower_components/reveal.js/js/reveal.min.js'
     ],
     function() {
       self.render('audience', {
@@ -197,17 +234,11 @@ Template.author.rendered = function() {
 
 Template.author.events({
   'click #newDeckBtn': function(event) {
-    Decks.insert({
-      author: 'John Smith',
-      title: 'New DynamicPoint Deck',
-      created: (new Date()).getTime(),
-      lastModified: (new Date()).getTime(),
-      slides: [ genEmptySlide() ]
-    }, function(err, id) {
+    Decks.insert(genNewDeck(), function(err, id) {
       if (err) {
         return alertify.alert('Error: ' + JSON.stringify(err));
       }
-      Router.go(window.location.pathname + '?id=' + id);
+      Router.go('/author?id=' + id);
     });
   },
 
@@ -228,6 +259,27 @@ Template.author.events({
     if ( v !== {}) {
       Decks.update({ _id: dpTheDeck._id }, { $set: v });
     }
+  },
+
+  'click #importMenu': function(event) {
+    console.log($('#importMenuFileSelector'));
+    $('#importMenuFileSelector')
+      .on('change', function(event) {
+        console.log('changed', event.target.files);
+        var fr = new FileReader();
+        fr.onload = function(file) {
+          Meteor.call('importFile', fr.result, function(err, id) {
+            if (err) {
+              return alertify.alert('Oops! ' + err.error + '<br><code>' + err.reason + '</code>');
+            }
+            // not to use Router.go as we want the page refresh
+            // Router.go('/author?id=' + id);
+            window.location.href = '/author?id=' + id;
+          });
+        };
+        fr.readAsText(event.target.files[0]);
+      })
+      .click();
   }
 });
 
