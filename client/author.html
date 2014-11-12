@@ -59,7 +59,7 @@
     </div>
     -->
 
-    <div class="row">
+    <div class="row sortable">
 
       {{#each indexedSlides}}
         {{> authorSlide}}
@@ -85,7 +85,7 @@
 <template name="authorSlide">
 <div class="col-md-6 slide" slideId="{{ id }}" slideIndex="{{ index }}">
   <div class="panel panel-default dp-panel">
-    <div class="panel-heading">
+    <div class="panel-heading slide-handle">
       <div class="btn-group pull-right">
         <div class="btn-group pull-right">
           <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-cog"></span> <span class="caret"></span></button>

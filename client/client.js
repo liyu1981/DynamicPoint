@@ -75,6 +75,7 @@ Router.route('/author', function() {
       'bower_components/alertify-js/build/css/themes/default.css',
       'bower_components/medium-editor/dist/js/medium-editor.min.js',
       'bower_components/alertify-js/build/alertify.min.js',
+      'bower_components/html5sortable/jquery.sortable.js'
     ],
     function() {
       self.render('author', {
@@ -294,9 +295,26 @@ Template.authorSlide.helpers({
 Template.authorSlide.created = function() {
 };
 
+function slideSortUpdated() {
+  console.log('sort updated');
+  var newSlides = [];
+  _.each($('.slide'), function(slide, index) {
+    newSlides.push(null);
+    var s = $(slide);
+    var oldIndex = parseInt(s.attr('slideIndex'));
+    if (oldIndex !== index) {
+      newSlides[index] = dpTheDeck.slides[oldIndex]
+      newSlides[index].index = index;
+    }
+  });
+  console.log('sorted:', newSlides);
+  dpTheDeck.slides = newSlides;
+}
+
 Template.authorSlide.rendered = function() {
   if (!this.rendered) {
     var e = new MediumEditor('.editable'); // kick off the editable
+    $('.sortable').sortable({ items: '.slide', handle: '.slide-handle' }).bind('sortupdate', slideSortUpdated);;
     this.rendered = true;
   }
 };

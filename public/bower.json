@@ -18,6 +18,7 @@
     "medium-editor": "git@github.com:liyu1981/medium-editor.git#de6687cf9ddf1a5b9a586d21acac306bb5a176e2",
     "alertify-js": "~0.10.2",
     "FileSaver": "*",
-    "blob": "*"
+    "blob": "*",
+    "html5sortable": "*"
   }
 }
