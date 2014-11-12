@@ -11,6 +11,15 @@ function genEmptySlide(type) {
   }
 }
 
+function waitfor(selector, callback) {
+  var r = $(selector);
+  if (r.length <= 0) {
+    setTimeout(function() { waitfor(selector, callback); }, 500);
+  } else {
+    callback();
+  }
+}
+
 Template.registerHelper('isEmpty', function(target) {
   if (target) {
     return _.isEmpty(target);
@@ -19,32 +28,27 @@ Template.registerHelper('isEmpty', function(target) {
   }
 });
 
-Router.route('/', function() {
-  var self = this;
-  dpMode = 'audience';
-  Meteor.Loader.loadCss('bower_components/reveal.js/css/reveal.min.css');
-  Meteor.Loader.loadCss('bower_components/reveal.js/css/theme/solarized.css');
-  Meteor.Loader.loadJs('bower_components/reveal.js/js/reveal.min.js', function() {
-    self.render('audience', {
-      data: function() {
-        return Decks.findOne();
-      }
-    });
-  });
-});
-
-Template.audience.rendered = function () {
-  Reveal.initialize();
-};
-
 Router.route('/speaker', function() {
   var self = this;
   dpMode = 'speaker';
   Meteor.Loader.loadCss('bower_components/reveal.js/css/reveal.min.css');
   Meteor.Loader.loadCss('bower_components/reveal.js/css/theme/solarized.css');
-  Meteor.Loader.loadJs('bower_components/reveal.js/js/reveal.min.js', function() {
-    self.render('speaker');
-  });
+  async.series([
+      function(cb) { Meteor.Loader.loadJs('bower_components/reveal.js/js/reveal.min.js', function() { cb(); }); }
+    ],
+    function() {
+      self.render('speaker', {
+        data: function() {
+          if (self.params.query.id) {
+            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+            console.log('find the deck:', dpTheDeck);
+            return dpTheDeck;
+          } else {
+            Router.go('/author');
+          }
+        }
+      });
+    });
 });
 
 Router.route('/author', function() {
@@ -62,24 +66,72 @@ Router.route('/author', function() {
       self.render('author', {
         data: function() {
           var filter = (self.params.query.id ? { _id: self.params.query.id } : {});
-          //console.log('filter is:', filter);
           dpTheDeck = Decks.findOne(filter);
-          //console.log('got the deck:', dpTheDeck);
-          //if (!dpTheDeck) {
-          //  // create empty deck
-          //  dpTheDeck = Decks.insert({
-          //    author: '',
-          //    title: '',
-          //    created: (new Date()).getTime(),
-          //    lastModified: (new Date()).getTime(),
-          //    slides: [ genEmptySlide() ]
-          //  });
-          //}
+          console.log('find the deck:', dpTheDeck);
+          if (!dpTheDeck) {
+            dpTheDeck = {};
+          }
           return dpTheDeck;
         }
       });
     });
 });
+
+Router.route('/', function() {
+  var self = this;
+  dpMode = 'audience';
+  Meteor.Loader.loadCss('bower_components/reveal.js/css/reveal.min.css');
+  Meteor.Loader.loadCss('bower_components/reveal.js/css/theme/solarized.css');
+  async.series([
+      function(cb) { Meteor.Loader.loadJs('bower_components/reveal.js/js/reveal.min.js', function() { cb(); }); }
+    ],
+    function() {
+      self.render('audience', {
+        data: function() {
+          if (self.params.query.id) {
+            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+            console.log('find the deck:', dpTheDeck);
+            return dpTheDeck;
+          } else {
+            Router.go('/author');
+          }
+        }
+      });
+    });
+});
+
+Template.audience.rendered = function () {
+  if (!this.rendered) {
+    $(function() {
+      waitfor('.slides section', function() {
+        Reveal.initialize();
+        Decks.find({ _id: dpTheDeck._id }, { runStatus: 1 }).observeChanges({
+          changed: function(id, fields) {
+            console.log('changes:', id, fields);
+            Reveal.slide(fields.runStatus.curIndex.indexh, fields.runStatus.curIndex.indexv);
+          }
+        });
+      });
+    });
+    this.rendered = true;
+  }
+};
+
+Template.speaker.rendered = function() {
+  if (!this.rendered) {
+    $(function() {
+      waitfor('.slides section', function() {
+        Reveal.initialize();
+        Reveal.addEventListener('slidechanged', function(event) {
+          // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+          console.log('slide changed to:', event);
+          Decks.update({ _id: dpTheDeck._id }, { $set: { 'runStatus.curIndex': { indexh: event.indexh, indexv: event.indexv } } });
+        });
+      });
+    });
+    this.rendered = true;
+  }
+};
 
 Template.author.helpers({
   indexedSlides: function() {
@@ -92,8 +144,51 @@ Template.author.rendered = function() {
   if (!this.rendered) {
     $(function() {
       $('body').addClass('dp-author'); // add the global dp-author class
-
       // init alertify
+      //(function registerAlertifyDialogs() {
+      //  if (!alertify.slideConfirm) {
+      //    alertify.dialog('slideConfirm',
+      //      function factory() {
+      //        return {
+      //          main: function(message, owner) {
+      //            this.message = message;
+      //            this.owner = owner;
+      //          },
+      //          prepare: function() {
+      //            // the owner panel
+      //            var o = $(this.owner);
+      //            var offset = o.offset();
+      //            var ow = o.outerWidth();
+      //            var oh = o.outerHeight();
+
+      //            // hack the dimmer to cover the panel
+      //            var dimmer = $('.alertify .ajs-dimmer');
+      //            dimmer.css({
+      //              'top': offset.top,
+      //              'left': offset.left,
+      //              'width': ow,
+      //              'height': oh,
+      //              'border-radius': '4px'
+      //            });
+
+      //            // hack the dialog shown in the center of panel
+      //            this.set('movable', false);
+      //            var dialog = $('.alertify .ajs-dialog');
+      //            dialog.css({ 'margin': '0px 0px' });
+      //            var dw = dialog.outerWidth();
+      //            var dh = dialog.outerHeight();
+      //            this.moveTo(offset.left + ((ow - dw)/2), offset.top + ((oh - dh)/2));
+
+      //            // now load the message as usual
+      //            this.setHeader('Please confirm');
+      //            this.setContent(this.message);
+      //          }
+      //        };
+      //      },
+      //      false,
+      //      'confirm');
+      //  }
+      //})();
       alertify.defaults.transition = 'pulse';
     });
     this.rendered = true;
@@ -130,7 +225,6 @@ Template.author.events({
         v['slides.' + index + '.content'] = h;
       }
     });
-    //console.log('will:', { _id: dpTheDeck._id }, { $set: v });
     if ( v !== {}) {
       Decks.update({ _id: dpTheDeck._id }, { $set: v });
     }
@@ -160,6 +254,7 @@ Template.authorSlide.events({
     var s = $(event.currentTarget).closest('.slide');
     var id = s.attr('slideId');
     var index = s.attr('slideIndex');
+    //alertify.slideConfirm('Do you want ot delete slide: ' + index + ' ?', s.find('.dp-panel'), function() {
     alertify.confirm('Do you want ot delete slide: ' + index + ' ?', function() {
       Decks.update({ _id: dpTheDeck._id }, { $pull: { 'slides': { 'id': id } } });
     });

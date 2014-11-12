@@ -17,7 +17,12 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-left">
+            {{#if isEmpty indexedSlides}}
             <button type="button" class="btn btn-primary" id="newDeckBtn">New Deck</button>
+            {{else}}
+            <a class="btn btn-default" href="/?id={{ _id }}" target="_blank">Audience <i class="fa fa-share-square-o"></i></a>
+            <a class="btn btn-default" href="/speaker?id={{ _id }}" target="_blank">Speaker <i class="fa fa-share-square-o"></i></a>
+            {{/if}}
           </form>
           <ul class="nav navbar-nav navbar-right">
             <li class="dropdown">
