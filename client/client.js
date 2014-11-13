@@ -161,7 +161,8 @@ Router.route('/author', function() {
     'bower_components/alertify-js/build/css/themes/default.css',
     'bower_components/medium-editor/dist/js/medium-editor.min.js',
     'bower_components/alertify-js/build/alertify.min.js',
-    'bower_components/html5sortable/jquery.sortable.js'
+    'bower_components/html5sortable/jquery.sortable.js',
+    'js/alertifyext.js'
   ],
   function() {
     self.render('author', {
@@ -291,17 +292,6 @@ Template.author.rendered = function() {
       .addClass('dp-author') // add the global dp-author class
       .addClass('dp-author-theme-specklednoise') // default theme
       ;
-    // init alertify
-    (function registerAlertifyDialogs() {
-      if (!alertify.codePrompt) {
-        alertify.dialog('codePrompt',
-          function factory() {
-            return {};
-          },
-          true,
-          'prompt');
-      }
-    })();
     alertify.defaults.transition = 'pulse';
   });
 };
@@ -379,7 +369,7 @@ Template.authorToolbar.events({
         function(event, value) {
           console.log('got image URI:', value);
           next('<img src="' + value + '"></img>');
-        });
+        }).setHeader('Insert Image');
     }),
 
     'click #insertCodeBlockBtn': genInsertHandler(function(next) {
@@ -387,7 +377,15 @@ Template.authorToolbar.events({
         'console.log(\'hello,world\');',
         function(event, value) {
           next('<code>' + value + '</code>');
-        });
+        }).setHeader('Insert Code Block');
+    }),
+
+    'click #insertMediaBtn': genInsertHandler(function(next) {
+      alertify.codePrompt('Paste media embeding code here',
+        '<iframe width="320px" height="240px" src="//www.youtube.com/embed/l6k_5GHwLRA" frameborder="0" allowfullscreen></iframe>',
+        function(event, value) {
+          next('<div style="text-align: center;">' + value + '</div>');
+        }).setHeader('Insert Embedded Media');
     })
 });
 
@@ -416,7 +414,7 @@ Template.authorSlide.events({
     var index = s.attr('slideIndex');
     alertify.confirm('Do you want ot delete No.' + index + 'slide ?', function() {
       Decks.update({ _id: dpTheDeck._id }, { $pull: { 'slides': { 'id': id } } });
-    });
+    }).setHeader('Caution!');
   },
 
   'click #duplicateThisSlide': function(event) {

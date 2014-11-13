@@ -37,9 +37,15 @@ body.dp-author {
 
   .dp-panel {
     min-height: 430px;
+    max-height: 430px;
+    overflow: scroll;
 
     .panel-heading {
       min-height: 34px;
+    }
+
+    .panel-body {
+      padding: 0px 0px;
     }
 
     .new-slide {
@@ -138,6 +144,8 @@ body.dp-author {
   body.dp-author {
     .dp-panel {
       min-height: 386px;
+      max-height: 386px;
+      overflow: auto;
     }
   }
 }
