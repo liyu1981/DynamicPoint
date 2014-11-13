@@ -319,7 +319,25 @@ Template.authorToolbar.events({
       $('.sortable')
         .removeClass('sortable-enabled')
         .sortable('disable');
-    })
+    }),
+
+  'click #insertImageBtn': function(event) {
+    var selection = window.getSelection();
+    var range = selection.getRangeAt(0);
+    var lastFocusNode = selection.focusNode;
+    if (selection && range) {
+      alertify.prompt('The URI of image', 'https://graph.facebook.com/minhua.lin.9/picture?type=large', function(event, value) {
+        console.log('got image URI:', value);
+        node = range.createContextualFragment('<img src="' + value + '"></img>');
+        range.insertNode(node);
+        var r = document.createRange();
+        r.setStart(lastFocusNode, 0);
+        r.setEnd(lastFocusNode, 0);
+        selection.removeAllRanges();
+        selection.addRange(r);
+      });
+    }
+  }
 });
 
 Template.authorSlide.helpers({
