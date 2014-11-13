@@ -15,12 +15,21 @@ function getExt(file) {
   return file.substr((~-file.lastIndexOf('.') >>> 0) + 2);
 }
 
+function genToolbarToggleClickHandler(target, onCb, offCb) {
+  return function(event) {
+    var t = $(target);
+    if (t.hasClass('active')) {
+      t.removeClass('active');
+      offCb(event);
+    } else {
+      t.addClass('active');
+      onCb(event);
+    }
+  };
+}
+
 Template.registerHelper('isEmpty', function(target) {
-  if (target) {
-    return _.isEmpty(target);
-  } else {
-    return false;
-  }
+  return _.isEmpty(target);
 });
 
 Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
@@ -52,6 +61,29 @@ Router.route('/speaker', function() {
     ],
     function() {
       self.render('speaker', {
+        data: function() {
+          if (self.params.query.id) {
+            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+            console.log('find the deck:', dpTheDeck);
+            return dpTheDeck;
+          } else {
+            Router.go('/author');
+          }
+        }
+      });
+    });
+});
+
+Router.route('/', function() {
+  var self = this;
+  dpMode = 'audience';
+  Meteor.Loader.loadJsAndCss([
+      'bower_components/reveal.js/css/reveal.min.css',
+      'bower_components/reveal.js/css/theme/solarized.css',
+      'bower_components/reveal.js/js/reveal.min.js'
+    ],
+    function() {
+      self.render('audience', {
         data: function() {
           if (self.params.query.id) {
             dpTheDeck = Decks.findOne({ _id: self.params.query.id });
@@ -115,29 +147,6 @@ Router.route('/export', function() {
     });
 });
 
-Router.route('/', function() {
-  var self = this;
-  dpMode = 'audience';
-  Meteor.Loader.loadJsAndCss([
-      'bower_components/reveal.js/css/reveal.min.css',
-      'bower_components/reveal.js/css/theme/solarized.css',
-      'bower_components/reveal.js/js/reveal.min.js'
-    ],
-    function() {
-      self.render('audience', {
-        data: function() {
-          if (self.params.query.id) {
-            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-            console.log('find the deck:', dpTheDeck);
-            return dpTheDeck;
-          } else {
-            Router.go('/author');
-          }
-        }
-      });
-    });
-});
-
 Template.audience.rendered = function () {
   if (!this.rendered) {
     $(function() {
@@ -173,7 +182,6 @@ Template.speaker.rendered = function() {
 
 Template.author.helpers({
   indexedSlides: function() {
-    //return this.slides;
     return _.map(this.slides, function(e, i) { return _.extend(e, { index: i }) });
   }
 });
@@ -181,7 +189,10 @@ Template.author.helpers({
 Template.author.rendered = function() {
   if (!this.rendered) {
     $(function() {
-      $('body').addClass('dp-author'); // add the global dp-author class
+      $('body')
+        .addClass('dp-author') // add the global dp-author class
+        .addClass('dp-author-theme-specklednoise') // default theme
+        ;
       // init alertify
       //(function registerAlertifyDialogs() {
       //  if (!alertify.slideConfirm) {
@@ -233,7 +244,7 @@ Template.author.rendered = function() {
   }
 };
 
-Template.author.events({
+Template.authorNavbar.events({
   'click #newDeckBtn': function(event) {
     Decks.insert(genNewDeck(), function(err, id) {
       if (err) {
@@ -241,10 +252,6 @@ Template.author.events({
       }
       Router.go('/author?id=' + id);
     });
-  },
-
-  'click #newSlideBtn': function(event) {
-    Decks.update({ _id: dpTheDeck._id }, { $push: { slides: genEmptySlide() } });
   },
 
   'click #saveBtn': function(event) {
@@ -284,6 +291,26 @@ Template.author.events({
   }
 });
 
+Template.authorToolbar.events({
+  'click #newSlideBtn': function(event) {
+    Decks.update({ _id: dpTheDeck._id }, { $push: { slides: genEmptySlide() } });
+  },
+
+  'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
+    function on(event) {
+      $('.sortable')
+        .addClass('sortable-enabled')
+        .sortable({ items: '.slide', handle: '.slide-handle' })
+        .bind('sortupdate', slideSortUpdated);;
+    },
+    function off(event) {
+      console.log('now off');
+      $('.sortable')
+        .removeClass('sortable-enabled')
+        .sortable('disable');
+    })
+});
+
 Template.authorSlide.helpers({
   editableContent: function() {
     // have to do this to overcome the contenteditable issue of meteor now
@@ -314,7 +341,6 @@ function slideSortUpdated() {
 Template.authorSlide.rendered = function() {
   if (!this.rendered) {
     var e = new MediumEditor('.editable'); // kick off the editable
-    $('.sortable').sortable({ items: '.slide', handle: '.slide-handle' }).bind('sortupdate', slideSortUpdated);;
     this.rendered = true;
   }
 };
