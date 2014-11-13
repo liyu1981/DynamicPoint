@@ -60,11 +60,14 @@
         <ul class="dropdown-menu" role="menu">
           {{#if isEmpty slides}}
           {{else}}
+          <li><a href="/qrcode?id={{ _id }}" target="_blank"><span class="glyphicon glyphicon-qrcode"></span> QR Codes</a></li>
+          <li class="divider"></li>
           <li><a href="/export?id={{ _id }}" target="_blank"><span class="glyphicon glyphicon-floppy-save"></span> Export To File</a></li>
           {{/if}}
           <li><a href="#" id="importMenu"><span class="glyphicon glyphicon-floppy-open"></span> Import From File</a>
           <form class="hidden"><input type="file" id="importMenuFileSelector" /></form>
           </li>
+          <li class="divider"></li>
           <li><a href="https://github.com/liyu1981/DynamicPoint" target="_blank"><i class="fa fa-github-square"></i> Fork me on Github!</a></li>
         </ul>
         </li>

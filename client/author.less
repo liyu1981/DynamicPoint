@@ -72,10 +72,14 @@ body.dp-author {
 
   .dp-toolbar {
     position: fixed;
-    margin-left: -75px;
+    margin-left: -70px;
     padding-left: 0px;
     padding-right: 0px;
     z-index: 1000;
+
+    li {
+      text-align: center;
+    }
 
     li.active a {
       background-color: #999 !important;
@@ -124,3 +128,17 @@ body.dp-author {
     }
   }
 }
+
+// optimize the 1366x768 case
+@media (min-width: 1200px) and (max-width: 1360px) {
+  .container {
+    width: 1000px;
+  }
+
+  body.dp-author {
+    .dp-panel {
+      min-height: 386px;
+    }
+  }
+}
+

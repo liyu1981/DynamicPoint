@@ -18,6 +18,7 @@
     "alertify-js": "~0.10.2",
     "FileSaver": "*",
     "blob": "*",
-    "html5sortable": "*"
+    "html5sortable": "*",
+    "qrcodejs": "~0.1.0"
   }
 }

@@ -15,6 +15,15 @@ function getExt(file) {
   return file.substr((~-file.lastIndexOf('.') >>> 0) + 2);
 }
 
+function qualifyURL(url){
+  // http://james.padolsey.com/javascript/getting-a-fully-qualified-url/
+  var img = document.createElement('img');
+  img.src = url; // set string url
+  url = img.src; // get qualified url
+  img.src = null; // no server request
+  return url;
+}
+
 function genToolbarToggleClickHandler(target, onCb, offCb) {
   return function(event) {
     var t = $(target);
@@ -99,97 +108,97 @@ Router.route('/speaker', function() {
   var self = this;
   dpMode = 'speaker';
   Meteor.Loader.loadJsAndCss([
-      'bower_components/reveal.js/css/reveal.min.css',
-      'bower_components/reveal.js/css/theme/solarized.css',
-      'bower_components/reveal.js/js/reveal.min.js'
-    ],
-    function() {
-      self.render('speaker', {
-        data: function() {
-          if (self.params.query.id) {
-            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-            console.log('find the deck:', dpTheDeck);
-            // reset the runStatus first
-            return dpTheDeck;
-          } else {
-            Router.go('/author');
-          }
+    'bower_components/reveal.js/css/reveal.min.css',
+    'bower_components/reveal.js/css/theme/solarized.css',
+    'bower_components/reveal.js/js/reveal.min.js'
+  ],
+  function() {
+    self.render('speaker', {
+      data: function() {
+        if (self.params.query.id) {
+          dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+          console.log('find the deck:', dpTheDeck);
+          // reset the runStatus first
+          return dpTheDeck;
+        } else {
+          Router.go('/author');
         }
-      });
+      }
     });
+  });
 });
 
 Router.route('/', function() {
   var self = this;
   dpMode = 'audience';
   Meteor.Loader.loadJsAndCss([
-      'bower_components/reveal.js/css/reveal.min.css',
-      'bower_components/reveal.js/css/theme/solarized.css',
-      'bower_components/reveal.js/js/reveal.min.js'
-    ],
-    function() {
-      self.render('audience', {
-        data: function() {
-          if (self.params.query.id) {
-            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-            console.log('find the deck:', dpTheDeck);
-            return dpTheDeck;
-          } else {
-            Router.go('/author');
-          }
+    'bower_components/reveal.js/css/reveal.min.css',
+    'bower_components/reveal.js/css/theme/solarized.css',
+    'bower_components/reveal.js/js/reveal.min.js'
+  ],
+  function() {
+    self.render('audience', {
+      data: function() {
+        if (self.params.query.id) {
+          dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+          console.log('find the deck:', dpTheDeck);
+          return dpTheDeck;
+        } else {
+          Router.go('/author');
         }
-      });
+      }
     });
+  });
 });
 
 Router.route('/author', function() {
   var self = this;
   dpMode = 'author';
   Meteor.Loader.loadJsAndCss([
-      'bower_components/medium-editor/dist/css/medium-editor.min.css',
-      'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
-      'bower_components/alertify-js/build/css/alertify.min.css',
-      'bower_components/alertify-js/build/css/themes/default.css',
-      'bower_components/medium-editor/dist/js/medium-editor.min.js',
-      'bower_components/alertify-js/build/alertify.min.js',
-      'bower_components/html5sortable/jquery.sortable.js'
-    ],
-    function() {
-      self.render('author', {
-        data: function() {
-          if (self.params.query.id) {
-            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-          } else {
-            dpTheDeck = {};
-          }
-          console.log('find the deck:', dpTheDeck);
-          return dpTheDeck || {};
+    'bower_components/medium-editor/dist/css/medium-editor.min.css',
+    'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
+    'bower_components/alertify-js/build/css/alertify.min.css',
+    'bower_components/alertify-js/build/css/themes/default.css',
+    'bower_components/medium-editor/dist/js/medium-editor.min.js',
+    'bower_components/alertify-js/build/alertify.min.js',
+    'bower_components/html5sortable/jquery.sortable.js'
+  ],
+  function() {
+    self.render('author', {
+      data: function() {
+        if (self.params.query.id) {
+          dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+        } else {
+          dpTheDeck = {};
         }
-      });
+        console.log('find the deck:', dpTheDeck);
+        return dpTheDeck || {};
+      }
     });
+  });
 });
 
 Router.route('/export', function() {
   var self = this;
   dpMode = 'export';
   Meteor.Loader.loadJsAndCss([
-      'bower_components/blob/Blob.js',
-      'bower_components/FileSaver/FileSaver.min.js'
-    ],
-    function() {
-      if (self.params.query.id) {
-        dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-        console.log('find the deck:', dpTheDeck, { _id: self.params.query.id });
-        if (dpTheDeck) {
-          var datastr = JSON.stringify(_.pick(dpTheDeck, 'author', 'title', 'created', 'lastModified', 'slides'), null, '  ');
-          var blob = new Blob([datastr], { type: "text/plain;charset=utf-8" });
-          saveAs(blob, dpTheDeck._id + '.dp');
-          setTimeout(function() { window.close(); }, 1000); // auto-close window after 1s
-        }
-      } else {
-        Router.go('/author');
+    'bower_components/blob/Blob.js',
+    'bower_components/FileSaver/FileSaver.min.js'
+  ],
+  function() {
+    if (self.params.query.id) {
+      dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+      console.log('find the deck:', dpTheDeck, { _id: self.params.query.id });
+      if (dpTheDeck) {
+        var datastr = JSON.stringify(_.pick(dpTheDeck, 'author', 'title', 'created', 'lastModified', 'slides'), null, '  ');
+        var blob = new Blob([datastr], { type: "text/plain;charset=utf-8" });
+        saveAs(blob, dpTheDeck._id + '.dp');
+        setTimeout(function() { window.close(); }, 1000); // auto-close window after 1s
       }
-    });
+    } else {
+      Router.go('/author');
+    }
+  });
 });
 
 Router.route('/superview', function() {
@@ -201,6 +210,36 @@ Router.route('/superview', function() {
   } else {
     Router.go('/author');
   }
+});
+
+Router.route('/pairview', function() {
+  var self = this;
+  if (self.params.query.id) {
+    self.render('pairview', {
+      data: { id: self.params.query.id }
+    });
+  } else {
+    Router.go('/author');
+  }
+});
+
+Router.route('/qrcode', function() {
+  var self = this;
+  Meteor.Loader.loadJsAndCss([
+    'bower_components/qrcodejs/qrcode.min.js'
+  ],
+  function() {
+    if (self.params.query.id) {
+      self.render('qrcode', {
+        data: {
+          id: self.params.query.id,
+          showall: (self.params.query.showall ? true : false)
+        }
+      });
+    } else {
+      Router.go('/author');
+    }
+  });
 });
 
 Template.audience.rendered = function () {
@@ -247,27 +286,24 @@ Template.author.helpers({
 });
 
 Template.author.rendered = function() {
-  if (!this.rendered) {
-    $(function() {
-      $('body')
-        .addClass('dp-author') // add the global dp-author class
-        .addClass('dp-author-theme-specklednoise') // default theme
-        ;
-      // init alertify
-      (function registerAlertifyDialogs() {
-        if (!alertify.codePrompt) {
-          alertify.dialog('codePrompt',
-            function factory() {
-              return {};
-            },
-            true,
-            'prompt');
-        }
-      })();
-      alertify.defaults.transition = 'pulse';
-    });
-    this.rendered = true;
-  }
+  $(function() {
+    $('body')
+      .addClass('dp-author') // add the global dp-author class
+      .addClass('dp-author-theme-specklednoise') // default theme
+      ;
+    // init alertify
+    (function registerAlertifyDialogs() {
+      if (!alertify.codePrompt) {
+        alertify.dialog('codePrompt',
+          function factory() {
+            return {};
+          },
+          true,
+          'prompt');
+      }
+    })();
+    alertify.defaults.transition = 'pulse';
+  });
 };
 
 Template.authorNavbar.events({
@@ -396,6 +432,21 @@ Template.authorSlide.events({
     Decks.update({ _id: dpTheDeck._id }, { $set: { 'slides': newSlides }});
   }
 });
+
+Template.qrcode.rendered = function() {
+  $(function() {
+    $('body')
+      .addClass('dp-author') // add the global dp-author class
+      .addClass('dp-author-theme-specklednoise') // default theme
+      ;
+    waitfor('.qrcode-container', function() {
+      $('.qrcode-container').each(function(index, elem) {
+        var e = $(elem);
+        new QRCode(elem, qualifyURL(e.attr('rawUrl')));
+      });
+    });
+  });
+};
 
 Meteor.startup(function () {
 });
