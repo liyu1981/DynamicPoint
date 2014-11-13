@@ -147,6 +147,17 @@ Router.route('/export', function() {
     });
 });
 
+Router.route('/superview', function() {
+  var self = this;
+  if (self.params.query.id) {
+    self.render('superview', {
+      data: { id: self.params.query.id }
+    });
+  } else {
+    Router.go('/author');
+  }
+});
+
 Template.audience.rendered = function () {
   if (!this.rendered) {
     $(function() {
