@@ -102,7 +102,7 @@ Router.route('/author', function() {
   dpMode = 'author';
   Meteor.Loader.loadJsAndCss([
       'bower_components/medium-editor/dist/css/medium-editor.min.css',
-      'bower_components/medium-editor/dist/css/themes/default.min.css',
+      'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
       'bower_components/alertify-js/build/css/alertify.min.css',
       'bower_components/alertify-js/build/css/themes/default.css',
       'bower_components/medium-editor/dist/js/medium-editor.min.js',
