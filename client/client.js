@@ -28,6 +28,31 @@ function genToolbarToggleClickHandler(target, onCb, offCb) {
   };
 }
 
+function slideOrderUpdated() {
+  var children = $('.dp-deck').children('.slide');
+  var changes = {};
+  for (var i=0; i<children.length; i++) {
+    var c = $(children[i]);
+    var slideIndex = parseInt(c.attr('slideIndex'));
+    if (i !== slideIndex) {
+      console.log('changed:', i, slideIndex);
+      if (!(slideIndex in changes || i in changes)) {
+        changes[slideIndex] = i; // from => to
+      }
+    }
+  }
+  // now manuniplate the slides array
+  var newSlides = dpTheDeck.slides;
+  _.each(changes, function(to, from) {
+    // swap dom as blaze will remember
+    $(children[to]).before(children[from]);
+    var tmp = newSlides[to];
+    newSlides[to] = newSlides[from];
+    newSlides[from] = tmp;
+  });
+  Decks.update({ _id: dpTheDeck._id }, { $set: { 'slides': newSlides } });
+}
+
 Template.registerHelper('isEmpty', function(target) {
   return _.isEmpty(target);
 });
@@ -162,7 +187,11 @@ Template.audience.rendered = function () {
   if (!this.rendered) {
     $(function() {
       waitfor('.slides section', function() {
-        Reveal.initialize();
+        Reveal.initialize({
+          keyboard: false,
+          touch: false,
+          controls: false
+        });
         Decks.find({ _id: dpTheDeck._id }, { runStatus: 1 }).observeChanges({
           changed: function(id, fields) {
             console.log('changes:', id, fields);
@@ -311,14 +340,15 @@ Template.authorToolbar.events({
     function on(event) {
       $('.sortable')
         .addClass('sortable-enabled')
-        .sortable({ items: '.slide', handle: '.slide-handle' })
-        .bind('sortupdate', slideSortUpdated);;
+        .sortable({ items: '.slide', handle: '.slide-handle' });
+        //.bind('sortupdate', slideOrderUpdated);
     },
     function off(event) {
       console.log('now off');
       $('.sortable')
         .removeClass('sortable-enabled')
         .sortable('disable');
+      slideOrderUpdated();
     }),
 
   'click #insertImageBtn': function(event) {
@@ -350,22 +380,6 @@ Template.authorSlide.helpers({
 
 Template.authorSlide.created = function() {
 };
-
-function slideSortUpdated() {
-  console.log('sort updated');
-  var newSlides = [];
-  _.each($('.slide'), function(slide, index) {
-    newSlides.push(null);
-    var s = $(slide);
-    var oldIndex = parseInt(s.attr('slideIndex'));
-    if (oldIndex !== index) {
-      newSlides[index] = dpTheDeck.slides[oldIndex]
-      newSlides[index].index = index;
-    }
-  });
-  console.log('sorted:', newSlides);
-  dpTheDeck.slides = newSlides;
-}
 
 Template.authorSlide.rendered = function() {
   if (!this.rendered) {
