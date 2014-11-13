@@ -53,6 +53,25 @@ function slideOrderUpdated() {
   Decks.update({ _id: dpTheDeck._id }, { $set: { 'slides': newSlides } });
 }
 
+function genInsertHandler(htmlGenerator) {
+  return function(event) {
+    var selection = window.getSelection();
+    var range = selection.getRangeAt(0);
+    var lastFocusNode = selection.focusNode;
+    if (selection && range && htmlGenerator) {
+      htmlGenerator(function(html) {
+        node = range.createContextualFragment(html);
+        range.insertNode(node);
+        var r = document.createRange();
+        r.setStart(lastFocusNode, 0);
+        r.setEnd(lastFocusNode, 0);
+        selection.removeAllRanges();
+        selection.addRange(r);
+       });
+     }
+  };
+}
+
 Template.registerHelper('isEmpty', function(target) {
   return _.isEmpty(target);
 });
@@ -90,6 +109,7 @@ Router.route('/speaker', function() {
           if (self.params.query.id) {
             dpTheDeck = Decks.findOne({ _id: self.params.query.id });
             console.log('find the deck:', dpTheDeck);
+            // reset the runStatus first
             return dpTheDeck;
           } else {
             Router.go('/author');
@@ -159,7 +179,7 @@ Router.route('/export', function() {
     function() {
       if (self.params.query.id) {
         dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-        console.log('find the deck:', dpTheDeck);
+        console.log('find the deck:', dpTheDeck, { _id: self.params.query.id });
         if (dpTheDeck) {
           var datastr = JSON.stringify(_.pick(dpTheDeck, 'author', 'title', 'created', 'lastModified', 'slides'), null, '  ');
           var blob = new Blob([datastr], { type: "text/plain;charset=utf-8" });
@@ -234,50 +254,16 @@ Template.author.rendered = function() {
         .addClass('dp-author-theme-specklednoise') // default theme
         ;
       // init alertify
-      //(function registerAlertifyDialogs() {
-      //  if (!alertify.slideConfirm) {
-      //    alertify.dialog('slideConfirm',
-      //      function factory() {
-      //        return {
-      //          main: function(message, owner) {
-      //            this.message = message;
-      //            this.owner = owner;
-      //          },
-      //          prepare: function() {
-      //            // the owner panel
-      //            var o = $(this.owner);
-      //            var offset = o.offset();
-      //            var ow = o.outerWidth();
-      //            var oh = o.outerHeight();
-
-      //            // hack the dimmer to cover the panel
-      //            var dimmer = $('.alertify .ajs-dimmer');
-      //            dimmer.css({
-      //              'top': offset.top,
-      //              'left': offset.left,
-      //              'width': ow,
-      //              'height': oh,
-      //              'border-radius': '4px'
-      //            });
-
-      //            // hack the dialog shown in the center of panel
-      //            this.set('movable', false);
-      //            var dialog = $('.alertify .ajs-dialog');
-      //            dialog.css({ 'margin': '0px 0px' });
-      //            var dw = dialog.outerWidth();
-      //            var dh = dialog.outerHeight();
-      //            this.moveTo(offset.left + ((ow - dw)/2), offset.top + ((oh - dh)/2));
-
-      //            // now load the message as usual
-      //            this.setHeader('Please confirm');
-      //            this.setContent(this.message);
-      //          }
-      //        };
-      //      },
-      //      false,
-      //      'confirm');
-      //  }
-      //})();
+      (function registerAlertifyDialogs() {
+        if (!alertify.codePrompt) {
+          alertify.dialog('codePrompt',
+            function factory() {
+              return {};
+            },
+            true,
+            'prompt');
+        }
+      })();
       alertify.defaults.transition = 'pulse';
     });
     this.rendered = true;
@@ -351,23 +337,22 @@ Template.authorToolbar.events({
       slideOrderUpdated();
     }),
 
-  'click #insertImageBtn': function(event) {
-    var selection = window.getSelection();
-    var range = selection.getRangeAt(0);
-    var lastFocusNode = selection.focusNode;
-    if (selection && range) {
-      alertify.prompt('The URI of image', 'https://graph.facebook.com/minhua.lin.9/picture?type=large', function(event, value) {
-        console.log('got image URI:', value);
-        node = range.createContextualFragment('<img src="' + value + '"></img>');
-        range.insertNode(node);
-        var r = document.createRange();
-        r.setStart(lastFocusNode, 0);
-        r.setEnd(lastFocusNode, 0);
-        selection.removeAllRanges();
-        selection.addRange(r);
-      });
-    }
-  }
+    'click #insertImageBtn': genInsertHandler(function(next) {
+      alertify.prompt('The URI of image',
+        'https://graph.facebook.com/minhua.lin.9/picture?type=large',
+        function(event, value) {
+          console.log('got image URI:', value);
+          next('<img src="' + value + '"></img>');
+        });
+    }),
+
+    'click #insertCodeBlockBtn': genInsertHandler(function(next) {
+      alertify.codePrompt('Paste code here',
+        'console.log(\'hello,world\');',
+        function(event, value) {
+          next('<code>' + value + '</code>');
+        });
+    })
 });
 
 Template.authorSlide.helpers({
@@ -393,10 +378,22 @@ Template.authorSlide.events({
     var s = $(event.currentTarget).closest('.slide');
     var id = s.attr('slideId');
     var index = s.attr('slideIndex');
-    //alertify.slideConfirm('Do you want ot delete slide: ' + index + ' ?', s.find('.dp-panel'), function() {
-    alertify.confirm('Do you want ot delete slide: ' + index + ' ?', function() {
+    alertify.confirm('Do you want ot delete No.' + index + 'slide ?', function() {
       Decks.update({ _id: dpTheDeck._id }, { $pull: { 'slides': { 'id': id } } });
     });
+  },
+
+  'click #duplicateThisSlide': function(event) {
+    var s = $(event.currentTarget).closest('.slide');
+    var index = s.attr('slideIndex');
+
+    // $position should be faster, but can only use with mongo 2.6
+    // Decks.update({ _id: dpTheDeck._id }, { $push: { 'slides': { $each: [ cloneSlide(dpTheDeck.slides[index]) ] , $position: index } } });
+
+    // turn to naive way with mongo 2.4
+    var newSlides = dpTheDeck.slides;
+    newSlides.splice(index, 0, cloneSlide(dpTheDeck.slides[index]));
+    Decks.update({ _id: dpTheDeck._id }, { $set: { 'slides': newSlides }});
   }
 });
 

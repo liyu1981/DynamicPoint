@@ -1,6 +1,10 @@
 Decks = new Mongo.Collection("Decks");
 DPConf = new Mongo.Collection("DPConf");
 
+cloneSlide = function(slide) {
+  return _.extend(_.clone(slide), { id: Random.id() });
+};
+
 genEmptySlide = function(type) {
   switch(type) {
     default: return {
@@ -9,7 +13,7 @@ genEmptySlide = function(type) {
       content: 'hello'
     };
   }
-}
+};
 
 genNewDeck = function(data) {
   var defaultDeck = {
@@ -20,5 +24,5 @@ genNewDeck = function(data) {
     slides: [ genEmptySlide() ]
   };
   return _.defaults(data || {}, defaultDeck);
-}
+};
 
