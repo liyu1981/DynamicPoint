@@ -32,6 +32,7 @@ Template.speaker.rendered = function() {
           console.log('slide changed to:', event);
           Decks.update({ _id: dpTheDeck._id }, { $set: { 'runStatus.curIndex': { indexh: event.indexh, indexv: event.indexv } } });
         });
+        gotoSlide(dpTheDeck.runStatus.curIndex);
       });
     });
     this.rendered = true;

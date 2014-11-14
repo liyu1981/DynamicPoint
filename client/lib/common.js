@@ -19,6 +19,14 @@ qualifyURL = function(url){
   return url;
 };
 
+// share by audience & speaker
+gotoSlide = function(index) {
+  // index : { indexh: , indexv: }
+  if (Reveal) {
+    Reveal.slide(index.indexh, index.indexv);
+  }
+}
+
 Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
   function _genLoadCssTask(file) {
     return function(cb) { Meteor.Loader.loadCss(file); cb(); };

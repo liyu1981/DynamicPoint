@@ -1,8 +1,3 @@
-function gotoSlide(index) {
-  // index : { indexh: , indexv: }
-  Reveal.slide(index.indexh, index.indexv);
-}
-
 Router.route('/', function() {
   var self = this;
   dpMode = 'audience';
