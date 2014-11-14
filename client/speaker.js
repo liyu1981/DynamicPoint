@@ -22,6 +22,20 @@ Router.route('/speaker', function() {
   });
 });
 
+Template.speaker.helpers({
+  'speakerSlides': function() {
+    return _.map(dpTheDeck.slides, function(s) {
+      var r = {
+        content: ''
+      };
+      r.content = ((s.type in DPPlugins) ?
+        DPPlugins[s.type].genHtml[dpMode](s, dpTheDeck.runStatus) :
+        s.content);
+      return r;
+    });
+  }
+});
+
 Template.speaker.rendered = function() {
   if (!this.rendered) {
     $(function() {

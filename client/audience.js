@@ -21,6 +21,20 @@ Router.route('/', function() {
   });
 });
 
+Template.audience.helpers({
+  'audienceSlides': function() {
+    return _.map(dpTheDeck.slides, function(s) {
+      var r = {
+        content: ''
+      };
+      r.content = ((s.type in DPPlugins) ?
+        DPPlugins[s.type].genHtml[dpMode](s, dpTheDeck.runStatus) :
+        s.content);
+      return r;
+    });
+  }
+});
+
 Template.audience.rendered = function () {
   if (!this.rendered) {
     $(function() {
@@ -36,6 +50,9 @@ Template.audience.rendered = function () {
         });
         // and update for starting time
         gotoSlide(dpTheDeck.runStatus.curIndex);
+        // now fire events
+        _.each(dpTheDeck.slides, function(index, slide) {
+        });
       });
     });
     this.rendered = true;
