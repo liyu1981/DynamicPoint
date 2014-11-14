@@ -1,29 +1,3 @@
-dpMode = null;
-dpTheDeck = null;
-
-function waitfor(selector, callback) {
-  var r = $(selector);
-  if (r.length <= 0) {
-    setTimeout(function() { waitfor(selector, callback); }, 500);
-  } else {
-    callback();
-  }
-}
-
-function getExt(file) {
-  // ext algorithm taken from http://stackoverflow.com/a/12900504
-  return file.substr((~-file.lastIndexOf('.') >>> 0) + 2);
-}
-
-function qualifyURL(url){
-  // http://james.padolsey.com/javascript/getting-a-fully-qualified-url/
-  var img = document.createElement('img');
-  img.src = url; // set string url
-  url = img.src; // get qualified url
-  img.src = null; // no server request
-  return url;
-}
-
 function genToolbarToggleClickHandler(target, onCb, offCb) {
   return function(event) {
     var t = $(target);
@@ -81,76 +55,6 @@ function genInsertHandler(htmlGenerator) {
   };
 }
 
-Template.registerHelper('isEmpty', function(target) {
-  return _.isEmpty(target);
-});
-
-Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
-  function _genLoadCssTask(file) {
-    return function(cb) { Meteor.Loader.loadCss(file); cb(); };
-  }
-  function _genLoadJsTask(file) {
-    return function(cb) { Meteor.Loader.loadJs(file, function() { cb(); }); }
-  }
-  var tasks = [];
-  _.each(assetArray, function(file, index) {
-    switch (getExt(file).toLowerCase()) {
-      case 'css': tasks.push(_genLoadCssTask(file)); break;
-      case 'js': tasks.push(_genLoadJsTask(file)); break;
-      default: break;
-    }
-  });
-  console.log('tasks is:', tasks);
-  async.series(tasks, callback);
-};
-
-Router.route('/speaker', function() {
-  var self = this;
-  dpMode = 'speaker';
-  Meteor.Loader.loadJsAndCss([
-    'bower_components/reveal.js/css/reveal.min.css',
-    'bower_components/reveal.js/css/theme/solarized.css',
-    'bower_components/reveal.js/js/reveal.min.js'
-  ],
-  function() {
-    self.render('speaker', {
-      data: function() {
-        if (self.params.query.id) {
-          dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-          console.log('find the deck:', dpTheDeck);
-          // reset the runStatus first
-          return dpTheDeck;
-        } else {
-          Router.go('/author');
-        }
-      }
-    });
-  });
-});
-
-Router.route('/', function() {
-  var self = this;
-  dpMode = 'audience';
-  Meteor.Loader.loadJsAndCss([
-    'bower_components/reveal.js/css/reveal.min.css',
-    'bower_components/reveal.js/css/theme/solarized.css',
-    'bower_components/reveal.js/js/reveal.min.js'
-  ],
-  function() {
-    self.render('audience', {
-      data: function() {
-        if (self.params.query.id) {
-          dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-          console.log('find the deck:', dpTheDeck);
-          return dpTheDeck;
-        } else {
-          Router.go('/author');
-        }
-      }
-    });
-  });
-});
-
 Router.route('/author', function() {
   var self = this;
   dpMode = 'author';
@@ -178,107 +82,6 @@ Router.route('/author', function() {
     });
   });
 });
-
-Router.route('/export', function() {
-  var self = this;
-  dpMode = 'export';
-  Meteor.Loader.loadJsAndCss([
-    'bower_components/blob/Blob.js',
-    'bower_components/FileSaver/FileSaver.min.js'
-  ],
-  function() {
-    if (self.params.query.id) {
-      dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-      console.log('find the deck:', dpTheDeck, { _id: self.params.query.id });
-      if (dpTheDeck) {
-        var datastr = JSON.stringify(_.pick(dpTheDeck, 'author', 'title', 'created', 'lastModified', 'slides'), null, '  ');
-        var blob = new Blob([datastr], { type: "text/plain;charset=utf-8" });
-        saveAs(blob, dpTheDeck._id + '.dp');
-        setTimeout(function() { window.close(); }, 1000); // auto-close window after 1s
-      }
-    } else {
-      Router.go('/author');
-    }
-  });
-});
-
-Router.route('/superview', function() {
-  var self = this;
-  if (self.params.query.id) {
-    self.render('superview', {
-      data: { id: self.params.query.id }
-    });
-  } else {
-    Router.go('/author');
-  }
-});
-
-Router.route('/pairview', function() {
-  var self = this;
-  if (self.params.query.id) {
-    self.render('pairview', {
-      data: { id: self.params.query.id }
-    });
-  } else {
-    Router.go('/author');
-  }
-});
-
-Router.route('/qrcode', function() {
-  var self = this;
-  Meteor.Loader.loadJsAndCss([
-    'bower_components/qrcodejs/qrcode.min.js'
-  ],
-  function() {
-    if (self.params.query.id) {
-      self.render('qrcode', {
-        data: {
-          id: self.params.query.id,
-          showall: (self.params.query.showall ? true : false)
-        }
-      });
-    } else {
-      Router.go('/author');
-    }
-  });
-});
-
-Template.audience.rendered = function () {
-  if (!this.rendered) {
-    $(function() {
-      waitfor('.slides section', function() {
-        Reveal.initialize({
-          keyboard: false,
-          touch: false,
-          controls: false
-        });
-        Decks.find({ _id: dpTheDeck._id }, { runStatus: 1 }).observeChanges({
-          changed: function(id, fields) {
-            console.log('changes:', id, fields);
-            Reveal.slide(fields.runStatus.curIndex.indexh, fields.runStatus.curIndex.indexv);
-          }
-        });
-      });
-    });
-    this.rendered = true;
-  }
-};
-
-Template.speaker.rendered = function() {
-  if (!this.rendered) {
-    $(function() {
-      waitfor('.slides section', function() {
-        Reveal.initialize();
-        Reveal.addEventListener('slidechanged', function(event) {
-          // event.previousSlide, event.currentSlide, event.indexh, event.indexv
-          console.log('slide changed to:', event);
-          Decks.update({ _id: dpTheDeck._id }, { $set: { 'runStatus.curIndex': { indexh: event.indexh, indexv: event.indexv } } });
-        });
-      });
-    });
-    this.rendered = true;
-  }
-};
 
 Template.author.helpers({
   indexedSlides: function() {
@@ -397,9 +200,6 @@ Template.authorSlide.helpers({
   }
 });
 
-Template.authorSlide.created = function() {
-};
-
 Template.authorSlide.rendered = function() {
   if (!this.rendered) {
     var e = new MediumEditor('.editable'); // kick off the editable
@@ -429,22 +229,4 @@ Template.authorSlide.events({
     newSlides.splice(index, 0, cloneSlide(dpTheDeck.slides[index]));
     Decks.update({ _id: dpTheDeck._id }, { $set: { 'slides': newSlides }});
   }
-});
-
-Template.qrcode.rendered = function() {
-  $(function() {
-    $('body')
-      .addClass('dp-author') // add the global dp-author class
-      .addClass('dp-author-theme-specklednoise') // default theme
-      ;
-    waitfor('.qrcode-container', function() {
-      $('.qrcode-container').each(function(index, elem) {
-        var e = $(elem);
-        new QRCode(elem, qualifyURL(e.attr('rawUrl')));
-      });
-    });
-  });
-};
-
-Meteor.startup(function () {
 });

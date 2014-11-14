@@ -9,22 +9,10 @@
       {{> authorToolbar}}
     {{/if}}
 
-    <!--
-    <div class="panel panel-default">
-      <div class="panel-body">
-        <strong>Title</strong> : <input type="text" class="form-control" value="{{ title }}" />
-        <br>
-        <strong>Author</strong> : <input type="text" class="form-control" value="{{ author }}" />
-      </div>
-    </div>
-    -->
-
     <div class="row dp-deck sortable">
-
       {{#each indexedSlides}}
         {{> authorSlide}}
       {{/each}}
-
     </div>
 
   </div>
