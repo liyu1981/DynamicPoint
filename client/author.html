@@ -32,14 +32,12 @@
       </a>
     </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse">
       <form class="navbar-form navbar-left">
         {{#if isEmpty slides}}
         <button type="button" class="btn btn-primary" id="newDeckBtn">New Deck</button>
         {{else}}
-        <a class="btn btn-default" href="/?id={{ _id }}" target="_blank">Audience <i class="fa fa-share-square-o"></i></a>
-        <a class="btn btn-default" href="/speaker?id={{ _id }}" target="_blank">Speaker <i class="fa fa-share-square-o"></i></a>
+        <label>Title</label> <input type="text" class="form-control dp-title" value="{{ title }}" />
         {{/if}}
       </form>
       <ul class="nav navbar-nav navbar-right">
@@ -62,7 +60,7 @@
       </ul>
       <form class="navbar-form navbar-right">
         <div class="form-group">
-          <button type="button" class="btn btn-default" id="saveBtn"><i class="fa fa-save"></i></button>
+          <span id="dpActionInfo" class="hidden dp-action-info">saving...</span><button type="button" class="btn btn-success" id="saveBtn"><i class="fa fa-save"></i></button>
         </div>
       </form>
     </div>
