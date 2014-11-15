@@ -1,5 +1,7 @@
 dpMode = null;
 dpTheDeck = null;
+dpRunStatus = null;
+dpRunId = null;
 
 waitfor = function(selector, callback) {
   var r = $(selector);

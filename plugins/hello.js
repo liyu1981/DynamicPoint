@@ -14,11 +14,11 @@
     },
 
     onSlideRendered: {
-      'speaker': function(slideRoot, slide, runStatus) {
+      'speaker': function($slideRoot, slide, runStatus) {
       },
-      'author': function(slideRoot, slide, runStatus) {
+      'author': function($slideRoot, slide, runStatus) {
       },
-      'audience': function(slideRoot, slide, runStatus) {
+      'audience': function($slideRoot, slide, runStatus) {
       }
     }
   };
