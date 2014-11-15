@@ -52,6 +52,14 @@ Template.speaker.rendered = function() {
       console.log('slide changed to:', event);
       RunStatus.update({ _id: dpRunStatus._id }, { $set: { 'curIndex': { indexh: event.indexh, indexv: event.indexv } } });
     });
+    // now fire events
+    _.each(dpTheDeck.slides, function(slide, index) {
+      if (slide.type in DPPlugins) {
+        DPPlugins[slide.type].onSlideRendered[dpMode]($('#' + slide.id), {
+          slide: slide, runStatus: dpRunStatus
+        });
+      }
+    });
     gotoSlide(dpRunStatus.curIndex);
   });
 };

@@ -1,3 +1,5 @@
+var audience = {};
+
 Router.route('/',
   function() {
     var self = this;
@@ -43,6 +45,8 @@ Template.audience.helpers({
 
 Template.audience.rendered = function () {
   waitfor('.slides section', function() {
+    audience.id = Random.id();
+    console.log('audienceId generated as:', audience.id);
     Reveal.initialize({
       keyboard: false, touch: false, controls: false // disable all user inputs
     });
@@ -55,9 +59,11 @@ Template.audience.rendered = function () {
         }
       });
       // now fire events
-      _.each(dpTheDeck.slides, function(index, slide) {
+      _.each(dpTheDeck.slides, function(slide, index) {
         if (slide.type in DPPlugins) {
-          DPPlugins[slide.type].onSlideRendered[dpMode]($('#' + slide.id), slide, runStatus);
+          DPPlugins[slide.type].onSlideRendered[dpMode]($('#' + slide.id), {
+            audience: audience, slide: slide, runStatus: dpRunStatus
+          });
         }
       });
       // and update for starting time
