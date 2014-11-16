@@ -1,39 +1,44 @@
 ;(function() {
 
   DPPlugins['hello'] = {
-    genHtml: {
-      'speaker': function(slide, runStatus) {
-        return '<h2>hello, speaker</h2><p>Let us welcome:<br><span id="audienceList"></span></p>';
+    templateHelpers: {
+      'speaker': function() {
+        return {
+          'userList': function() {
+            console.log('called me:', this);
+            return _.reduce(this.runStatus.users, function(memo, v) {
+              return memo + v + ' , ';
+            }, '');
+          }
+        };
       },
-      'author': function(slide, runStatus) {
-        return '<p>Nothing need to be configured for this slide.</p>';
+      'author': function() {
+        return {};
       },
-      'audience': function(slide, runStatus) {
-        return '<h2>hello, audience</h2><p>Your name?<br><input id="name" type="text" placeholder="James Bond"></input></p>';
+      'audience': function() {
+        return {};
       }
     },
 
-    onSlideRendered: {
-      'speaker': function($slideRoot, data) {
-        console.log('iam speaker');
-        var v = new Blaze.View('audienceList', function() {
-          console.log('rendered me?', $al);
-          var namelist = _.map(data.runStatus.users, function(name) { return name; }).join(', ');
-          $al.html(namelist);
-        });
-        Blaze.render(v, $al.get());
+    templateEvents: {
+      'speaker': function(context) {
+        return {
+        };
       },
-      'author': function($slideRoot, data) {
+      'author': function(context) {
+        return {
+        };
       },
-      'audience': function($slideRoot, data) {
-        console.log('iam audience');
-        var d = data;
-        var $input = $('input#name', $slideRoot);
-        $input.on('change', function(event) {
-          var setData = {};
-          setData['users.' + d.audience.id] = $input.val();
-          RunStatus.update({ _id: d.runStatus._id }, { $set: setData });
-        });
+      'audience': function(context) {
+        return {
+          'click #ok': function(event) {
+            console.log('we got:', $('input#name').val());
+            var setData = {};
+            setData['users.' + context.audience.id] = $('input#name').val();
+            console.log('will update:', setData);
+            RunStatus.update({ _id: context.runStatusId }, { $set: setData });
+          }
+        };
       }
     }
   };

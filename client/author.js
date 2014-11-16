@@ -193,14 +193,20 @@ Template.authorToolbar.events({
 });
 
 Template.authorSlide.helpers({
-  authorContent: function() {
+  calcSlideTemplate: function() {
     if (this.type in DPPlugins) {
-      return '<div class="content" slideIndex="' + this.index + '">' + DPPlugins[this.type].genHtml[dpMode](this, dpTheDeck.runStatus);
+      return dpMode + '-slide-' + this.type;
     } else {
-      // have to do this to overcome the contenteditable issue of meteor now
-      // ref: https://github.com/meteor/meteor/issues/1964
-      return '<div class="content editable" slideIndex="' + this.index + '">' + this.content + '</div>';
+      return 'author-slide-normal';
     }
+  }
+});
+
+Template['author-slide-normal'].helpers({
+  authorContent: function() {
+    // have to do this to overcome the contenteditable issue of meteor now
+    // ref: https://github.com/meteor/meteor/issues/1964
+      return '<div class="content editable" slideIndex="' + this.index + '">' + this.content + '</div>';
   }
 });
 

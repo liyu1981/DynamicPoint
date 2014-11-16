@@ -104,8 +104,12 @@
       </div>
     </div>
     <div class="panel-body">
-      {{{authorContent}}}
+    {{> Template.dynamic template=calcSlideTemplate}}
     </div>
   </div>
 </div>
+</template>
+
+<template name="author-slide-normal">
+{{{authorContent}}}
 </template>

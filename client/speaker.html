@@ -1,9 +1,13 @@
 <template name="speaker">
 <div class="reveal">
   <div class="slides">
-    {{#each speakerSlides}}
-    <section id="{{ id }}">{{{ content }}}</section>
+    {{#each slides}}
+    {{> Template.dynamic template=calcSlideTemplate data=calcSlideData}}
     {{/each}}
   </div>
 </div>
+</template>
+
+<template name="speaker-slide-normal">
+<section id="{{ id }}">{{{ content }}}</section>
 </template>

@@ -1,4 +1,6 @@
-var audience = {};
+var audience = {
+  id: null // audience id
+};
 
 Router.route('/',
   function() {
@@ -21,6 +23,19 @@ Router.route('/',
         dpRunId = this.params.query.runId || 'rehearsal';
         dpRunStatus = RunStatus.findOne({ slideId: dpTheDeck._id, runId: dpRunId });
         console.log('find the runStatus:', dpRunStatus);
+
+        // now register plugins' events
+        var allTemplateTypes = _.uniq(_.map(dpTheDeck.slides, function(v) { return v.type; }));
+        _.each(allTemplateTypes, function(type) {
+          if (type in DPPlugins) {
+            var t = Template[dpMode + '-slide-' + type];
+            console.log('will reg helpers:', t, DPPlugins[type].templateHelpers[dpMode]());
+            t.helpers(DPPlugins[type].templateHelpers[dpMode]());
+            console.log('will reg events:', t, DPPlugins[type].templateEvents[dpMode]({ runStatusId: dpRunStatus._id, audience: audience }));
+            t.events(DPPlugins[type].templateEvents[dpMode]({ runStatusId: dpRunStatus._id, audience: audience }));
+          }
+        });
+
         return dpTheDeck;
       } else {
         Router.go('/author');
@@ -29,17 +44,16 @@ Router.route('/',
   });
 
 Template.audience.helpers({
-  'audienceSlides': function() {
-    return _.map(dpTheDeck.slides, function(s) {
-      var r = {
-        id: s.id,
-        content: ''
-      };
-      r.content = ((s.type in DPPlugins) ?
-        DPPlugins[s.type].genHtml[dpMode](s, dpTheDeck.runStatus) :
-        s.content);
-      return r;
-    });
+  'calcSlideTemplate': function() {
+    if (this.type in DPPlugins) {
+      return dpMode + '-slide-' + this.type;
+    } else {
+      return 'audience-slide-normal';
+    }
+  },
+
+  'calcSlideData': function() {
+    return _.extend(this, { runStatus: dpRunStatus });
   }
 });
 
@@ -56,14 +70,6 @@ Template.audience.rendered = function () {
         changed: function(id, fields) {
           console.log('changes:', id, fields);
           gotoSlide(fields.curIndex);
-        }
-      });
-      // now fire events
-      _.each(dpTheDeck.slides, function(slide, index) {
-        if (slide.type in DPPlugins) {
-          DPPlugins[slide.type].onSlideRendered[dpMode]($('#' + slide.id), {
-            audience: audience, slide: slide, runStatus: dpRunStatus
-          });
         }
       });
       // and update for starting time

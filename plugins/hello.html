@@ -1,0 +1,22 @@
+<template name="speaker-slide-hello">
+<section id="{{ id }}">
+  <h2>hello, speaker</h2>
+  <p>Let us welcome:<br><span><i>{{userList}}</i></span></p>
+</section>
+</template>
+
+<template name="author-slide-hello">
+<div class="content" slideIndex="{{ index }}">
+<p>Nothing need to be configured for this slide.</p>
+</div>
+</template>
+
+<template name="audience-slide-hello">
+<section id="{{ id }}">
+  <h2>hello, audience</h2>
+  <p>Your name?<br>
+  <input id="name" type="text" placeholder="James Bond" />
+  <button id="ok">OK</button>
+  </p>
+</section>
+</template>
