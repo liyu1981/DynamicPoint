@@ -199,6 +199,11 @@ Template.authorSlide.helpers({
     } else {
       return 'author-slide-normal';
     }
+  },
+
+  allSlideTypes: function() {
+    var self = this;
+    return _.reject(dpPluginGetAllTypes(), function(t) { return t.id === self.type; });
   }
 });
 
@@ -238,5 +243,9 @@ Template.authorSlide.events({
     var newSlides = dpTheDeck.slides;
     newSlides.splice(index, 0, cloneSlide(dpTheDeck.slides[index]));
     Decks.update({ _id: dpTheDeck._id }, { $set: { 'slides': newSlides }});
+  },
+
+  'click .change-slide-type-btn': function(event) {
+    console.log('clicked:', event.currentTarget);
   }
 });

@@ -94,10 +94,11 @@
         <div class="btn-group">
           <button type="button" class="btn btn-default" disabled>{{ index }}</button>
           <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">{{ type }} <span class="caret"></span></button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-toggle-on"></i> {{ type }} <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Action 1</a></li>
-              <li><a href="#">Action 2</a></li>
+              {{#each allSlideTypes}}
+              <li><a class="change-slide-type-btn" href="#" id="{{id}}"><i class="fa fa-toggle-off"></i> {{ displayName }}</a></li>
+              {{/each}}
             </ul>
           </div>
         </div>
