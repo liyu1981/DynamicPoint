@@ -28,6 +28,16 @@ gotoSlide = function(index) {
   }
 }
 
+commonDPPageSetup = function() {
+  $(function() {
+    $('body')
+      .addClass('dp') // add the global dp-author class
+      .addClass('dp-theme-specklednoise') // default theme
+      ;
+    alertify.defaults.transition = 'pulse';
+  });
+};
+
 Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
   function _genLoadCssTask(file) {
     return function(cb) { Meteor.Loader.loadCss(file); cb(); };
