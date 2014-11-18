@@ -20,22 +20,16 @@ Router.route('/',
       if (this.params.query.id) {
         dpTheDeck = Decks.findOne(this.params.query.id);
         console.log('find the deck:', dpTheDeck);
-        dpRunId = this.params.query.runId || 'rehearsal';
-        dpRunStatus = RunStatus.findOne({ slideId: dpTheDeck._id, runId: dpRunId });
-        console.log('find the runStatus:', dpRunStatus);
+        if (dpTheDeck) {
+          var dpRunId = this.params.query.runId || 'rehearsal';
+          dpRunStatus = RunStatus.findOne({ slideId: dpTheDeck._id, runId: dpRunId });
+          console.log('find the runStatus:', dpRunStatus);
 
-        // now register plugins' events
-        var allTemplateTypes = _.uniq(_.map(dpTheDeck.slides, function(v) { return v.type; }));
-        _.each(allTemplateTypes, function(type) {
-          if (type in DPPlugins) {
-            var t = Template[dpMode + '-slide-' + type];
-            console.log('will reg helpers:', t, DPPlugins[type].templateHelpers[dpMode]());
-            t.helpers(DPPlugins[type].templateHelpers[dpMode]());
-            console.log('will reg events:', t, DPPlugins[type].templateEvents[dpMode]({ runStatusId: dpRunStatus._id, audience: audience }));
-            t.events(DPPlugins[type].templateEvents[dpMode]({ runStatusId: dpRunStatus._id, audience: audience }));
-          }
-        });
-
+          // now register plugins' events
+          _.map(dpTheDeck.slides, function(v) {
+            dpPluginRegTemplate(v.type, dpMode, { runStatusId: dpRunStatus._id, audience: audience });
+          });
+        }
         return dpTheDeck;
       } else {
         Router.go('/author');
@@ -66,7 +60,8 @@ Template.audience.rendered = function () {
     });
     if (dpRunStatus) {
       // subscribe to the changes
-      RunStatus.find({ slideId: dpTheDeck._id, runId: dpRunId }).observeChanges({
+      //console.log('will subscribe:', RunStatus.findOne({ _id: dpRunStatus._id }));
+      RunStatus.find({ _id: dpRunStatus._id }).observeChanges({
         changed: function(id, fields) {
           console.log('changes:', id, fields);
           gotoSlide(fields.curIndex);

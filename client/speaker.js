@@ -17,26 +17,25 @@ Router.route('/speaker',
         //console.log('called me', (new Error()).stack);
         dpTheDeck = Decks.findOne({ _id: this.params.query.id });
         console.log('find the deck:', dpTheDeck);
-        dpRunId = (this.params.query.runId || 'rehearsal');
-        dpRunStatus = RunStatus.findOne({ slideId: dpTheDeck._id, runId: dpRunId });
-        if (!dpRunStatus) {
-          var rid = RunStatus.insert({ slideId: dpTheDeck._id, dpRunId: runId, curIndex: { indexh: 0, indexv: 0 } });
-          dpRunStatus = RunStatus.find({ _id: rid });
-        }
-        console.log('find the runStatus:', dpRunStatus);
-
-        // now register plugins' events
-        var allTemplateTypes = _.uniq(_.map(dpTheDeck.slides, function(v) { return v.type; }));
-        _.each(allTemplateTypes, function(type) {
-          if (type in DPPlugins) {
-            var t = Template[dpMode + '-slide-' + type];
-            console.log('will reg helpers:', t, DPPlugins[type].templateHelpers[dpMode]());
-            t.helpers(DPPlugins[type].templateHelpers[dpMode]());
-            console.log('will reg events:', t, DPPlugins[type].templateEvents[dpMode]({ runStatusId: dpRunStatus._id }));
-            t.events(DPPlugins[type].templateEvents[dpMode]({ runStatusId: dpRunStatus._id }));
+        if (dpTheDeck) {
+          var dpRunId = (this.params.query.runId || 'rehearsal');
+          dpRunStatus = RunStatus.findOne({ slideId: dpTheDeck._id, runId: dpRunId });
+          if (!dpRunStatus) {
+            var rid = RunStatus.insert({
+              slideId: dpTheDeck._id,
+              runId: dpRunId,
+              curIndex: { indexh: 0, indexv: 0 },
+              pluginData: {}
+            });
+            dpRunStatus = RunStatus.find({ _id: rid });
           }
-        });
+          console.log('find the runStatus:', dpRunStatus);
 
+          // now register plugins' events
+          _.map(dpTheDeck.slides, function(v) {
+            dpPluginRegTemplate(v.type, dpMode, { runStatusId: dpRunStatus._id });
+          });
+        }
         return dpTheDeck;
       } else {
         Router.go('/author');

@@ -1,7 +1,6 @@
 dpMode = null;
 dpTheDeck = null;
 dpRunStatus = null;
-dpRunId = null;
 
 waitfor = function(selector, callback) {
   var r = $(selector);
@@ -24,7 +23,7 @@ qualifyURL = function(url){
 // share by audience & speaker
 gotoSlide = function(index) {
   // index : { indexh: , indexv: }
-  if (Reveal) {
+  if (Reveal && index) {
     Reveal.slide(index.indexh, index.indexv);
   }
 }

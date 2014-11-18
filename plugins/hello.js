@@ -5,10 +5,12 @@
       'speaker': function() {
         return {
           'userList': function() {
-            console.log('called me:', this);
-            return _.reduce(this.runStatus.users, function(memo, v) {
-              return memo + v + ' , ';
-            }, '');
+            var alluser = _.reduce(this.runStatus.pluginData.hello, function(memo, v) {
+              memo.push(v);
+              return memo;
+            }, []);
+            alluser.sort();
+            return alluser.join(' , ');
           }
         };
       },
@@ -30,13 +32,22 @@
         };
       },
       'audience': function(context) {
+        function changedUser() {
+          console.log('change user to:', $('#helloName').val());
+          var setData = {};
+          setData['pluginData.hello.' + context.audience.id] = $('#helloName').val();
+          RunStatus.update({ _id: context.runStatusId }, { $set: setData });
+        }
+
         return {
-          'click #ok': function(event) {
-            console.log('we got:', $('input#name').val());
-            var setData = {};
-            setData['users.' + context.audience.id] = $('input#name').val();
-            console.log('will update:', setData);
-            RunStatus.update({ _id: context.runStatusId }, { $set: setData });
+          'blur #helloName': function(event) {
+            changedUser();
+          },
+
+          'keypress #helloName': function(event) {
+            if (event.which === 13) {
+              changedUser();
+            }
           }
         };
       }
