@@ -26,7 +26,17 @@ Template.qrcode.rendered = function() {
     waitfor('.qrcode-container', function() {
       $('.qrcode-container').each(function(index, elem) {
         var e = $(elem);
-        new QRCode(elem, qualifyURL(e.attr('rawUrl')));
+        var size = Math.min(e.width(), $(document).height() * 0.8);
+        console.log('will draw:', {
+          text: qualifyURL(e.attr('rawUrl')),
+          width: size,
+          height: size
+        });
+        new QRCode(elem, {
+          text: qualifyURL(e.attr('rawUrl')),
+          width: size,
+          height: size
+        });
       });
     });
   });
