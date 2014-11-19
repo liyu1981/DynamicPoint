@@ -240,6 +240,10 @@ Template.authorSlide.events({
   },
 
   'click .change-slide-type-btn': function(event) {
-    console.log('clicked:', event.currentTarget);
+    var e = $(event.currentTarget);
+    var toType = e.attr('id');
+    var slideIndex = e.closest('.slide').attr('slideIndex');
+    console.log('will change to:', toType);
+    dpPluginChangeType(dpTheDeck._id, slideIndex, toType);
   }
 });
