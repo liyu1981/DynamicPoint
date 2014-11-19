@@ -1,4 +1,4 @@
-Router.route('/login', function() {
+Router.route('/profile', function() {
   var self = this;
   Meteor.Loader.loadJsAndCss([
     'bower_components/alertify-js/build/css/alertify.min.css',
@@ -7,10 +7,17 @@ Router.route('/login', function() {
     'js/alertifyext.js'
    ],
   function() {
-    self.render('login');
+    self.render('profile');
   });
 });
 
-Template.login.rendered = function() {
+Template.profileSlidesList.helpers({
+  slides: function() {
+    return Decks.find().fetch();
+  }
+});
+
+Template.profile.rendered = function() {
   commonDPPageSetup();
 };
+

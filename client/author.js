@@ -90,13 +90,7 @@ Template.author.helpers({
 });
 
 Template.author.rendered = function() {
-  $(function() {
-    $('body')
-      .addClass('dp-author') // add the global dp-author class
-      .addClass('dp-author-theme-specklednoise') // default theme
-      ;
-    alertify.defaults.transition = 'pulse';
-  });
+  commonDPPageSetup();
 };
 
 Template.authorNavbar.events({

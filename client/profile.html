@@ -1,4 +1,4 @@
-<template name="login">
+<template name="profile">
 <div class="container">
   <div class="row">
     <br>
@@ -31,6 +31,31 @@
       </div>
     </nav>
 
+    <div class="row">
+      <div class="col-md-12">
+        <div class="panel panel-default dp-panel">
+          <div class="panel-body">
+            {{> profileSlidesList}}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</template>
+
+<template name="profileSlidesList">
+{{#each slides}}
+<div class="media">
+  <a class="media-left" href="#">
+    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==" style="width: 64px; height: 64px;">
+  </a>
+  <div class="media-body">
+    <h4 class="media-heading">{{ title }}</h4>
+    <strong>ID</strong>: {{ _id }}, <strong>Created</strong>: {{ created }}
   </div>
 </div>
+{{/each}}
 </template>
