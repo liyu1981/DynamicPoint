@@ -32,7 +32,7 @@ Router.route('/audience',
         }
         return dpTheDeck;
       } else {
-        Router.go('/welcome');
+        window.location.href = '/welcome';
       }
     }
   });

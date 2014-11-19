@@ -38,7 +38,7 @@ Router.route('/speaker',
         }
         return dpTheDeck;
       } else {
-        Router.go('/author');
+        window.location.href = '/welcome';
       }
     }
   });

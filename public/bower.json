@@ -20,6 +20,7 @@
     "blob": "*",
     "html5sortable": "*",
     "qrcodejs": "~0.1.0",
-    "MutationObserver-shim": "~0.2.8"
+    "MutationObserver-shim": "~0.2.8",
+    "bigtext": "~0.1.6"
   }
 }

@@ -1,5 +1,5 @@
 Router.route('/', function() {
-  Router.go('/welcome');
+  window.location.href = '/welcome';
 });
 
 Router.route('/welcome', function() {
