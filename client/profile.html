@@ -11,19 +11,15 @@
           <form class="navbar-form navbar-left">
             <button type="button" class="btn btn-primary" id="newDeckBtn"><i class="fa fa-file-o"></i> New Deck</button>
           </form>
-          <ul class="nav navbar-nav navbar-right dp-navbar-right-most">
+          <ul class="nav navbar-nav navbar-right dp-navbar-menu">
             {{> loginButtons}}
             <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify"></span></a>
             <ul class="dropdown-menu" role="menu">
-              <li><a href="/user?id="><span class="glyphicon glyphicon-user"></span> </a></li>
-              <li class="divider"></li>
               <li>
                 <a href="#" id="importMenu"><span class="glyphicon glyphicon-floppy-open"></span> Import From File</a>
                 <form class="hidden"><input type="file" id="importMenuFileSelector" /></form>
               </li>
-              <li class="divider"></li>
-              <li><a href="https://github.com/liyu1981/DynamicPoint" target="_blank"><i class="fa fa-github-square"></i> Fork me on Github!</a></li>
             </ul>
             </li>
           </ul>
@@ -33,11 +29,7 @@
 
     <div class="row">
       <div class="col-md-12">
-        <div class="panel panel-default dp-panel">
-          <div class="panel-body">
-            {{> profileSlidesList}}
-          </div>
-        </div>
+        {{> profileSlidesList}}
       </div>
     </div>
 
@@ -47,15 +39,16 @@
 </template>
 
 <template name="profileSlidesList">
-{{#each slides}}
-<div class="media">
-  <a class="media-left" href="#">
-    <img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/PjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+PGRlZnMvPjxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iI0VFRUVFRSIvPjxnPjx0ZXh0IHg9IjEzLjQ2MDkzNzUiIHk9IjMyIiBzdHlsZT0iZmlsbDojQUFBQUFBO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1mYW1pbHk6QXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7Zm9udC1zaXplOjEwcHQ7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9nPjwvc3ZnPg==" style="width: 64px; height: 64px;">
+<div class="list-group">
+  {{#each slides}}
+  <a href="/author?id={{ id }}" target="_blank" class="list-group-item">
+    <h2 class="list-group-item-heading">{{ title }}</h2>
+    <p class="list-group-item-text"><span class="label label-default">ID</span> {{ id }}</p>
+    <p class="list-group-item-text">
+      <span class="list-group-item-text-span"><strong>Author</strong> {{ author }}</span>
+      <span class="list-group-item-text-span"><strong>Created</strong> <span data-livestamp="{{ created }}"></span></span>
+    </p>
   </a>
-  <div class="media-body">
-    <h4 class="media-heading">{{ title }}</h4>
-    <strong>ID</strong>: {{ _id }}, <strong>Created</strong>: {{ created }}
-  </div>
+  {{/each}}
 </div>
-{{/each}}
 </template>

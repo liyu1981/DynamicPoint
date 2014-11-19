@@ -1,0 +1,44 @@
+<template name="welcome">
+<div class="container">
+  <div class="row">
+    <br>
+
+    <nav class="navbar navbar-default" role="navigation">
+      <div class="container-fluid">
+        {{> navbarDPLogo}}
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right dp-navbar-menu">
+            {{#if currentUser}}
+            {{> loginButtons}}
+            {{/if}}
+            <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify"></span></a>
+            <ul class="dropdown-menu" role="menu">
+            </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <center>
+    <div class="welcome-text" id="bigtext" style="width: 400px; margin-top: 80px; margin-bottom: 80px;">
+      <div>Don't Make Your</div>
+      <div>Next Presentation</div>
+      <div>Boring</div>
+      <div>Make It Fun</div>
+    </div>
+
+    <div>
+      {{#if currentUser}}
+      <a id="gotoProfile" href="/profile?id={{currentUser._id}}" class="btn btn-lg btn-primary"><i class="fa fa-share fa-2x"></i> Go to my decks</a>
+      {{else}}
+      <button id="facebookLoginBtn" class="btn btn-lg btn-Facebook"><i class="fa fa-facebook-square fa-2x"></i> Login with Facebook</button>
+      <button id="githubLoginBtn" class="btn btn-lg btn-Github"><i class="fa fa-github-square fa-2x"></i> Login with Github</button>
+      {{/if}}
+    </div>
+    </center>
+
+  </div>
+</div>
+</template>

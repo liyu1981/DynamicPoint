@@ -20,8 +20,8 @@ Router.route('/qrcode', function() {
 Template.qrcode.rendered = function() {
   $(function() {
     $('body')
-      .addClass('dp-author') // add the global dp-author class
-      .addClass('dp-author-theme-specklednoise') // default theme
+      .addClass('dp') // add the global dp-author class
+      .addClass('dp-theme-specklednoise') // default theme
       ;
     waitfor('.qrcode-container', function() {
       $('.qrcode-container').each(function(index, elem) {

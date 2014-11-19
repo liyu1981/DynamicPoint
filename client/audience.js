@@ -2,7 +2,7 @@ var audience = {
   id: null // audience id
 };
 
-Router.route('/',
+Router.route('/audience',
   function() {
     var self = this;
     dpMode = 'audience';
@@ -32,7 +32,7 @@ Router.route('/',
         }
         return dpTheDeck;
       } else {
-        Router.go('/author');
+        Router.go('/welcome');
       }
     }
   });

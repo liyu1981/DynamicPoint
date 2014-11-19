@@ -17,3 +17,5 @@ peerlibrary:async
 accounts-facebook
 accounts-github
 ian:accounts-ui-bootstrap-3
+service-configuration
+mrt:livestamp-hs

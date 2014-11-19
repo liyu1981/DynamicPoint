@@ -38,6 +38,20 @@ commonDPPageSetup = function() {
   });
 };
 
+Router.onBeforeAction(function () {
+  var loginWaived = _.reduce(['/welcome', '/audience', '/speaker'], function(memo, p) { memo[p] = true; return memo; }, {});
+  // all properties available in the route function are also available here such as this.params
+  if (this.route._path in loginWaived) {
+    this.next();
+  } else if (!Meteor.userId()) {
+    // if the user is not logged in, render the Login template
+    this.render('welcome');
+  } else {
+    // otherwise don't hold up the rest of hooks or our route/action function from running
+    this.next();
+  }
+});
+
 Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
   function _genLoadCssTask(file) {
     return function(cb) { Meteor.Loader.loadCss(file); cb(); };
