@@ -8,8 +8,7 @@ Router.route('/profile', function() {
       'bower_components/alertify-js/build/css/alertify.min.css',
       'bower_components/alertify-js/build/css/themes/default.css',
       'bower_components/alertify-js/build/alertify.min.js',
-      'js/alertifyext.js',
-      'bower_components/html2canvas/build/html2canvas.min.js'
+      'js/alertifyext.js'
      ],
     function() {
       self.render('profile');
