@@ -4,7 +4,6 @@
 # but you can also edit it by hand.
 
 meteor-platform
-autopublish
 insecure
 underscore
 jquery
@@ -21,4 +20,3 @@ service-configuration
 mrt:livestamp-hs
 meteorhacks:kadira
 infinitedg:winston
-

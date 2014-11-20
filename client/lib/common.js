@@ -1,6 +1,7 @@
 dpMode = null;
 dpTheDeck = null;
 dpRunStatus = null;
+dpUrlParams = null;
 
 waitfor = function(selector, callback) {
   var r = $(selector);
@@ -104,21 +105,25 @@ loadJsAndCss = function(dpMode, assetArray, callback) {
   Meteor.Loader.loadJsAndCss(aa, callback);
 };
 
-Template.registerHelper('isEmpty', function(target) {
-  return _.isEmpty(target);
-});
+sub = function(callback) {
+  logger.info('will sub:', dpMode, dpTheDeck, dpRunStatus);
+  switch(dpMode) {
+    case 'profile':
+      Meteor.subscribe('Decks', callback);
+      break;
 
-Template.navbarDPLogo.events({
-  'click .dp-brand': function() {
-    window.location.href = "/welcome";
-  }
-});
+    case 'author':
+      Meteor.subscribe('Decks', callback);
+      break;
 
-Template.navbarDropdownDPAbout.events({
-  'click #aboutDP': function() {
-    alertify.alert('This DynamicPoint. Slides with fun! Made by @liyu.');
-  }
-});
+    case 'welcome':
+      break;
 
-Meteor.startup(function () {
-});
+    case 'audience':
+    case 'speaker':
+      Meteor.subscribe('Decks', callback);
+      Meteor.subscribe('RunStatus', callback);
+      break;
+  };
+}
+

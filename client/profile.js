@@ -1,15 +1,17 @@
-var urlParams = null;
-
 Router.route('/profile', function() {
+  logger.info('call me');
   var self = this;
   dpMode = 'profile';
+  dpUrlParams = this.params;
   if (this.params.query.id) {
-    urlParams = this.params;
-    loadJsAndCss(dpMode,
-      [],
-      function() {
-        self.render('profile');
-      });
+    sub(function() {
+      urlParams = this.params;
+      loadJsAndCss(dpMode,
+        [],
+        function() {
+          self.render('profile');
+        });
+    });
   } else {
     window.location.href = '/welcome';
   }
@@ -17,7 +19,8 @@ Router.route('/profile', function() {
 
 Template.profileSlidesList.helpers({
   slides: function() {
-    return _.map(Decks.find({ ownerId: urlParams.query.id }).fetch(), function(d) {
+    //logger.debug('found:', Decks.find({ ownerId: dpUrlParams.query.id }).fetch());
+    return _.map(Decks.find({ ownerId: dpUrlParams.query.id }).fetch(), function(d) {
       return {
         id: d._id,
         title: d.title,
