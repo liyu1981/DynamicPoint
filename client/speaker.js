@@ -2,21 +2,17 @@ Router.route('/speaker',
   function() {
     var self = this;
     dpMode = 'speaker';
-    Meteor.Loader.loadJsAndCss([
-      'bower_components/reveal.js/css/reveal.min.css',
-      'bower_components/reveal.js/css/theme/solarized.css',
-      'bower_components/reveal.js/js/reveal.min.js'
-    ],
-    function() {
-      self.render('speaker');
-    })
+    loadJsAndCss(dpMode,
+      [],
+      function() {
+        self.render('speaker');
+      });
   },
   {
     data: function() {
       if (this.params.query.id) {
-        //console.log('called me', (new Error()).stack);
         dpTheDeck = Decks.findOne({ _id: this.params.query.id });
-        console.log('find the deck:', dpTheDeck);
+        logger.info('find the deck:', dpTheDeck);
         if (dpTheDeck) {
           var dpRunId = (this.params.query.runId || 'rehearsal');
           dpRunStatus = RunStatus.findOne({ slideId: dpTheDeck._id, runId: dpRunId });
@@ -29,7 +25,7 @@ Router.route('/speaker',
             });
             dpRunStatus = RunStatus.find({ _id: rid });
           }
-          console.log('find the runStatus:', dpRunStatus);
+          logger.info('find the runStatus:', dpRunStatus);
 
           // now register plugins' events
           _.map(dpTheDeck.slides, function(v) {
@@ -62,7 +58,7 @@ Template.speaker.rendered = function() {
     Reveal.initialize();
     Reveal.addEventListener('slidechanged', function(event) {
       // event.previousSlide, event.currentSlide, event.indexh, event.indexv
-      //console.log('slide changed to:', event);
+      logger.info('slide changed to:', event);
       RunStatus.update({ _id: dpRunStatus._id }, { $set: { 'curIndex': { indexh: event.indexh, indexv: event.indexv } } });
     });
     // and update for starting time

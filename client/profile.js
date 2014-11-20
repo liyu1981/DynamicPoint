@@ -2,17 +2,14 @@ var urlParams = null;
 
 Router.route('/profile', function() {
   var self = this;
+  dpMode = 'profile';
   if (this.params.query.id) {
     urlParams = this.params;
-    Meteor.Loader.loadJsAndCss([
-      'bower_components/alertify-js/build/css/alertify.min.css',
-      'bower_components/alertify-js/build/css/themes/default.css',
-      'bower_components/alertify-js/build/alertify.min.js',
-      'js/alertifyext.js'
-     ],
-    function() {
-      self.render('profile');
-    });
+    loadJsAndCss(dpMode,
+      [],
+      function() {
+        self.render('profile');
+      });
   } else {
     window.location.href = '/welcome';
   }

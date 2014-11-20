@@ -1,19 +1,11 @@
-ServiceConfiguration.configurations.remove({
-  service: 'github'
-});
+if (Meteor.settings['account-services']) {
+  var as = Meteor.settings['account-services'];
+  _.each(as, function(s) {
+    logger.info('Loading account service:', s);
+    ServiceConfiguration.configurations.remove({ service: s.service });
+    ServiceConfiguration.configurations.insert(s);
+  });
+} else {
+  throw Error('No account-services configured in settings.json!');
+}
 
-ServiceConfiguration.configurations.insert({
-  service: 'github',
-  clientId: 'b0b20d7b2924a3c7a1a6',
-  secret: 'a3244d4dac0546a3341a155614cabf4dcb42b06c'
-});
-
-ServiceConfiguration.configurations.remove({
-  service: 'facebook'
-});
-
-ServiceConfiguration.configurations.insert({
-  service: 'facebook',
-  appId: '553456014788791',
-  secret: 'db5584da3b1bcf6e5ce74ed043a57619'
-});

@@ -18,7 +18,7 @@ function slideOrderUpdated() {
     var c = $(children[i]);
     var slideIndex = parseInt(c.attr('slideIndex'));
     if (i !== slideIndex) {
-      console.log('changed:', i, slideIndex);
+      logger.info('changed:', i, slideIndex);
       if (!(slideIndex in changes || i in changes)) {
         changes[slideIndex] = i; // from => to
       }
@@ -58,29 +58,26 @@ function genInsertHandler(htmlGenerator) {
 Router.route('/author', function() {
   var self = this;
   dpMode = 'author';
-  Meteor.Loader.loadJsAndCss([
-    'bower_components/medium-editor/dist/css/medium-editor.min.css',
-    'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
-    'bower_components/alertify-js/build/css/alertify.min.css',
-    'bower_components/alertify-js/build/css/themes/default.css',
-    'bower_components/medium-editor/dist/js/medium-editor.min.js',
-    'bower_components/alertify-js/build/alertify.min.js',
-    'bower_components/html5sortable/jquery.sortable.js',
-    'js/alertifyext.js'
-  ],
-  function() {
-    self.render('author', {
-      data: function() {
-        if (self.params.query.id) {
-          dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-        } else {
-          dpTheDeck = {};
+  loadJsAndCss(dpMode,
+    [
+      'bower_components/medium-editor/dist/css/medium-editor.min.css',
+      'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
+      'bower_components/medium-editor/dist/js/medium-editor.min.js',
+      'bower_components/html5sortable/jquery.sortable.js',
+    ],
+    function() {
+      self.render('author', {
+        data: function() {
+          if (self.params.query.id) {
+            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
+          } else {
+            dpTheDeck = {};
+          }
+          logger.info('find the deck:', dpTheDeck);
+          return dpTheDeck || {};
         }
-        console.log('find the deck:', dpTheDeck);
-        return dpTheDeck || {};
-      }
+      });
     });
-  });
 });
 
 Template.author.helpers({
@@ -119,10 +116,9 @@ Template.authorNavbar.events({
   },
 
   'click #importMenu': function(event) {
-    console.log($('#importMenuFileSelector'));
     $('#importMenuFileSelector')
       .on('change', function(event) {
-        console.log('changed', event.target.files);
+        logger.info('changed', event.target.files);
         var fr = new FileReader();
         fr.onload = function(file) {
           Meteor.call('importFile', fr.result, function(err, id) {
@@ -153,7 +149,6 @@ Template.authorToolbar.events({
         //.bind('sortupdate', slideOrderUpdated);
     },
     function off(event) {
-      console.log('now off');
       $('.sortable')
         .removeClass('sortable-enabled')
         .sortable('disable');
@@ -164,7 +159,7 @@ Template.authorToolbar.events({
       alertify.prompt('The URI of image',
         'https://graph.facebook.com/minhua.lin.9/picture?type=large',
         function(event, value) {
-          console.log('got image URI:', value);
+          logger.info('got image URI:', value);
           next('<img src="' + value + '"></img>');
         }).setHeader('Insert Image');
     }),
@@ -243,7 +238,7 @@ Template.authorSlide.events({
     var e = $(event.currentTarget);
     var toType = e.attr('id');
     var slideIndex = e.closest('.slide').attr('slideIndex');
-    console.log('will change to:', toType);
+    logger.info('will change to:', toType);
     dpPluginChangeType(dpTheDeck._id, slideIndex, toType);
   }
 });

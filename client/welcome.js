@@ -1,19 +1,13 @@
-Router.route('/', function() {
-  window.location.href = '/welcome';
-});
-
 Router.route('/welcome', function() {
   var self = this;
-  Meteor.Loader.loadJsAndCss([
-    'bower_components/alertify-js/build/css/alertify.min.css',
-    'bower_components/alertify-js/build/css/themes/default.css',
-    'bower_components/alertify-js/build/alertify.min.js',
-    'js/alertifyext.js',
-    'bower_components/bigtext/dist/bigtext.js'
-   ],
-  function() {
-    self.render('welcome');
-  });
+  dpMode = 'welcome';
+  loadJsAndCss(dpMode,
+    [
+      'bower_components/bigtext/dist/bigtext.js'
+    ],
+    function() {
+      self.render('welcome');
+    });
 });
 
 Template.welcome.rendered = function() {
@@ -32,7 +26,7 @@ Template.welcome.events({
   'click #facebookLoginBtn': function() {
     Meteor.loginWithFacebook({}, function(err) {
       if (err) {
-        return console.log(err);
+        return logger.error(err);
       }
       window.location.href = '/profile?id=' + Meteor.userId();
     });
@@ -41,7 +35,7 @@ Template.welcome.events({
   'click #githubLoginBtn': function() {
     Meteor.loginWithGithub({}, function(err) {
       if (err) {
-        return console.log(err);
+        return logger.error(err);
       }
       window.location.href = '/profile?id=' + Meteor.userId();
     });

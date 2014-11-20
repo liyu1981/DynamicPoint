@@ -2,3 +2,6 @@
 .DS_Store
 *.bak
 *.swp
+
+settings.json
+mongo.env

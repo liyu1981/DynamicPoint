@@ -8,7 +8,7 @@ Router.route('/export', function() {
   function() {
     if (self.params.query.id) {
       dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-      console.log('find the deck:', dpTheDeck, { _id: self.params.query.id });
+      logger.info('find the deck:', dpTheDeck, { _id: self.params.query.id });
       if (dpTheDeck) {
         var datastr = JSON.stringify(_.pick(dpTheDeck, 'author', 'title', 'created', 'lastModified', 'slides'), null, '  ');
         var blob = new Blob([datastr], { type: "text/plain;charset=utf-8" });

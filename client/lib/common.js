@@ -67,12 +67,57 @@ Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
       default: break;
     }
   });
-  console.log('tasks is:', tasks);
   async.series(tasks, callback);
+};
+
+loadJsAndCss = function(dpMode, assetArray, callback) {
+  var alertifyAA = [
+    'bower_components/alertify-js/build/css/alertify.min.css',
+    'bower_components/alertify-js/build/css/themes/default.css',
+    'bower_components/alertify-js/build/alertify.min.js',
+    'js/alertifyext.js'
+  ];
+  var revealjsAA = [
+    'bower_components/reveal.js/css/reveal.min.css',
+    'bower_components/reveal.js/css/theme/solarized.css',
+    'bower_components/reveal.js/js/reveal.min.js'
+  ];
+  var commonAA = [];
+  switch(dpMode) {
+    case 'welcome':
+      commonAA = _.union(alertifyAA);
+      break;
+    case 'profile':
+      commonAA = _.union(alertifyAA);
+      break;
+    case 'author':
+      commonAA = _.union(alertifyAA);
+      break;
+    case 'audience':
+      commonAA = _.union(revealjsAA);
+      break;
+    case 'speaker':
+      commonAA = _.union(revealjsAA);
+      break;
+  };
+  var aa = _.union(commonAA, assetArray);
+  Meteor.Loader.loadJsAndCss(aa, callback);
 };
 
 Template.registerHelper('isEmpty', function(target) {
   return _.isEmpty(target);
+});
+
+Template.navbarDPLogo.events({
+  'click .dp-brand': function() {
+    window.location.href = "/welcome";
+  }
+});
+
+Template.navbarDropdownDPAbout.events({
+  'click #aboutDP': function() {
+    alertify.alert('This DynamicPoint. Slides with fun! Made by @liyu.');
+  }
 });
 
 Meteor.startup(function () {

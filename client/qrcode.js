@@ -27,7 +27,7 @@ Template.qrcode.rendered = function() {
       $('.qrcode-container').each(function(index, elem) {
         var e = $(elem);
         var size = Math.min(e.width(), $(document).height() * 0.8);
-        console.log('will draw:', {
+        logger.info('will draw:', {
           text: qualifyURL(e.attr('rawUrl')),
           width: size,
           height: size
