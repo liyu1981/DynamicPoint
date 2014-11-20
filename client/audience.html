@@ -1,9 +1,13 @@
 <template name="audience">
 <div class="reveal">
   <div class="slides">
+    {{#if notAvaliable}}
+    <section><h3>Not avaliable yet.</h3></section>
+    {{else}}
     {{#each slides}}
-      {{> Template.dynamic template=calcSlideTemplate data=calcSlideData}}
+      {{> Template.dynamic template=calcSlideTemplate}}
     {{/each}}
+    {{/if}}
   </div>
 </div>
 </template>
