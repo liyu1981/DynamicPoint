@@ -1,8 +1,3 @@
-var audience = {
-  id: null // audience id
-};
-Session.set('audience', audience);
-
 Template.audience.helpers({
   'calcSlideTemplate': function() {
     if (this.type in DPPlugins) {
@@ -10,27 +5,22 @@ Template.audience.helpers({
     } else {
       return 'audience-slide-normal';
     }
-  },
-
-  'notAvaliable': function() {
-    console.log('we are here');
-    return (this.notAvaliable ? true : false);
   }
 });
 
 Template.audience.rendered = function () {
-  logger.info('rendered me?');
   waitfor('.slides section', function() {
-    audience.id = Random.id();
-    logger.info('audienceId generated as:', audience.id);
+    Session.set('audienceId', Random.id());
+    logger.info('audienceId generated as:', Session.get('audienceId'));
     Reveal.initialize({
       keyboard: false, touch: false, controls: false // disable all user inputs
     })
-    if (dpRunStatus && !dpRunStatus.notAvaliable) {
+    if (dpRunStatus) {
       // subscribe to the changes
       RunStatus.find({ _id: dpRunStatus._id }).observeChanges({
         changed: function(id, fields) {
           logger.info('changes:', id, fields);
+          $('.slides').trigger('runStatusChanged', [id, fields]);
           gotoSlide(fields.curIndex);
         }
       });

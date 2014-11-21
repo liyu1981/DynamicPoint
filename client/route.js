@@ -26,24 +26,21 @@ loadJsAndCss = (function() {
     'bower_components/reveal.js/css/theme/solarized.css',
     'bower_components/reveal.js/js/reveal.min.js'
   ];
+  var d3AA = [
+    'bower_components/d3/d3.min.js'
+  ];
 
   return function(dpMode, assetArray, callback) {
     var commonAA = [];
     switch(dpMode) {
       case 'welcome':
-        commonAA = _.union(alertifyAA);
-        break;
       case 'profile':
-        commonAA = _.union(alertifyAA);
-        break;
       case 'author':
         commonAA = _.union(alertifyAA);
         break;
       case 'audience':
-        commonAA = _.union(revealjsAA);
-        break;
       case 'speaker':
-        commonAA = _.union(revealjsAA);
+        commonAA = _.union(revealjsAA, d3AA);
         break;
       case 'qrcode':
       case 'pairview':

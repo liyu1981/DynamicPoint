@@ -35,7 +35,7 @@
         function changedUser() {
           console.log('change user to:', $('#helloName').val());
           var setData = {};
-          setData['pluginData.hello.' + Session.get('audience').id] = $('#helloName').val();
+          setData['pluginData.hello.' + Session.get('audienceId')] = $('#helloName').val();
           RunStatus.update({ _id: dpRunStatus._id }, { $set: setData });
         }
 

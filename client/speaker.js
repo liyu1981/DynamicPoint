@@ -20,6 +20,13 @@ Template.speaker.rendered = function() {
       logger.info('slide changed to:', event);
       RunStatus.update({ _id: dpRunStatus._id }, { $set: { 'curIndex': { indexh: event.indexh, indexv: event.indexv } } });
     });
+    // subscribe to the changes
+    RunStatus.find({ _id: dpRunStatus._id }).observeChanges({
+      changed: function(id, fields) {
+        logger.info('changes:', id, fields);
+        $('.slides').trigger('runStatusChanged', [id, fields]);
+      }
+    });
     // and update for starting time
     gotoSlide(dpRunStatus.curIndex);
   });

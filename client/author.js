@@ -79,9 +79,10 @@ Template.authorNavbar.events({
     var v = {}
     $('.slide .content').each(function(i, elem) {
       var e = $(elem);
+      var type = e.attr('slideType');
       var index = parseInt(e.attr('slideIndex'));
       var h = e.html().trim();
-      if (h !== dpTheDeck.slides[index].content) {
+      if (type === 'normal' && h !== dpTheDeck.slides[index].content) {
         v['slides.' + index + '.content'] = h;
       }
     });
