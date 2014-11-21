@@ -1,22 +1,20 @@
-Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
-  function _genLoadCssTask(file) {
-    return function(cb) { Meteor.Loader.loadCss(file); cb(); };
-  }
-  function _genLoadJsTask(file) {
-    return function(cb) { Meteor.Loader.loadJs(file, function() { cb(); }); }
-  }
-  var tasks = [];
-  _.each(assetArray, function(file, index) {
-    switch (getExt(file).toLowerCase()) {
-      case 'css': tasks.push(_genLoadCssTask(file)); break;
-      case 'js': tasks.push(_genLoadJsTask(file)); break;
-      default: break;
-    }
-  });
-  async.series(tasks, callback);
-};
+loadJsAndCss = (function() {
+  // augment Meteor.Loader first
+  Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
+    function _genLoadCssTask(file) { return function(cb) { Meteor.Loader.loadCss(file); cb(); }; }
+    function _genLoadJsTask(file) { return function(cb) { Meteor.Loader.loadJs(file, function() { cb(); }); } }
+    var tasks = [];
+    _.each(assetArray, function(file, index) {
+      switch (getExt(file).toLowerCase()) {
+        case 'css': tasks.push(_genLoadCssTask(file)); break;
+        case 'js': tasks.push(_genLoadJsTask(file)); break;
+        default: break;
+      }
+    });
+    async.series(tasks, callback);
+  };
 
-loadJsAndCss = function(dpMode, assetArray, callback) {
+  // predef assets
   var alertifyAA = [
     'bower_components/alertify-js/build/css/alertify.min.css',
     'bower_components/alertify-js/build/css/themes/default.css',
@@ -28,32 +26,49 @@ loadJsAndCss = function(dpMode, assetArray, callback) {
     'bower_components/reveal.js/css/theme/solarized.css',
     'bower_components/reveal.js/js/reveal.min.js'
   ];
-  var commonAA = [];
-  switch(dpMode) {
-    case 'welcome':
-      commonAA = _.union(alertifyAA);
-      break;
-    case 'profile':
-      commonAA = _.union(alertifyAA);
-      break;
-    case 'author':
-      commonAA = _.union(alertifyAA);
-      break;
-    case 'audience':
-      commonAA = _.union(revealjsAA);
-      break;
-    case 'speaker':
-      commonAA = _.union(revealjsAA);
-      break;
-    case 'qrcode':
-    case 'pairview':
-    case 'superview':
-    case 'export':
-      break;
+
+  return function(dpMode, assetArray, callback) {
+    var commonAA = [];
+    switch(dpMode) {
+      case 'welcome':
+        commonAA = _.union(alertifyAA);
+        break;
+      case 'profile':
+        commonAA = _.union(alertifyAA);
+        break;
+      case 'author':
+        commonAA = _.union(alertifyAA);
+        break;
+      case 'audience':
+        commonAA = _.union(revealjsAA);
+        break;
+      case 'speaker':
+        commonAA = _.union(revealjsAA);
+        break;
+      case 'qrcode':
+      case 'pairview':
+      case 'superview':
+      case 'export':
+        break;
+    };
+    var aa = _.union(commonAA, assetArray);
+    Meteor.Loader.loadJsAndCss(aa, callback);
   };
-  var aa = _.union(commonAA, assetArray);
-  Meteor.Loader.loadJsAndCss(aa, callback);
-};
+})();
+
+Router.onBeforeAction(function () {
+  var loginWaived = _.reduce(['/welcome', '/audience', '/speaker'], function(memo, p) { memo[p] = true; return memo; }, {});
+  // all properties available in the route function are also available here such as this.params
+  if (this.route._path in loginWaived) {
+    this.next();
+  } else if (!Meteor.userId()) {
+    // if the user is not logged in, render the Login template
+    this.render('welcome');
+  } else {
+    // otherwise don't hold up the rest of hooks or our route/action function from running
+    this.next();
+  }
+});
 
 Router.route('/welcome', function() {
   var self = this;
