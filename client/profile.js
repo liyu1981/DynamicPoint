@@ -1,22 +1,3 @@
-Router.route('/profile', function() {
-  logger.info('call me');
-  var self = this;
-  dpMode = 'profile';
-  dpUrlParams = this.params;
-  if (this.params.query.id) {
-    sub(function() {
-      urlParams = this.params;
-      loadJsAndCss(dpMode,
-        [],
-        function() {
-          self.render('profile');
-        });
-    });
-  } else {
-    window.location.href = '/welcome';
-  }
-});
-
 Template.profileSlidesList.helpers({
   slides: function() {
     //logger.debug('found:', Decks.find({ ownerId: dpUrlParams.query.id }).fetch());

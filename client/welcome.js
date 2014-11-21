@@ -1,15 +1,3 @@
-Router.route('/welcome', function() {
-  var self = this;
-  dpMode = 'welcome';
-  loadJsAndCss(dpMode,
-    [
-      'bower_components/bigtext/dist/bigtext.js'
-    ],
-    function() {
-      self.render('welcome');
-    });
-});
-
 Template.welcome.rendered = function() {
   commonDPPageSetup();
   $(function() {

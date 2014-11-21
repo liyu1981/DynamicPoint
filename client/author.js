@@ -55,31 +55,6 @@ function genInsertHandler(htmlGenerator) {
   };
 }
 
-Router.route('/author', function() {
-  var self = this;
-  dpMode = 'author';
-  loadJsAndCss(dpMode,
-    [
-      'bower_components/medium-editor/dist/css/medium-editor.min.css',
-      'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
-      'bower_components/medium-editor/dist/js/medium-editor.min.js',
-      'bower_components/html5sortable/jquery.sortable.js',
-    ],
-    function() {
-      self.render('author', {
-        data: function() {
-          if (self.params.query.id) {
-            dpTheDeck = Decks.findOne({ _id: self.params.query.id });
-          } else {
-            dpTheDeck = {};
-          }
-          logger.info('find the deck:', dpTheDeck);
-          return dpTheDeck || {};
-        }
-      });
-    });
-});
-
 Template.author.helpers({
   indexedSlides: function() {
     return _.map(this.slides, function(e, i) { return _.extend(e, { index: i }) });
