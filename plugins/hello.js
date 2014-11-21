@@ -23,20 +23,20 @@
     },
 
     templateEvents: {
-      'speaker': function(context) {
+      'speaker': function() {
         return {
         };
       },
-      'author': function(context) {
+      'author': function() {
         return {
         };
       },
-      'audience': function(context) {
+      'audience': function() {
         function changedUser() {
           console.log('change user to:', $('#helloName').val());
           var setData = {};
-          setData['pluginData.hello.' + context.audience.id] = $('#helloName').val();
-          RunStatus.update({ _id: context.runStatusId }, { $set: setData });
+          setData['pluginData.hello.' + Session.get('audience').id] = $('#helloName').val();
+          RunStatus.update({ _id: dpRunStatus._id }, { $set: setData });
         }
 
         return {

@@ -165,7 +165,7 @@ Router.route('/audience', {
       if (!(dpTheDeck && dpRunStatus)) { return {}; }
       // now register plugins' events
       _.map(dpTheDeck.slides, function(v) {
-        dpPluginRegTemplate(v.type, dpMode, { runStatusId: dpUrlParams.query.id, audience: Session.get('audience') });
+        dpPluginRegTemplate(v.type, dpMode);
       });
       return _.extend(dpTheDeck, { runStatus: dpRunStatus });
     } else {
@@ -203,7 +203,7 @@ Router.route('/speaker', {
       if (!(dpTheDeck && dpRunStatus)) { return {}; }
       // now register plugins' events
       _.map(dpTheDeck.slides, function(v) {
-        dpPluginRegTemplate(v.type, dpMode, { runStatusId: dpRunStatus._id });
+        dpPluginRegTemplate(v.type, dpMode);
       });
       return _.extend(dpTheDeck, { runStatus: dpRunStatus });
     } else {
