@@ -70,39 +70,51 @@ Router.onBeforeAction(function () {
   }
 });
 
-Router.route('/welcome', function() {
-  var self = this;
-  dpMode = 'welcome';
-  loadJsAndCss(dpMode,
-    [
+Router.route('/welcome', {
+  waitOn: function() {
+    dpMode = 'welcome';
+    return sub();
+  },
+
+  action: function() {
+    var self = this;
+    loadJsAndCss(dpMode, [
       'bower_components/bigtext/dist/bigtext.js'
-    ],
-    function() {
+    ], function() {
       self.render('welcome');
     });
-});
-
-Router.route('/profile', function() {
-  var self = this;
-  dpMode = 'profile';
-  dpUrlParams = this.params;
-  if (dpUrlParams.query.id) {
-    sub(function() {
-      loadJsAndCss(dpMode, [
-      ], function() {
-        self.render('profile');
-      });
-    });
-  } else {
-    window.location.href = '/welcome';
   }
 });
 
-Router.route('/author', function() {
-  var self = this;
-  dpMode = 'author';
-  dpUrlParams = this.params;
-  sub(function() {
+Router.route('/profile', {
+  loadingTemplate: 'commonLoading',
+
+  waitOn: function() {
+    dpMode = 'profile';
+    dpUrlParams = this.params;
+    return sub();
+  },
+
+  action: function() {
+    var self = this;
+    loadJsAndCss(dpMode, [
+    ], function() {
+      self.render('profile');
+    });
+  }
+});
+
+Router.route('/author', {
+  loadingTemplate: 'commonLoading',
+
+  waitOn: function() {
+    dpMode = 'author';
+    dpUrlParams = this.params;
+    return sub();
+  },
+
+  action: function() {
+    var self = this;
     loadJsAndCss(dpMode, [
       'bower_components/medium-editor/dist/css/medium-editor.min.css',
       'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
@@ -111,8 +123,8 @@ Router.route('/author', function() {
     ], function() {
       self.render('author');
     });
-  });
-}, {
+  },
+
   data: function() {
     if (dpUrlParams.query.id) {
       dpTheDeck = Decks.findOne({ _id: dpUrlParams.query.id });
@@ -124,30 +136,33 @@ Router.route('/author', function() {
   }
 });
 
-Router.route('/audience', function() {
-  var self = this;
-  dpMode = 'audience';
-  dpUrlParams = this.params;
-  if (!(dpUrlParams.query.runId)) {
-    dpUrlParams.query.runId = 'rehearsal';
-  }
-  sub(function() {
+Router.route('/audience', {
+  loadingTemplate: 'commonLoading',
+
+  waitOn: function() {
+    dpMode = 'audience';
+    dpUrlParams = this.params;
+    if (!(dpUrlParams.query.runId)) {
+      dpUrlParams.query.runId = 'rehearsal';
+    }
+    return sub();
+  },
+
+  action: function() {
+    var self = this;
     loadJsAndCss(dpMode, [
     ], function() {
-      self.render('audience')
+      self.render('audience');
     });
-  });
-},
-{
+  },
+
   data: function() {
     if (dpUrlParams.query.id) {
       dpTheDeck = Decks.findOne();
       logger.info('find the deck:', dpTheDeck);
       dpRunStatus = RunStatus.findOne();
       logger.info('find the runStatus:', dpRunStatus);
-      if (!(dpTheDeck && dpRunStatus)) {
-        return { notAvaliable: true };
-      }
+      if (!(dpTheDeck && dpRunStatus)) { return {}; }
       // now register plugins' events
       _.map(dpTheDeck.slides, function(v) {
         dpPluginRegTemplate(v.type, dpMode, { runStatusId: dpUrlParams.query.id, audience: Session.get('audience') });
@@ -159,30 +174,33 @@ Router.route('/audience', function() {
   }
 });
 
-Router.route('/speaker', function() {
-  var self = this;
-  dpMode = 'speaker';
-  dpUrlParams = this.params;
-  if (!(dpUrlParams.query.runId)) {
-    dpUrlParams.query.runId = 'rehearsal';
-  }
-  sub(function() {
+Router.route('/speaker', {
+  loadingTemplate: 'commonLoading',
+
+  waitOn: function() {
+    dpMode = 'speaker';
+    dpUrlParams = this.params;
+    if (!(dpUrlParams.query.runId)) {
+      dpUrlParams.query.runId = 'rehearsal';
+    }
+    return sub();
+  },
+
+  action: function() {
+    var self = this;
     loadJsAndCss(dpMode, [
     ], function() {
       self.render('speaker');
     });
-  });
-},
-{
+  },
+
   data: function() {
     if (dpUrlParams.query.id) {
       dpTheDeck = Decks.findOne();
       logger.info('find the deck:', dpTheDeck);
       dpRunStatus = RunStatus.findOne();
       logger.info('find the runStatus:', dpRunStatus);
-      if (!(dpTheDeck && dpRunStatus)) {
-        return {};
-      }
+      if (!(dpTheDeck && dpRunStatus)) { return {}; }
       // now register plugins' events
       _.map(dpTheDeck.slides, function(v) {
         dpPluginRegTemplate(v.type, dpMode, { runStatusId: dpRunStatus._id });
@@ -194,20 +212,26 @@ Router.route('/speaker', function() {
   }
 });
 
-Router.route('/qrcode', function() {
-  var self = this;
-  dpMode = 'qrcode';
-  dpUrlParams = this.params;
-  loadJsAndCss(dpMode, [
-    'bower_components/qrcodejs/qrcode.min.js'
-  ], function() {
-    if (dpUrlParams.query.id) {
-      self.render('qrcode');
-    } else {
-      window.location.href = '/welcome';
-    }
-  });
-}, {
+Router.route('/qrcode', {
+  waitOn: function() {
+    dpMode = 'qrcode';
+    dpUrlParams = this.params;
+    return sub();
+  },
+
+  action: function() {
+    var self = this;
+    loadJsAndCss(dpMode, [
+      'bower_components/qrcodejs/qrcode.min.js'
+    ], function() {
+      if (dpUrlParams.query.id) {
+        self.render('qrcode');
+      } else {
+        window.location.href = '/welcome';
+      }
+    });
+  },
+
   data: function() {
     return {
       id: dpUrlParams.query.id,
@@ -216,26 +240,42 @@ Router.route('/qrcode', function() {
   }
 });
 
-Router.route('/pairview', function() {
-  var self = this;
-  dpMode = 'pairview';
-  if (self.params.query.id) {
-    self.render('pairview', {
-      data: { id: self.params.query.id }
-    });
-  } else {
-    window.location.href = '/welcome';
+Router.route('/pairview', {
+  waitOn: function() {
+    dpMode = 'pairview';
+    return sub();
+  },
+
+  action: function() {
+    var self = this;
+    if (self.params.query.id) {
+      self.render('pairview');
+    } else {
+      window.location.href = '/welcome';
+    }
+  },
+
+  data: function() {
+    return { id: this.params.query.id };
   }
 });
 
-Router.route('/superview', function() {
-  var self = this;
-  dpMode = 'supreview';
-  if (self.params.query.id) {
-    self.render('superview', {
-      data: { id: self.params.query.id }
-    });
-  } else {
-    window.location.href = '/welcome';
+Router.route('/superview', {
+  waitOn: function() {
+    dpMode = 'supreview';
+    return sub();
+  },
+
+  action: function() {
+    var self = this;
+    if (self.params.query.id) {
+      self.render('superview');
+    } else {
+      window.location.href = '/welcome';
+    }
+  },
+
+  data: function() {
+    return { id: this.params.query.id };
   }
 });

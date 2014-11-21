@@ -13,11 +13,13 @@ Template.audience.helpers({
   },
 
   'notAvaliable': function() {
+    console.log('we are here');
     return (this.notAvaliable ? true : false);
   }
 });
 
 Template.audience.rendered = function () {
+  logger.info('rendered me?');
   waitfor('.slides section', function() {
     audience.id = Random.id();
     logger.info('audienceId generated as:', audience.id);
