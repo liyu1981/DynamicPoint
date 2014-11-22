@@ -20,3 +20,5 @@ service-configuration
 mrt:livestamp-hs
 meteorhacks:kadira
 infinitedg:winston
+liyu:sprintfjs
+

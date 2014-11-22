@@ -45,6 +45,7 @@ json@1.0.1
 launch-screen@1.0.0
 less@1.0.11
 livedata@1.0.11
+liyu:sprintfjs@1.0.0
 localstorage@1.0.1
 logging@1.0.5
 meteor-platform@1.2.0
