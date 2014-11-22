@@ -21,4 +21,4 @@ sub = function() {
         Meteor.subscribe('RunStatus', dpUrlParams.query.id, dpUrlParams.query.runId)
       ];
   };
-}
+};

@@ -1,10 +1,12 @@
 // client global vars
 dpMode = null;
-dpTheDeck = null;
-dpRunStatus = null;
 dpUrlParams = null;
+dpTheDeck = null; // cache for current deck
+dpRunStatus = null; // cache for current runStatus
 
 // common util methods
+
+// waitfor any page elements then callback
 waitfor = function(selector, callback) {
   var r = $(selector);
   if (r.length <= 0) {
@@ -14,8 +16,9 @@ waitfor = function(selector, callback) {
   }
 };
 
-qualifyURL = function(url){
-  // http://james.padolsey.com/javascript/getting-a-fully-qualified-url/
+// normalize url
+// taken from http://james.padolsey.com/javascript/getting-a-fully-qualified-url/
+qualifyURL = function(url) {
   var img = document.createElement('img');
   img.src = url; // set string url
   url = img.src; // get qualified url
@@ -31,6 +34,7 @@ gotoSlide = function(index) {
   }
 }
 
+// DP page setup
 commonDPPageSetup = function() {
   $(function() {
     $('body')

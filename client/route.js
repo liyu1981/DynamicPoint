@@ -60,9 +60,11 @@ Router.onBeforeAction((function() {
     if (loginWaived[this.route._path]) {
       this.next();
     } else if (!Meteor.userId()) {
-      this.render('welcome'); // if the user is not logged in, render the Login template
+      // if the user is not logged in, render the Login template
+      this.render('welcome');
     } else {
-      this.next(); // otherwise don't hold up the rest of hooks or our route/action function from running
+      // otherwise don't hold up the rest of hooks or our route/action function from running
+      this.next();
     }
   };
 })());
@@ -98,6 +100,16 @@ Router.route('/profile', {
     ], function() {
       self.render('profile');
     });
+  },
+
+  onRun: function() {
+    if (!dpUrlParams.query.id) {
+      window.location.href = '/welcome';
+    }
+  },
+
+  data: function() {
+    return Decks.find({ ownerId: dpUrlParams.query.id }).fetch();
   }
 });
 
@@ -122,14 +134,16 @@ Router.route('/author', {
     });
   },
 
-  data: function() {
-    if (dpUrlParams.query.id) {
-      dpTheDeck = Decks.findOne({ _id: dpUrlParams.query.id });
-      logger.info('find the deck:', dpTheDeck);
-      return dpTheDeck || {};
-    } else {
+  onRun: function() {
+    if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+  },
+
+  data: function() {
+    dpTheDeck = Decks.findOne({ _id: dpUrlParams.query.id });
+    logger.info('find the deck:', dpTheDeck);
+    return dpTheDeck || {};
   }
 });
 
@@ -153,21 +167,23 @@ Router.route('/audience', {
     });
   },
 
-  data: function() {
-    if (dpUrlParams.query.id) {
-      dpTheDeck = Decks.findOne();
-      logger.info('find the deck:', dpTheDeck);
-      dpRunStatus = RunStatus.findOne();
-      logger.info('find the runStatus:', dpRunStatus);
-      if (!(dpTheDeck && dpRunStatus)) { return {}; }
-      // now register plugins' events
-      _.map(dpTheDeck.slides, function(v) {
-        dpPluginRegTemplate(v.type, dpMode);
-      });
-      return _.extend(dpTheDeck, { runStatus: dpRunStatus });
-    } else {
+  onRun: function() {
+    if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+  },
+
+  data: function() {
+    dpTheDeck = Decks.findOne();
+    logger.info('find the deck:', dpTheDeck);
+    dpRunStatus = RunStatus.findOne();
+    logger.info('find the runStatus:', dpRunStatus);
+    if (!(dpTheDeck && dpRunStatus)) { return {}; }
+    // now register plugins' events
+    _.map(dpTheDeck.slides, function(v) {
+      dpPluginRegTemplate(v.type, dpMode);
+    });
+    return _.extend(dpTheDeck, { runStatus: dpRunStatus });
   }
 });
 
@@ -191,21 +207,23 @@ Router.route('/speaker', {
     });
   },
 
-  data: function() {
-    if (dpUrlParams.query.id) {
-      dpTheDeck = Decks.findOne();
-      logger.info('find the deck:', dpTheDeck);
-      dpRunStatus = RunStatus.findOne();
-      logger.info('find the runStatus:', dpRunStatus);
-      if (!(dpTheDeck && dpRunStatus)) { return {}; }
-      // now register plugins' events
-      _.map(dpTheDeck.slides, function(v) {
-        dpPluginRegTemplate(v.type, dpMode);
-      });
-      return _.extend(dpTheDeck, { runStatus: dpRunStatus });
-    } else {
+  onRun: function() {
+    if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+  },
+
+  data: function() {
+    dpTheDeck = Decks.findOne();
+    logger.info('find the deck:', dpTheDeck);
+    dpRunStatus = RunStatus.findOne();
+    logger.info('find the runStatus:', dpRunStatus);
+    if (!(dpTheDeck && dpRunStatus)) { return {}; }
+    // now register plugins' events
+    _.map(dpTheDeck.slides, function(v) {
+      dpPluginRegTemplate(v.type, dpMode);
+    });
+    return _.extend(dpTheDeck, { runStatus: dpRunStatus });
   }
 });
 
@@ -244,10 +262,11 @@ Router.route('/pairview', {
   },
 
   action: function() {
-    var self = this;
-    if (self.params.query.id) {
-      self.render('pairview');
-    } else {
+    this.render('pairview');
+  },
+
+  onRun: function() {
+    if (!this.params.query.id) {
       window.location.href = '/welcome';
     }
   },
@@ -264,10 +283,11 @@ Router.route('/superview', {
   },
 
   action: function() {
-    var self = this;
-    if (self.params.query.id) {
-      self.render('superview');
-    } else {
+    this.render('superview');
+  },
+
+  onRun: function() {
+    if (!this.params.query.id) {
       window.location.href = '/welcome';
     }
   },

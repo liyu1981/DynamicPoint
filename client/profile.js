@@ -1,7 +1,6 @@
 Template.profileSlidesList.helpers({
   slides: function() {
-    //logger.debug('found:', Decks.find({ ownerId: dpUrlParams.query.id }).fetch());
-    return _.map(Decks.find({ ownerId: dpUrlParams.query.id }).fetch(), function(d) {
+    return _.map(this, function(d) {
       return {
         id: d._id,
         title: d.title,
