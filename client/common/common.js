@@ -34,9 +34,10 @@ gotoSlide = function(index) {
 commonDPPageSetup = function() {
   $(function() {
     $('body')
-      .addClass('dp') // add the global dp-author class
+      .addClass('dp') // add the global dp class
       .addClass('dp-theme-specklednoise') // default theme
       ;
+    // alertify setup
     alertify.defaults.transition = 'pulse';
   });
 };

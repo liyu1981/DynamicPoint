@@ -16,8 +16,8 @@ Template.speaker.rendered = function() {
   waitfor('.slides section', function() {
     Reveal.initialize();
     Reveal.addEventListener('slidechanged', function(event) {
-      // event.previousSlide, event.currentSlide, event.indexh, event.indexv
       logger.info('slide changed to:', event);
+      // event.previousSlide, event.currentSlide, event.indexh, event.indexv
       RunStatus.update({ _id: dpRunStatus._id }, { $set: { 'curIndex': { indexh: event.indexh, indexv: event.indexv } } });
     });
     // subscribe to the changes

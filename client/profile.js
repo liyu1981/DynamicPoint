@@ -25,4 +25,3 @@ Template.profile.events({
     });
   }
 });
-

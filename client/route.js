@@ -21,11 +21,13 @@ loadJsAndCss = (function() {
     'bower_components/alertify-js/build/alertify.min.js',
     'js/alertifyext.js'
   ];
+
   var revealjsAA = [
     'bower_components/reveal.js/css/reveal.min.css',
     'bower_components/reveal.js/css/theme/solarized.css',
     'bower_components/reveal.js/js/reveal.min.js'
   ];
+
   var d3AA = [
     'bower_components/d3/d3.min.js'
   ];
@@ -48,24 +50,22 @@ loadJsAndCss = (function() {
       case 'export':
         break;
     };
-    var aa = _.union(commonAA, assetArray);
-    Meteor.Loader.loadJsAndCss(aa, callback);
+    Meteor.Loader.loadJsAndCss(_.union(commonAA, assetArray), callback);
   };
 })();
 
-Router.onBeforeAction(function () {
+Router.onBeforeAction((function() {
   var loginWaived = _.reduce(['/welcome', '/audience', '/speaker'], function(memo, p) { memo[p] = true; return memo; }, {});
-  // all properties available in the route function are also available here such as this.params
-  if (this.route._path in loginWaived) {
-    this.next();
-  } else if (!Meteor.userId()) {
-    // if the user is not logged in, render the Login template
-    this.render('welcome');
-  } else {
-    // otherwise don't hold up the rest of hooks or our route/action function from running
-    this.next();
-  }
-});
+  return function () {
+    if (loginWaived[this.route._path]) {
+      this.next();
+    } else if (!Meteor.userId()) {
+      this.render('welcome'); // if the user is not logged in, render the Login template
+    } else {
+      this.next(); // otherwise don't hold up the rest of hooks or our route/action function from running
+    }
+  };
+})());
 
 Router.route('/welcome', {
   waitOn: function() {
@@ -125,11 +125,11 @@ Router.route('/author', {
   data: function() {
     if (dpUrlParams.query.id) {
       dpTheDeck = Decks.findOne({ _id: dpUrlParams.query.id });
+      logger.info('find the deck:', dpTheDeck);
+      return dpTheDeck || {};
     } else {
-      dpTheDeck = {};
+      window.location.href = '/welcome';
     }
-    logger.info('find the deck:', dpTheDeck);
-    return dpTheDeck || {};
   }
 });
 
