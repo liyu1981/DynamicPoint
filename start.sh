@@ -15,4 +15,4 @@ if [ -f ./mongo.env ]; then
 fi
 
 # start
-$MONGO_ENV meteor --settings ./settings.json
+METEOR_OFFLINE_CATALOG=1 $MONGO_ENV meteor --settings ./settings.json
