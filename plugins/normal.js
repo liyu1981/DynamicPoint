@@ -9,7 +9,12 @@
 
     templateRendered: {
       'author': function() {
-        var e = new window.MediumEditor(this.$('.editable'));
+        var e = this.$('.editable');
+        new window.MediumEditor(e); // start the editor
+        var observerSubchild = new MutationObserver(function(items, observer) {
+          console.log('content changed', items, observer);
+        });
+        observerSubchild.observe(e.get(0), { childList: true, subtree: true });
       }
     },
 

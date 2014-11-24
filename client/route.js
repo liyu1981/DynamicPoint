@@ -144,6 +144,7 @@ Router.route('/author', {
     dpMode = 'author';
     dpUrlParams = this.params;
     return _.union(sub(), waitOnJsAndCss(dpMode, [
+      'bower_components/MutationObserver-shim/dist/mutationobserver.min.js',
       'bower_components/medium-editor/dist/css/medium-editor.min.css',
       'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
       'bower_components/medium-editor/dist/js/medium-editor.min.js',
