@@ -42,6 +42,8 @@ commonDPPageSetup = function() {
       .addClass('dp-theme-specklednoise') // default theme
       ;
     // alertify setup
-    alertify.defaults.transition = 'pulse';
+    if (window.alertify) {
+      window.alertify.defaults.transition = 'pulse';
+    }
   });
 };

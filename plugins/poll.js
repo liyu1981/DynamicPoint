@@ -21,7 +21,6 @@
   var d3PieChartChange = null;
 
   function d3PieChart() {
-    console.log('start d3 pie chart');
     var svg = d3.select('.chart-container svg').append('g');
     svg.append('g').attr('class', 'slices');
     svg.append('g').attr('class', 'labels');
@@ -31,24 +30,14 @@
         height = 450,
         radius = Math.min(width, height) / 2;
 
-    var pie = d3.layout.pie().sort(null).value(function(d) {
-      return d.value;
-    });
-
+    var pie = d3.layout.pie().sort(null).value(function(d) { return d.value; });
     var arc = d3.svg.arc().outerRadius(radius * 0.8).innerRadius(radius * 0.4);
-
     var outerArc = d3.svg.arc().innerRadius(radius * 0.9).outerRadius(radius * 0.9);
-
     svg.attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
-
     var key = function(d){ return d.data.label; };
-
-    var color = d3.scale.ordinal()
-      .domain(['Lorem ipsum', 'dolor sit', 'amet', 'consectetur', 'adipisicing', 'elit', 'sed', 'do', 'eiusmod', 'tempor', 'incididunt'])
-      .range(['#98abc5', '#8a89a6', '#7b6888', '#6b486b', '#a05d56', '#d0743c', '#ff8c00']);
+    var color = d3.scale.ordinal().domain(['Yes', 'No']).range(['#98abc5', '#d0743c']);
 
     function change(data) {
-      console.log('we got data:', data);
       /* ------- PIE SLICES -------*/
       var slice = svg.select('.slices').selectAll('path.slice').data(pie(data), key);
 
@@ -147,9 +136,7 @@
             return findVotedValue();
           }
         };
-      },
-      'author': function() { return {}; },
-      'speaker': function() { return {}; }
+      }
     },
 
     templateEvents: {
@@ -164,12 +151,6 @@
             RunStatus.update({ _id: dpRunStatus._id }, { $push: data });
           }
         };
-      },
-      'author': function() {
-        return {};
-      },
-      'speaker': function() {
-        return {};
       }
     }
   };

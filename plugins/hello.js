@@ -13,24 +13,10 @@
             return alluser.join(' , ');
           }
         };
-      },
-      'author': function() {
-        return {};
-      },
-      'audience': function() {
-        return {};
       }
     },
 
     templateEvents: {
-      'speaker': function() {
-        return {
-        };
-      },
-      'author': function() {
-        return {
-        };
-      },
       'audience': function() {
         function changedUser() {
           console.log('change user to:', $('#helloName').val());

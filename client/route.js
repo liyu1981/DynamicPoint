@@ -1,8 +1,24 @@
-loadJsAndCss = (function() {
+// waitOn wrapper of loadJs and loadCss
+waitOnJsAndCss = (function() {
   // augment Meteor.Loader first
   Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
-    function _genLoadCssTask(file) { return function(cb) { Meteor.Loader.loadCss(file); cb(); }; }
-    function _genLoadJsTask(file) { return function(cb) { Meteor.Loader.loadJs(file, function() { cb(); }); } }
+    function _genLoadCssTask(file) {
+      return function(cb) {
+        if (!Meteor.Loader.loaded(file)) {
+          Meteor.Loader.loadCss(file);
+        }
+        cb();
+      };
+    }
+    function _genLoadJsTask(file) {
+      return function(cb) {
+        if (!Meteor.Loader.loaded(file)) {
+          Meteor.Loader.loadJs(file, function() { cb(); });
+        } else {
+          cb();
+        }
+      }
+    }
     var tasks = [];
     _.each(assetArray, function(file, index) {
       switch (getExt(file).toLowerCase()) {
@@ -11,7 +27,7 @@ loadJsAndCss = (function() {
         default: break;
       }
     });
-    async.series(tasks, callback);
+    async.series(tasks, function() { callback(); });
   };
 
   // predef assets
@@ -32,7 +48,7 @@ loadJsAndCss = (function() {
     'bower_components/d3/d3.min.js'
   ];
 
-  return function(dpMode, assetArray, callback) {
+  return function(dpMode, assetArray) {
     var commonAA = [];
     switch(dpMode) {
       case 'welcome':
@@ -50,7 +66,20 @@ loadJsAndCss = (function() {
       case 'export':
         break;
     };
-    Meteor.Loader.loadJsAndCss(_.union(commonAA, assetArray), callback);
+
+    var depReady = false;
+    var dep = new Tracker.Dependency;
+    Meteor.Loader.loadJsAndCss(_.union(commonAA, assetArray), function() {
+      depReady = true;
+      dep.changed();
+    });
+
+    return [{
+      ready: function() {
+        dep.depend();
+        return depReady;
+      }
+    }];
   };
 })();
 
@@ -70,23 +99,22 @@ Router.onBeforeAction((function() {
 })());
 
 Router.route('/welcome', {
+  loadingTemplate: 'commonLoading',
+
+  template: 'welcome',
+
   waitOn: function() {
     dpMode = 'welcome';
-    return sub();
-  },
-
-  action: function() {
-    var self = this;
-    loadJsAndCss(dpMode, [
+    return _.union(sub(), waitOnJsAndCss(dpMode, [
       'bower_components/bigtext/dist/bigtext.js'
-    ], function() {
-      self.render('welcome');
-    });
+    ]));;
   }
 });
 
 Router.route('/profile', {
   loadingTemplate: 'commonLoading',
+
+  template: 'profile',
 
   waitOn: function() {
     dpMode = 'profile';
@@ -94,18 +122,12 @@ Router.route('/profile', {
     return sub();
   },
 
-  action: function() {
-    var self = this;
-    loadJsAndCss(dpMode, [
-    ], function() {
-      self.render('profile');
-    });
-  },
-
   onRun: function() {
+    logger.info('run me?');
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+    this.render();
   },
 
   data: function() {
@@ -116,39 +138,42 @@ Router.route('/profile', {
 Router.route('/author', {
   loadingTemplate: 'commonLoading',
 
+  template: 'author',
+
   waitOn: function() {
     dpMode = 'author';
     dpUrlParams = this.params;
-    return sub();
-  },
-
-  action: function() {
-    var self = this;
-    loadJsAndCss(dpMode, [
+    return _.union(sub(), waitOnJsAndCss(dpMode, [
       'bower_components/medium-editor/dist/css/medium-editor.min.css',
       'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
       'bower_components/medium-editor/dist/js/medium-editor.min.js',
       'bower_components/html5sortable/jquery.sortable.js',
-    ], function() {
-      self.render('author');
-    });
+    ]));
   },
 
   onRun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+    this.render();
   },
 
   data: function() {
     dpTheDeck = Decks.findOne({ _id: dpUrlParams.query.id });
     logger.info('find the deck:', dpTheDeck);
-    return dpTheDeck || {};
+    if (!dpTheDeck) { return {}; }
+    // now register plugins' events
+    _.map(dpTheDeck.slides, function(v) {
+      dpPluginRegTemplate(v.type, dpMode);
+    });
+    return dpTheDeck;
   }
 });
 
 Router.route('/audience', {
   loadingTemplate: 'commonLoading',
+
+  template: 'audience',
 
   waitOn: function() {
     dpMode = 'audience';
@@ -156,24 +181,19 @@ Router.route('/audience', {
     if (!(dpUrlParams.query.runId)) {
       dpUrlParams.query.runId = 'rehearsal';
     }
-    return sub();
-  },
-
-  action: function() {
-    var self = this;
-    loadJsAndCss(dpMode, [
-    ], function() {
-      self.render('audience');
-    });
+    return _.union(sub(), waitOnJsAndCss(dpMode, []));
   },
 
   onRun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+    this.render();
   },
 
   data: function() {
+    console.log('called action');
+    console.log('found', Decks.find().fetch());
     dpTheDeck = Decks.findOne();
     logger.info('find the deck:', dpTheDeck);
     dpRunStatus = RunStatus.findOne();
@@ -190,27 +210,22 @@ Router.route('/audience', {
 Router.route('/speaker', {
   loadingTemplate: 'commonLoading',
 
+  template: 'speaker',
+
   waitOn: function() {
     dpMode = 'speaker';
     dpUrlParams = this.params;
     if (!(dpUrlParams.query.runId)) {
       dpUrlParams.query.runId = 'rehearsal';
     }
-    return sub();
-  },
-
-  action: function() {
-    var self = this;
-    loadJsAndCss(dpMode, [
-    ], function() {
-      self.render('speaker');
-    });
+    return _.union(sub(), waitOnJsAndCss(dpMode, []));
   },
 
   onRun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+    this.render();
   },
 
   data: function() {
@@ -231,20 +246,15 @@ Router.route('/qrcode', {
   waitOn: function() {
     dpMode = 'qrcode';
     dpUrlParams = this.params;
-    return sub();
+    return _.union(sub(), waitOnJsAndCss(dpMode, [
+      'bower_components/qrcodejs/qrcode.min.js'
+    ]));
   },
 
-  action: function() {
-    var self = this;
-    loadJsAndCss(dpMode, [
-      'bower_components/qrcodejs/qrcode.min.js'
-    ], function() {
-      if (dpUrlParams.query.id) {
-        self.render('qrcode');
-      } else {
-        window.location.href = '/welcome';
-      }
-    });
+  onRun: function() {
+    if (!dpUrlParams.query.id) {
+      window.location.href = '/welcome';
+    }
   },
 
   data: function() {
@@ -256,19 +266,18 @@ Router.route('/qrcode', {
 });
 
 Router.route('/pairview', {
+  template: 'pairview',
+
   waitOn: function() {
     dpMode = 'pairview';
     return sub();
-  },
-
-  action: function() {
-    this.render('pairview');
   },
 
   onRun: function() {
     if (!this.params.query.id) {
       window.location.href = '/welcome';
     }
+    this.render();
   },
 
   data: function() {
@@ -277,19 +286,18 @@ Router.route('/pairview', {
 });
 
 Router.route('/superview', {
+  template: 'superview',
+
   waitOn: function() {
     dpMode = 'supreview';
     return sub();
-  },
-
-  action: function() {
-    this.render('superview');
   },
 
   onRun: function() {
     if (!this.params.query.id) {
       window.location.href = '/welcome';
     }
+    this.render();
   },
 
   data: function() {
