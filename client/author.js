@@ -55,6 +55,14 @@ function genInsertHandler(htmlGenerator) {
   };
 }
 
+dpSaveMgr.saveNowCb = function(saving) {
+  if (saving) {
+    $('#dpActionInfo').html('saving...').show();
+  } else {
+    $('#dpActionInfo').html('saved!').hide(500);
+  }
+};
+
 Template.author.helpers({
   indexedSlides: function() {
     return _.map(this.slides, function(e, i) { return _.extend(e, { index: i }) });
@@ -76,19 +84,7 @@ Template.authorNavbar.events({
   },
 
   'click #saveBtn': function(event) {
-    var v = {}
-    $('.slide .content').each(function(i, elem) {
-      var e = $(elem);
-      var type = e.attr('slideType');
-      var index = parseInt(e.attr('slideIndex'));
-      var h = e.html().trim();
-      if (type === 'normal' && h !== dpTheDeck.slides[index].content) {
-        v['slides.' + index + '.content'] = h;
-      }
-    });
-    if ( v !== {}) {
-      Decks.update({ _id: dpTheDeck._id }, { $set: v });
-    }
+    dpSaveMgr.saveNow();
   },
 
   'click #importMenu': function(event) {

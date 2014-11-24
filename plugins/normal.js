@@ -13,6 +13,12 @@
         new window.MediumEditor(e); // start the editor
         var observerSubchild = new MutationObserver(function(items, observer) {
           console.log('content changed', items, observer);
+          var v = {};
+          var type = e.attr('slideType');
+          var index = parseInt(e.attr('slideIndex'));
+          var h = e.html().trim();
+          v['slides.' + index + '.content'] = h;
+          dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
         });
         observerSubchild.observe(e.get(0), { childList: true, subtree: true });
       }
