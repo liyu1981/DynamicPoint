@@ -154,7 +154,6 @@ Router.route('/author', {
       'bower_components/MutationObserver-shim/dist/mutationobserver.min.js',
       'bower_components/medium-editor/dist/css/medium-editor.min.css',
       'css/medium-editor-theme-dp.css',
-      //'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
       'bower_components/medium-editor/dist/js/medium-editor.min.js',
       'bower_components/html5sortable/jquery.sortable.js',
     ]));
