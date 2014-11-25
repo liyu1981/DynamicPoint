@@ -17,12 +17,11 @@ Template.audience.rendered = function () {
     })
     if (dpRunStatus) {
       // subscribe to the changes
-      RunStatus.find({ _id: dpRunStatus._id }).observeChanges({
-        changed: function(id, fields) {
-          logger.info('changes:', id, fields);
-          $('.slides').trigger('runStatusChanged', [id, fields]);
-          gotoSlide(fields.curIndex);
-        }
+      var s = $('.slides');
+      dpPluginObserve('deck', Decks, dpTheDeck._id, s);
+      dpPluginObserve('runStatus', RunStatus, dpRunStatus._id, s);
+      s.on('runStatusChanged', function(event, id, fields) {
+        gotoSlide(fields.curIndex);
       });
       // and update for starting time
       gotoSlide(dpRunStatus.curIndex);

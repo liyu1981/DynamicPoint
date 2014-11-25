@@ -1,0 +1,3 @@
+[submodule "packages/livestamp"]
+	path = packages/livestamp
+	url = https://github.com/liyu1981/livestamp.git

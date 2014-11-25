@@ -1,3 +1,6 @@
+git submodule init
+git submodule update
+
 # bower part
 cd public
 bower install

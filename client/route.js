@@ -148,7 +148,6 @@ Router.route('/author', {
   template: 'author',
 
   waitOn: function() {
-    console.log('time time wait');
     dpMode = 'author';
     dpUrlParams = this.params;
     return _.union(sub(), waitOnJsAndCss(dpMode, [

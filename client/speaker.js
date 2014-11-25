@@ -21,12 +21,9 @@ Template.speaker.rendered = function() {
       RunStatus.update({ _id: dpRunStatus._id }, { $set: { 'curIndex': { indexh: event.indexh, indexv: event.indexv } } });
     });
     // subscribe to the changes
-    RunStatus.find({ _id: dpRunStatus._id }).observeChanges({
-      changed: function(id, fields) {
-        logger.info('changes:', id, fields);
-        $('.slides').trigger('runStatusChanged', [id, fields]);
-      }
-    });
+    var s = $('.slides');
+    dpPluginObserve('deck', Decks, dpTheDeck._id, s);
+    dpPluginObserve('runStatus', RunStatus, dpRunStatus._id, s);
     // and update for starting time
     gotoSlide(dpRunStatus.curIndex);
   });

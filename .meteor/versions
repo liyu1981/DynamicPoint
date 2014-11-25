@@ -46,6 +46,7 @@ json@1.0.1
 launch-screen@1.0.0
 less@1.0.11
 livedata@1.0.11
+livestamp@0.0.0
 liyu:sprintfjs@1.0.0
 localstorage@1.0.1
 logging@1.0.5
@@ -62,7 +63,6 @@ mongo@1.0.8
 mrt:allow-env@0.0.1
 mrt:bootstrap-3@0.3.8
 mrt:external-file-loader@0.1.4
-mrt:livestamp-hs@0.0.33
 oauth2@1.1.1
 oauth@1.1.2
 observe-sequence@1.0.3
