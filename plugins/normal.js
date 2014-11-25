@@ -1,5 +1,16 @@
 ;(function() {
 
+  var startMediumEditor = function(e) {
+    if (!e) {
+      throw Error('Must provide the root DOM node in first time startMediumEditor');
+    }
+    new window.MediumEditor(e, {
+      buttonLabels: 'fontawesome',
+      buttons:  ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote', 'superscript', 'subscript', 'strikethrough',
+        'unorderedlist', 'orderedlist', 'justifyLeft', 'justifyFull', 'justifyCenter', 'justifyRight', 'indent', 'outdent']
+    }); // start the editor
+  };
+
   DPPlugins['normal'] = {
     displayName: 'Normal',
 
@@ -7,15 +18,18 @@
       return '<h2>Hello</h2>';
     },
 
+    templateUpdated: {
+      'author': function() {
+        console.log('updated me:', this, this.$('.editable'));
+        //startMediumEditor(s.get());
+      }
+    },
+
     templateRendered: {
       'author': function() {
+        console.log('rendered');
         var e = this.$('.editable');
-        logger.info('we have:', e, window.MediumEditor);
-        new window.MediumEditor(e.get(), {
-          buttonLabels: 'fontawesome',
-          buttons:  ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote', 'superscript', 'subscript', 'strikethrough',
-                     'unorderedlist', 'orderedlist', 'justifyLeft', 'justifyFull', 'justifyCenter', 'justifyRight', 'indent', 'outdent']
-        }); // start the editor
+        startMediumEditor(e.get());
         var observerSubchild = new MutationObserver(function(items, observer) {
           console.log('content changed', items, observer);
           var v = {};

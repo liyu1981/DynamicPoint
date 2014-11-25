@@ -159,7 +159,7 @@ Router.route('/author', {
     ]));
   },
 
-  onRerun: function() {
+  onRun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
@@ -170,10 +170,6 @@ Router.route('/author', {
     dpTheDeck = Decks.findOne({ _id: dpUrlParams.query.id });
     logger.info('find the deck:', dpTheDeck);
     if (!dpTheDeck) { return {}; }
-    //now register plugins' events
-    _.map(dpTheDeck.slides, function(v) {
-      dpPluginRegTemplate(v.type, dpMode);
-    });
     return dpTheDeck;
   }
 });
