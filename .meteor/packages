@@ -21,4 +21,5 @@ mrt:livestamp-hs
 meteorhacks:kadira
 infinitedg:winston
 liyu:sprintfjs
+mrt:allow-env
 

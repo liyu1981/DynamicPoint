@@ -1,19 +1,25 @@
 // waitOn wrapper of loadJs and loadCss
 waitOnJsAndCss = (function() {
+  function wrapFile(file) {
+    return file;
+  }
+
   // augment Meteor.Loader first
   Meteor.Loader.loadJsAndCss = function(assetArray, callback) {
     function _genLoadCssTask(file) {
+      var f = wrapFile(file);
       return function(cb) {
-        if (!Meteor.Loader.loaded(file)) {
-          Meteor.Loader.loadCss(file);
+        if (!Meteor.Loader.loaded(f)) {
+          Meteor.Loader.loadCss(f);
         }
         cb();
       };
     }
     function _genLoadJsTask(file) {
+      var f = wrapFile(file);
       return function(cb) {
-        if (!Meteor.Loader.loaded(file)) {
-          Meteor.Loader.loadJs(file, function() { cb(); });
+        if (!Meteor.Loader.loaded(f)) {
+          Meteor.Loader.loadJs(f, function() { cb(); });
         } else {
           cb();
         }
@@ -27,7 +33,9 @@ waitOnJsAndCss = (function() {
         default: break;
       }
     });
-    async.series(tasks, function() { callback(); });
+    async.series(tasks, function() {
+      callback();
+    });
   };
 
   // predef assets
@@ -122,12 +130,11 @@ Router.route('/profile', {
     return sub();
   },
 
-  onRun: function() {
-    logger.info('run me?');
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
-    this.render();
+    this.next();
   },
 
   data: function() {
@@ -141,29 +148,31 @@ Router.route('/author', {
   template: 'author',
 
   waitOn: function() {
+    console.log('time time wait');
     dpMode = 'author';
     dpUrlParams = this.params;
     return _.union(sub(), waitOnJsAndCss(dpMode, [
       'bower_components/MutationObserver-shim/dist/mutationobserver.min.js',
       'bower_components/medium-editor/dist/css/medium-editor.min.css',
-      'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
+      'css/medium-editor-theme-dp.css',
+      //'bower_components/medium-editor/dist/css/themes/bootstrap.min.css',
       'bower_components/medium-editor/dist/js/medium-editor.min.js',
       'bower_components/html5sortable/jquery.sortable.js',
     ]));
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
-    this.render();
+    this.next();
   },
 
   data: function() {
     dpTheDeck = Decks.findOne({ _id: dpUrlParams.query.id });
     logger.info('find the deck:', dpTheDeck);
     if (!dpTheDeck) { return {}; }
-    // now register plugins' events
+    //now register plugins' events
     _.map(dpTheDeck.slides, function(v) {
       dpPluginRegTemplate(v.type, dpMode);
     });
@@ -185,11 +194,11 @@ Router.route('/audience', {
     return _.union(sub(), waitOnJsAndCss(dpMode, []));
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
-    this.render();
+    this.next();
   },
 
   data: function() {
@@ -222,11 +231,11 @@ Router.route('/speaker', {
     return _.union(sub(), waitOnJsAndCss(dpMode, []));
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
-    this.render();
+    this.next();
   },
 
   data: function() {
@@ -252,10 +261,11 @@ Router.route('/qrcode', {
     ]));
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+    this.next();
   },
 
   data: function() {
@@ -274,11 +284,11 @@ Router.route('/pairview', {
     return sub();
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!this.params.query.id) {
       window.location.href = '/welcome';
     }
-    this.render();
+    this.next();
   },
 
   data: function() {
@@ -294,11 +304,11 @@ Router.route('/superview', {
     return sub();
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!this.params.query.id) {
       window.location.href = '/welcome';
     }
-    this.render();
+    this.next();
   },
 
   data: function() {

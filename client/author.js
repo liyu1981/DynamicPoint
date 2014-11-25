@@ -18,12 +18,12 @@ function slideOrderUpdated() {
     var c = $(children[i]);
     var slideIndex = parseInt(c.attr('slideIndex'));
     if (i !== slideIndex) {
-      logger.info('changed:', i, slideIndex);
       if (!(slideIndex in changes || i in changes)) {
         changes[slideIndex] = i; // from => to
       }
     }
   }
+  logger.info('order changed:', changes);
   // now manuniplate the slides array
   var newSlides = dpTheDeck.slides;
   _.each(changes, function(to, from) {
@@ -33,7 +33,8 @@ function slideOrderUpdated() {
     newSlides[to] = newSlides[from];
     newSlides[from] = tmp;
   });
-  Decks.update({ _id: dpTheDeck._id }, { $set: { 'slides': newSlides } });
+  dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: { 'slides': newSlides }});
+  dpSaveMgr.saveNow();
 }
 
 function genInsertHandler(htmlGenerator) {
@@ -57,9 +58,10 @@ function genInsertHandler(htmlGenerator) {
 
 dpSaveMgr.saveNowCb = function(saving) {
   if (saving) {
-    $('#dpActionInfo').html('saving...').show();
+    Session.set('dpActionInfo', 'saving...');
   } else {
-    $('#dpActionInfo').html('saved!').hide(500);
+    Session.set('dpActionInfo', 'saved!');
+    setTimeout(function() { Session.set('dpActionInfo', null); }, 1000);
   }
 };
 
@@ -72,6 +74,12 @@ Template.author.helpers({
 Template.author.rendered = function() {
   commonDPPageSetup();
 };
+
+Template.authorNavbar.helpers({
+  dpActionInfo: function() {
+    return Session.get('dpActionInfo');
+  }
+});
 
 Template.authorNavbar.events({
   'click #newDeckBtn': function(event) {
@@ -110,7 +118,8 @@ Template.authorNavbar.events({
 
 Template.authorToolbar.events({
   'click #newSlideBtn': function(event) {
-    Decks.update({ _id: dpTheDeck._id }, { $push: { slides: genEmptySlide() } });
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide() }});
+    dpSaveMgr.saveNow();
   },
 
   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
@@ -174,7 +183,8 @@ Template.authorSlide.events({
     var id = s.attr('slideId');
     var index = s.attr('slideIndex');
     alertify.confirm('Do you want ot delete No.' + index + 'slide ?', function() {
-      Decks.update({ _id: dpTheDeck._id }, { $pull: { 'slides': { 'id': id } } });
+      dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $pull: { 'slides': { 'id': id }}});
+      dpSaveMgr.saveNow();
     }).setHeader('Caution!');
   },
 
@@ -194,7 +204,8 @@ Template.authorSlide.events({
     // turn to naive way with mongo 2.4
     var newSlides = dpTheDeck.slides;
     newSlides.splice(index, 0, cloneSlide(dpTheDeck.slides[index]));
-    Decks.update({ _id: dpTheDeck._id }, { $set: { 'slides': newSlides }});
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: { 'slides': newSlides }});
+    dpSaveMgr.saveNow();
   },
 
   'click .change-slide-type-btn': function(event) {

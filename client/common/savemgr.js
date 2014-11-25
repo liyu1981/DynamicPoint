@@ -2,7 +2,9 @@
 dpSaveMgr = (function () {
   function SaveMgr() {
     this.queue = [];
+    this.savingQueue = null;
     this.saving = false;
+    this.pendingSaving = 0;
     this.saveNowCb = function() {};
   }
 
@@ -16,12 +18,21 @@ dpSaveMgr = (function () {
     });
   };
 
-  SaveMgr.prototype.saveNow = function(callback) {
-    logger.info('saveMgr saveNow:', this.queue.length);
+  SaveMgr.prototype.saveNow = function() {
+    if (this.saving) {
+      // in saving, just pending the request and exit
+      this.pendingSaving += 1;
+      return;
+    }
     this.saving = true;
-    callback = callback || this.saveNowCb;
-    callback(this.saving);
-    _.each(this.queue, function(item) {
+    var cb = this.saveNowCb;
+    // each time to save, we move this.queue to this.savingQueue, so that
+    // others can add more saving request when we are saving.
+    this.savingQueue = this.queue;
+    this.queue = [];
+    logger.info('saveMgr saveNow:', this.savingQueue);
+    cb(this.saving);
+    _.each(this.savingQueue, function(item) {
       logger.info('will save:', item);
       if (item.payload) {
         item.collection[item.action]({ _id: item.documentId }, item.payload);
@@ -29,9 +40,14 @@ dpSaveMgr = (function () {
         item.collection[item.action]({ _id: item.documentId });
       }
     });
-    this.queue = [];
+    this.savingQueue = null;
     this.saving = false;
-    callback(this.saving);
+    cb(this.saving);
+    if (this.pendingSaving > 0) {
+      // if there is pending request, do them
+      this.pendingSaving -= 1;
+      this.saveNow();
+    }
   };
 
   // the singleton
