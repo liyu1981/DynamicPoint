@@ -26,8 +26,11 @@ CKEDITOR.editorConfig = function(config) {
   // Disable plugins
   config.removePlugins = 'contextmenu,liststyle,tabletools';
 
-  config.skin = 'bootstrapck,/bower_components/bootstrapck4-skin/skins/bootstrapck/';
-  config.contentsCss = '/bower_components/bootstrapck4-skin/skins/bootstrapck/editor.css';
+  //config.skin = 'bootstrapck,/bower_components/bootstrapck4-skin/skins/bootstrapck/';
+  //config.contentsCss = '/bower_components/bootstrapck4-skin/skins/bootstrapck/editor.css';
+
+  config.skin = 'moono,/bower_components/ckeditor/skins/moono/';
+  config.contentsCss = '/bower_components/ckeditor/skins/moono/editor.css';
 
   // Remove word formatting
   config.pasteFromWordRemoveFontStyles = true;

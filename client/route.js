@@ -137,7 +137,7 @@ Router.route('/profile', {
     return sub();
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
@@ -167,17 +167,19 @@ Router.route('/author', {
     ]));
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+    // now register plugins' events
+    dpPluginRegAllTemplate(dpMode);
     this.next();
   },
 
   data: function() {
+    // cache the result in dpTheDeck
     dpTheDeck = Decks.findOne({ _id: dpUrlParams.query.id });
     logger.info('find the deck:', dpTheDeck);
-    if (!dpTheDeck) { return {}; }
     return dpTheDeck;
   }
 });
@@ -192,25 +194,22 @@ Router.route('/audience', {
     return _.union(sub(), waitOnJsAndCss(dpMode, []));
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+    // now register plugins' events
+    dpPluginRegAllTemplate(dpMode);
     this.next();
   },
 
   data: function() {
-    console.log('called action');
     console.log('found', Decks.find().fetch());
     dpTheDeck = Decks.findOne();
     logger.info('find the deck:', dpTheDeck);
     dpRunStatus = RunStatus.findOne();
     logger.info('find the runStatus:', dpRunStatus);
-    if (!(dpTheDeck && dpRunStatus)) { return {}; }
-    // now register plugins' events
-    _.map(dpTheDeck.slides, function(v) {
-      dpPluginRegTemplate(v.type, dpMode);
-    });
+    if (!(dpTheDeck && dpRunStatus)) { return null; }
     return _.extend(dpTheDeck, { runStatus: dpRunStatus });
   }
 });
@@ -225,10 +224,11 @@ Router.route('/speaker', {
     return _.union(sub(), waitOnJsAndCss(dpMode, []));
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
+    dpPluginRegAllTemplate(dpMode);
     this.next();
   },
 
@@ -237,11 +237,7 @@ Router.route('/speaker', {
     logger.info('find the deck:', dpTheDeck);
     dpRunStatus = RunStatus.findOne();
     logger.info('find the runStatus:', dpRunStatus);
-    if (!(dpTheDeck && dpRunStatus)) { return {}; }
-    // now register plugins' events
-    _.map(dpTheDeck.slides, function(v) {
-      dpPluginRegTemplate(v.type, dpMode);
-    });
+    if (!(dpTheDeck && dpRunStatus)) { return null; }
     return _.extend(dpTheDeck, { runStatus: dpRunStatus });
   }
 });
@@ -255,7 +251,7 @@ Router.route('/qrcode', {
     ]));
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
@@ -276,7 +272,7 @@ Router.route('/pairview', {
     return sub();
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!this.params.query.id) {
       window.location.href = '/welcome';
     }
@@ -294,7 +290,7 @@ Router.route('/superview', {
     return sub();
   },
 
-  onRun: function() {
+  onRerun: function() {
     if (!this.params.query.id) {
       window.location.href = '/welcome';
     }

@@ -65,17 +65,6 @@ dpSaveMgr.saveNowCb = function(saving) {
   }
 };
 
-Template.author.created = function() {
-  this.autorun(function() {
-    Template.currentData();
-    logger.info('auto run me:', dpTheDeck);
-    // now register plugins' events
-    _.map(dpTheDeck.slides, function(v) {
-      dpPluginRegTemplate(v.type, dpMode);
-    });
-  });
-};
-
 Template.author.helpers({
   indexedSlides: function() {
     return _.map(this.slides, function(e, i) { return _.extend(e, { index: i }) });

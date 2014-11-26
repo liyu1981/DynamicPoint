@@ -151,6 +151,26 @@
             RunStatus.update({ _id: dpRunStatus._id }, { $push: data });
           }
         };
+      },
+
+      'author': function() {
+        return {
+          'change form#pollForm': function(event) {
+            console.log('form data changed');
+            var s = $(event.currentTarget).closest('.slide');
+            var slideIndex = s.attr('slideIndex');
+            var formdata = {
+              question: s.find('input#q').val(),
+              anwsers: [
+                s.find('input#a1').val(),
+                s.find('input#a2').val()
+              ]
+            };
+            var setData = {};
+            setData['slides.' + slideIndex + '.content'] = formdata;
+            dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: setData });
+          }
+        };
       }
     }
   };
