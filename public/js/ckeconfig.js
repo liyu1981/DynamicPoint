@@ -24,10 +24,10 @@ CKEDITOR.editorConfig = function(config) {
   config.extraPlugins = 'link,font,panelbutton,colorbutton';
 
   // Disable plugins
-  //config.removePlugins = 'elementspath,contextmenu';
+  config.removePlugins = 'contextmenu,liststyle,tabletools';
 
-  config.skin = 'moono,/bower_components/ckeditor/skins/moono/';
-  config.contentsCss = '/bower_components/ckeditor/skins/moono/editor.css';
+  config.skin = 'bootstrapck,/bower_components/bootstrapck4-skin/skins/bootstrapck/';
+  config.contentsCss = '/bower_components/bootstrapck4-skin/skins/bootstrapck/editor.css';
 
   // Remove word formatting
   config.pasteFromWordRemoveFontStyles = true;

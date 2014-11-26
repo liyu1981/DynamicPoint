@@ -16,8 +16,6 @@
     templateRendered: {
       'author': function() {
         var e = this.$('.editable');
-        //var ed = startMediumEditor(e.get());
-        //this.mei = ed;
         var observerSubchild = new MutationObserver(function(items, observer) {
           console.log('content changed', items, observer);
           var v = {};
@@ -47,16 +45,26 @@
       'author': function() {
         return {
           'focusin .editable': function(event) {
-            logger.info('focusin', event.currentTarget);
+            var t = event.currentTarget;
+            t.classList.add('editable-focused');
+            logger.info('focusin');
             // clear previous editor instances first, so in any time we only keep one instance in page
             _.each(window.CKEDITOR.instances, function(e, k) {
               e.destroy();
             });
+            // now start this target's inline editor
             window.CKEDITOR.disableAutoInline = true;
-            window.CKEDITOR.inline(event.currentTarget.id, { customConfig: 'js/ckeconfig.js' });
+            var e = window.CKEDITOR.inline(t.id, { customConfig: 'js/ckeconfig.js' });
+            e.on('blur', function(event) {
+              // here is the real focusout part of our editor
+              logger.info('focusout');
+              t.classList.remove('editable-focused');
+            });
           },
           'focusout .editable': function(event) {
-            logger.info('focusout');
+            // we do not use this to focus out, instead we listen on ckeditor's event blur
+            // we do this is to avoid the wrongly focusout action when we click any buttons in ckeditor toolbar
+            event.preventDefault();
           }
         };
       }
