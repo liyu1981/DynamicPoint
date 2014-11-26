@@ -14,7 +14,6 @@
   ],
   "dependencies": {
     "reveal.js": "~2.6.2",
-    "medium-editor": "git@github.com:liyu1981/medium-editor.git#de6687cf9ddf1a5b9a586d21acac306bb5a176e2",
     "alertify-js": "~0.10.2",
     "FileSaver": "*",
     "blob": "*",
@@ -22,6 +21,7 @@
     "qrcodejs": "~0.1.0",
     "MutationObserver-shim": "~0.2.8",
     "bigtext": "~0.1.6",
-    "d3": "git@github.com:mbostock/d3.git#~3.4.13"
+    "d3": "git@github.com:mbostock/d3.git#~3.4.13",
+    "ckeditor": "~4.4.6"
   }
 }

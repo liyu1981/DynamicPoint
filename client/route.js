@@ -91,6 +91,21 @@ waitOnJsAndCss = (function() {
   };
 })();
 
+// hack to setup global custom loading template, as I can not make the official example work
+// example: https://github.com/EventedMind/iron-router/blob/devel/examples/loading_plugin/loading_plugin.js
+// ref: https://github.com/EventedMind/iron-router/blob/devel/lib/hooks.js
+Iron.Router.hooks.loading = function () {
+  // if we're ready just pass through
+  if (this.ready()) {
+    this.next();
+    return;
+  }
+
+  var template = this.lookupOption('loadingTemplate');
+  this.render(template || Template['dpLoading']);
+  this.renderRegions();
+};
+
 Router.onBeforeAction((function() {
   var loginWaived = _.reduce(['/welcome', '/audience', '/speaker'], function(memo, p) { memo[p] = true; return memo; }, {});
   return function () {
@@ -107,10 +122,6 @@ Router.onBeforeAction((function() {
 })());
 
 Router.route('/welcome', {
-  loadingTemplate: 'commonLoading',
-
-  template: 'welcome',
-
   waitOn: function() {
     dpMode = 'welcome';
     return _.union(sub(), waitOnJsAndCss(dpMode, [
@@ -120,17 +131,13 @@ Router.route('/welcome', {
 });
 
 Router.route('/profile', {
-  loadingTemplate: 'commonLoading',
-
-  template: 'profile',
-
   waitOn: function() {
     dpMode = 'profile';
     dpUrlParams = this.params;
     return sub();
   },
 
-  onRerun: function() {
+  onRun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
@@ -143,19 +150,21 @@ Router.route('/profile', {
 });
 
 Router.route('/author', {
-  loadingTemplate: 'commonLoading',
-
-  template: 'author',
-
   waitOn: function() {
     dpMode = 'author';
     dpUrlParams = this.params;
     return _.union(sub(), waitOnJsAndCss(dpMode, [
       'bower_components/MutationObserver-shim/dist/mutationobserver.min.js',
-      'bower_components/medium-editor/dist/css/medium-editor.min.css',
-      'css/medium-editor-theme-dp.css',
-      'bower_components/medium-editor/dist/js/medium-editor.min.js',
       'bower_components/html5sortable/jquery.sortable.js',
+      'bower_components/ckeditor/ckeditor.js',
+      'bower_components/ckeditor/lang/en.js',
+      'bower_components/ckeditor/skins/moono/editor.css',
+      'bower_components/ckeditor/styles.js',
+      'bower_components/ckeditor/plugins/font/plugin.js',
+      'bower_components/ckeditor/plugins/panelbutton/plugin.js',
+      'bower_components/ckeditor/plugins/colorbutton/plugin.js',
+      'bower_components/ckeditor/plugins/font/lang/en.js',
+      'bower_components/ckeditor/plugins/colorbutton/lang/en.js'
     ]));
   },
 
@@ -175,10 +184,6 @@ Router.route('/author', {
 });
 
 Router.route('/audience', {
-  loadingTemplate: 'commonLoading',
-
-  template: 'audience',
-
   waitOn: function() {
     dpMode = 'audience';
     dpUrlParams = this.params;
@@ -188,7 +193,7 @@ Router.route('/audience', {
     return _.union(sub(), waitOnJsAndCss(dpMode, []));
   },
 
-  onRerun: function() {
+  onRun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
@@ -212,10 +217,6 @@ Router.route('/audience', {
 });
 
 Router.route('/speaker', {
-  loadingTemplate: 'commonLoading',
-
-  template: 'speaker',
-
   waitOn: function() {
     dpMode = 'speaker';
     dpUrlParams = this.params;
@@ -225,7 +226,7 @@ Router.route('/speaker', {
     return _.union(sub(), waitOnJsAndCss(dpMode, []));
   },
 
-  onRerun: function() {
+  onRun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
@@ -255,7 +256,7 @@ Router.route('/qrcode', {
     ]));
   },
 
-  onRerun: function() {
+  onRun: function() {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
@@ -271,14 +272,12 @@ Router.route('/qrcode', {
 });
 
 Router.route('/pairview', {
-  template: 'pairview',
-
   waitOn: function() {
     dpMode = 'pairview';
     return sub();
   },
 
-  onRerun: function() {
+  onRun: function() {
     if (!this.params.query.id) {
       window.location.href = '/welcome';
     }
@@ -291,14 +290,12 @@ Router.route('/pairview', {
 });
 
 Router.route('/superview', {
-  template: 'superview',
-
   waitOn: function() {
     dpMode = 'supreview';
     return sub();
   },
 
-  onRerun: function() {
+  onRun: function() {
     if (!this.params.query.id) {
       window.location.href = '/welcome';
     }

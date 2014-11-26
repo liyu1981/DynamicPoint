@@ -1,16 +1,5 @@
 ;(function() {
 
-  var startMediumEditor = function(e) {
-    if (!e) {
-      throw Error('Must provide the root DOM node in first time startMediumEditor');
-    }
-    new window.MediumEditor(e, {
-      buttonLabels: 'fontawesome',
-      buttons:  ['bold', 'italic', 'underline', 'anchor', 'header1', 'header2', 'quote', 'superscript', 'subscript', 'strikethrough',
-        'unorderedlist', 'orderedlist', 'justifyLeft', 'justifyFull', 'justifyCenter', 'justifyRight', 'indent', 'outdent']
-    }); // start the editor
-  };
-
   DPPlugins['normal'] = {
     displayName: 'Normal',
 
@@ -20,16 +9,15 @@
 
     templateUpdated: {
       'author': function() {
-        console.log('updated me:', this, this.$('.editable'));
-        //startMediumEditor(s.get());
+        console.log('updated me:', this, this.data.index, $('.editable'));
       }
     },
 
     templateRendered: {
       'author': function() {
-        console.log('rendered');
         var e = this.$('.editable');
-        startMediumEditor(e.get());
+        //var ed = startMediumEditor(e.get());
+        //this.mei = ed;
         var observerSubchild = new MutationObserver(function(items, observer) {
           console.log('content changed', items, observer);
           var v = {};
@@ -49,13 +37,29 @@
           authorContent: function() {
             // have to do this to overcome the contenteditable issue of meteor now
             // ref: https://github.com/meteor/meteor/issues/1964
-            return '<div class="content editable" slideIndex="' + this.index + '">' + this.content + '</div>';
+            return sprintf('<div id="content%s" class="content editable" contenteditable="true" slideIndex="%d">%s</div>', this.id, this.index, this.content);
           }
         };
       }
     },
 
     templateEvents: {
+      'author': function() {
+        return {
+          'focusin .editable': function(event) {
+            logger.info('focusin', event.currentTarget);
+            window.CKEDITOR.disableAutoInline = true;
+            window.CKEDITOR.inline(event.currentTarget.id, { customConfig: 'js/ckeconfig.js' });
+          },
+          'focusout .editable': function(event) {
+            logger.info('focusout');
+            var editorid = event.currentTarget.id;
+            if (window.CKEDITOR.instances[editorid]) {
+              window.CKEDITOR.instances[editorid].destroy();
+            }
+          }
+        };
+      }
     }
   };
 
