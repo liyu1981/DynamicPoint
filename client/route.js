@@ -158,7 +158,6 @@ Router.route('/author', {
       'bower_components/html5sortable/jquery.sortable.js',
       'bower_components/ckeditor/ckeditor.js',
       'bower_components/ckeditor/lang/en.js',
-      'bower_components/ckeditor/skins/moono/editor.css',
       'bower_components/ckeditor/styles.js',
       'bower_components/ckeditor/plugins/font/plugin.js',
       'bower_components/ckeditor/plugins/panelbutton/plugin.js',

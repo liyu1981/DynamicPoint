@@ -48,15 +48,15 @@
         return {
           'focusin .editable': function(event) {
             logger.info('focusin', event.currentTarget);
+            // clear previous editor instances first, so in any time we only keep one instance in page
+            _.each(window.CKEDITOR.instances, function(e, k) {
+              e.destroy();
+            });
             window.CKEDITOR.disableAutoInline = true;
             window.CKEDITOR.inline(event.currentTarget.id, { customConfig: 'js/ckeconfig.js' });
           },
           'focusout .editable': function(event) {
             logger.info('focusout');
-            var editorid = event.currentTarget.id;
-            if (window.CKEDITOR.instances[editorid]) {
-              window.CKEDITOR.instances[editorid].destroy();
-            }
           }
         };
       }

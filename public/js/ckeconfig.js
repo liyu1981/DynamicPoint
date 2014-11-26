@@ -8,17 +8,17 @@ CKEDITOR.editorConfig = function(config) {
     [ 'Format', 'FontSize', 'TextColor' ]
   ];
 
-  config.allowedContent = {
-    'h1 h2 h3 h4 h5 h6 p ul ol li blockquote span pre': {
-      styles: 'text-align,font-size,color',
-      classes: 'fragment'
-    },
-    'strong em u s del ins': true,
-    'a': {
-      attributes: '!href,target',
-      classes: 'fragment'
-    }
-  };
+  //config.allowedContent = {
+  //  'h1 h2 h3 h4 h5 h6 p ul ol li blockquote span pre': {
+  //    styles: 'text-align,font-size,color',
+  //    classes: 'fragment'
+  //  },
+  //  'strong em u s del ins': true,
+  //  'a': {
+  //    attributes: '!href,target',
+  //    classes: 'fragment'
+  //  }
+  //};
 
   // Enable plugins
   config.extraPlugins = 'link,font,panelbutton,colorbutton';
@@ -26,6 +26,7 @@ CKEDITOR.editorConfig = function(config) {
   // Disable plugins
   //config.removePlugins = 'elementspath,contextmenu';
 
+  config.skin = 'moono,/bower_components/ckeditor/skins/moono/';
   config.contentsCss = '/bower_components/ckeditor/skins/moono/editor.css';
 
   // Remove word formatting
