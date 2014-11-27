@@ -23,6 +23,7 @@
     "bigtext": "~0.1.6",
     "d3": "git@github.com:mbostock/d3.git#~3.4.13",
     "ckeditor": "~4.4.6",
-    "bootstrapck4-skin": "git@github.com:Kunstmaan/BootstrapCK4-Skin.git#~1.0.0"
+    "draggabilly": "~1.1.1",
+    "jquery-free-transform": "git@github.com:gthmb/jquery-free-transform.git"
   }
 }

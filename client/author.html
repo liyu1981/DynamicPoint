@@ -16,11 +16,12 @@
     </div>
 
   </div>
+  {{> dpFooter}}
 </div>
 </template>
 
 <template name="authorNavbar">
-<nav class="navbar navbar-default" role="navigation">
+<nav class="navbar navbar-default dp-navbar" role="navigation">
   <div class="container-fluid">
     {{> navbarDPLogo}}
 
@@ -60,10 +61,16 @@
 
 <template name="authorToolbar">
 <nav class="navbar navbar-default dp-toolbar">
+  <div class="dplogo-block" style="display: none;">
+    {{> navbarDPLogo}}
+  <hr>
+  </div>
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
       <li><a href="#" id="newSlideBtn" title="New Slide"><i class="fa fa-plus-circle fa-2x"></i></a></li>
-      <li><a href="#" id="sortToggle" title="Toogle Drag&Drop Sort"><i class="fa fa-arrows fa-2x"></i></a></li>
+      <!--<li><a href="#" id="sortToggle" title="Toogle Drag&Drop Sort"><i class="fa fa-arrows fa-2x"></i></a></li>-->
+      <li><a href="#" id="insertTextBlockBtn" title="Insert Text Block"><i class="fa fa-font fa-2x"></i></a></li>
+      <li><a href="#" id="insertListBlockBtn" title="Insert List Block"><i class="fa fa-th-list fa-2x"></i></a></li>
       <li><a href="#" id="insertCodeBlockBtn" title="Insert Code Block"><i class="fa fa-code fa-2x"></i></a></li>
       <li><a href="#" id="insertImageBtn" title="Insert Image"><i class="fa fa-image fa-2x"></i></a></li>
       <li><a href="#" id="insertMediaBtn" title="Insert Media"><i class="fa fa-youtube-play fa-2x"></i></a></li>
@@ -73,7 +80,7 @@
 </template>
 
 <template name="authorSlide">
-<div class="col-md-6 slide" slideId="{{ id }}" slideIndex="{{ index }}" slideType="{{ type }}">
+<div class="col-md-12 slide" slideId="{{ id }}" slideIndex="{{ index }}" slideType="{{ type }}">
   <div class="panel panel-default dp-panel">
     <div class="panel-heading slide-handle">
       <div class="btn-group pull-right">
@@ -83,7 +90,7 @@
       </div>
       <div>
         <div class="btn-group">
-          <button type="button" class="btn btn-default" disabled>{{ index }}</button>
+          <button type="button" class="btn btn-default">{{ index }}</button>
           <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-toggle-on"></i> {{ type }} <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">

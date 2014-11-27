@@ -33,14 +33,23 @@
 body.dp {
   overflow: auto !important;
 
+  .container {
+    width: 89%;
+    max-width: 1300px;
+  }
+
   .dropdown-menu > li > a {
     padding-left: 12px;
     padding-right: 12px;
   }
 
+  .dp-navbar {
+    z-index: 1100;
+  }
+
   .dp-brand {
     height: 48px;
-    padding: 4px 10px;
+    padding: 4px 5px;
 
     .fa-stack-1x {
       color: #428bca;
@@ -74,8 +83,10 @@ body.dp {
   }
 
   .dp-panel {
-    min-height: 430px;
-    max-height: 430px;
+    //min-height: 430px;
+    //max-height: 430px;
+    min-height: 830px;
+    max-height: 830px;
     overflow: auto;
 
     .panel-heading {
@@ -83,7 +94,10 @@ body.dp {
     }
 
     .panel-body {
-      padding: 0px 0px;
+      padding: 8px 8px;
+      height: 773px;
+      min-height: 773px;
+      overflow: hidden;
     }
 
     .new-slide {
@@ -94,6 +108,12 @@ body.dp {
     .content {
       text-align: center;
     }
+
+    .dp-content {
+      min-height: 757px;
+      position: relative;
+      background-color: #eee;
+    }
   }
 
   .sortable-enabled {
@@ -101,6 +121,10 @@ body.dp {
       background-color: #428bca;
       cursor: move;
     }
+  }
+
+  .dp-deck {
+    padding-left: 80px;
   }
 
   div.sortable-placeholder {
@@ -116,10 +140,22 @@ body.dp {
 
   .dp-toolbar {
     position: fixed;
-    margin-left: -70px;
+    //margin-left: -70px;
     padding-left: 0px;
     padding-right: 0px;
     z-index: 1000;
+
+    .dplogo-block {
+      .dp-brand {
+        padding: 4px 5px;
+      }
+
+      hr {
+        margin-top: 8px;
+        margin-bottom: 0px;
+        border-color: #e7e7e7;
+      }
+    }
 
     li {
       text-align: center;
@@ -184,22 +220,24 @@ body.dp {
     }
   }
 
-  .editable-focused {
+  .in-transform {
+    cursor: pointer;
     border: 1px solid blue;
+    box-shadow: #888 0px 0px 1px;
   }
 }
 
 // optimize the 1366x768 case
 @media (min-width: 1200px) and (max-width: 1360px) {
   .container {
-    width: 1000px;
+    margin-left: 20px;
   }
 
   body.dp-author {
-    .dp {
-      min-height: 386px;
-      max-height: 386px;
-      overflow: auto;
+    .dp-panel {
+      //min-height: 386px;
+      //max-height: 386px;
+      //overflow: auto;
     }
   }
 }

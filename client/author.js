@@ -44,13 +44,14 @@ function genInsertHandler(htmlGenerator) {
     var lastFocusNode = selection.focusNode;
     if (selection && range && htmlGenerator) {
       htmlGenerator(function(html) {
-        node = range.createContextualFragment(html);
-        range.insertNode(node);
-        var r = document.createRange();
-        r.setStart(lastFocusNode, 0);
-        r.setEnd(lastFocusNode, 0);
-        selection.removeAllRanges();
-        selection.addRange(r);
+        var node = range.createContextualFragment(html);
+        //range.insertNode(node);
+        //var r = document.createRange();
+        //r.setStart(lastFocusNode, 0);
+        //r.setEnd(lastFocusNode, 0);
+        //selection.removeAllRanges();
+        //selection.addRange(r);
+        lastFocusNode.parentNode.appendChild(node);
        });
      }
   };
@@ -73,6 +74,19 @@ Template.author.helpers({
 
 Template.author.rendered = function() {
   commonDPPageSetup();
+  $(function() {
+    $(document).scroll(_.debounce(function() {
+      var y = $(this).scrollTop();
+      if (y > 79) {
+        $('.dp-toolbar .dplogo-block').fadeIn(function() {
+          $('.dp-toolbar').transition({ 'margin-top': '-72px' });
+        });
+      } else {
+        $('.dp-toolbar').transition({ 'margin-top': '0px' });
+        $('.dp-toolbar .dplogo-block').fadeOut(100);
+      }
+    }, 200));
+  });
 };
 
 Template.authorNavbar.helpers({
@@ -136,30 +150,30 @@ Template.authorToolbar.events({
       slideOrderUpdated();
     }),
 
-    'click #insertImageBtn': genInsertHandler(function(next) {
-      alertify.prompt('The URI of image',
-        'https://graph.facebook.com/minhua.lin.9/picture?type=large',
-        function(event, value) {
-          logger.info('got image URI:', value);
-          next('<img src="' + value + '"></img>');
-        }).setHeader('Insert Image');
-    }),
+  'click #insertImageBtn': genInsertHandler(function(next) {
+    alertify.prompt('The URI of image',
+      'https://graph.facebook.com/minhua.lin.9/picture?type=large',
+      function(event, value) {
+        logger.info('got image URI:', value);
+        next('<img src="' + value + '"></img>');
+      }).setHeader('Insert Image');
+  }),
 
-    'click #insertCodeBlockBtn': genInsertHandler(function(next) {
-      alertify.codePrompt('Paste code here',
-        'console.log(\'hello,world\');',
-        function(event, value) {
-          next('<code>' + value + '</code>');
-        }).setHeader('Insert Code Block');
-    }),
+  'click #insertCodeBlockBtn': genInsertHandler(function(next) {
+    alertify.codePrompt('Paste code here',
+      'console.log(\'hello,world\');',
+      function(event, value) {
+        next('<code>' + value + '</code>');
+      }).setHeader('Insert Code Block');
+  }),
 
-    'click #insertMediaBtn': genInsertHandler(function(next) {
-      alertify.codePrompt('Paste media embeding code here',
-        '<iframe width="320px" height="240px" src="//www.youtube.com/embed/l6k_5GHwLRA" frameborder="0" allowfullscreen></iframe>',
-        function(event, value) {
-          next('<div style="text-align: center;">' + value + '</div>');
-        }).setHeader('Insert Embedded Media');
-    })
+  'click #insertMediaBtn': genInsertHandler(function(next) {
+    alertify.codePrompt('Paste media embeding code here',
+      '<iframe width="320px" height="240px" src="//www.youtube.com/embed/l6k_5GHwLRA" frameborder="0" allowfullscreen></iframe>',
+      function(event, value) {
+        next('<div style="text-align: center;">' + value + '</div>');
+      }).setHeader('Insert Embedded Media');
+  })
 });
 
 Template.authorSlide.helpers({
@@ -178,6 +192,13 @@ Template.authorSlide.helpers({
 });
 
 Template.authorSlide.events({
+  'click #editThisSlide': function(event) {
+    var s = $(event.currentTarget).closest('.slide');
+    var id = s.attr('slideId');
+    var index = s.attr('slideIndex');
+    s.removeClass('col-md-6').addClass('col-md-12').addClass('slide-big');
+  },
+
   'click #deleteThisSlide': function(event) {
     var s = $(event.currentTarget).closest('.slide');
     var id = s.attr('slideId');

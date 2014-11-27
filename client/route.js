@@ -1,3 +1,21 @@
+// predef assets
+var alertifyAA = [
+  'bower_components/alertify-js/build/css/alertify.min.css',
+  'bower_components/alertify-js/build/css/themes/default.css',
+  'bower_components/alertify-js/build/alertify.min.js',
+  'js/alertifyext.js'
+];
+
+var revealjsAA = [
+  'bower_components/reveal.js/css/reveal.min.css',
+  'bower_components/reveal.js/css/theme/solarized.css',
+  'bower_components/reveal.js/js/reveal.min.js'
+];
+
+var d3AA = [
+  'bower_components/d3/d3.min.js'
+];
+
 // waitOn wrapper of loadJs and loadCss
 waitOnJsAndCss = (function() {
   function wrapFile(file) {
@@ -37,24 +55,6 @@ waitOnJsAndCss = (function() {
       callback();
     });
   };
-
-  // predef assets
-  var alertifyAA = [
-    'bower_components/alertify-js/build/css/alertify.min.css',
-    'bower_components/alertify-js/build/css/themes/default.css',
-    'bower_components/alertify-js/build/alertify.min.js',
-    'js/alertifyext.js'
-  ];
-
-  var revealjsAA = [
-    'bower_components/reveal.js/css/reveal.min.css',
-    'bower_components/reveal.js/css/theme/solarized.css',
-    'bower_components/reveal.js/js/reveal.min.js'
-  ];
-
-  var d3AA = [
-    'bower_components/d3/d3.min.js'
-  ];
 
   return function(dpMode, assetArray) {
     var commonAA = [];
@@ -163,7 +163,8 @@ Router.route('/author', {
       'bower_components/ckeditor/plugins/panelbutton/plugin.js',
       'bower_components/ckeditor/plugins/colorbutton/plugin.js',
       'bower_components/ckeditor/plugins/font/lang/en.js',
-      'bower_components/ckeditor/plugins/colorbutton/lang/en.js'
+      'bower_components/ckeditor/plugins/colorbutton/lang/en.js',
+      'bower_components/draggabilly/dist/draggabilly.pkgd.min.js'
     ]));
   },
 
