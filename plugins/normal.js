@@ -1,5 +1,14 @@
 ;(function() {
 
+  function saveChange(e) {
+    var v = {};
+    var type = e.attr('slideType');
+    var index = parseInt(e.attr('slideIndex'));
+    var h = e.html().trim();
+    v['slides.' + index + '.content'] = h;
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
+  }
+
   DPPlugins['normal'] = {
     displayName: 'Normal',
 
@@ -15,7 +24,6 @@
 
     templateRendered: {
       'author': function() {
-        var e = this.$('.editable');
         //var observerSubchild = new MutationObserver(function(items, observer) {
         //  console.log('content changed', items, observer);
         //  var v = {};
@@ -56,10 +64,7 @@
 
           'dblclick .dp-content > div': function(event) {
             var t = $(event.currentTarget);
-            if (t.hasClass('in-edit')) {
-              // in editing
-              return;
-            }
+            if (t.hasClass('in-edit')) { return; }
             if (t.hasClass('in-transform')) {
               // exit transform if it is on
               t.data('draggie').disable();
@@ -78,6 +83,7 @@
               t.removeAttr('contenteditable');
               t.removeClass('in-edit');
               e.destroy();
+              saveChange(t.closest('.dp-content'));
             });
             t.focus();
           }
