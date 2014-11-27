@@ -1,6 +1,11 @@
 ;(function() {
 
+  var ckeditorConfig = {
+    customConfig: 'js/ckeconfig.js'
+  };
+
   function saveChange(e) {
+    // e is the jquery object of current .slide
     var v = {};
     var type = e.attr('slideType');
     var index = parseInt(e.attr('slideIndex'));
@@ -9,21 +14,123 @@
     dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
   }
 
+  function EditMgr() {
+    this.currentTarget = null;
+    this.currentFacilities = {};
+    this.curerntTargetMode = null;
+
+    this._modeFSM = {
+      'null -> edit': function(mgr, callback) {
+        var t = mgr.currentTarget;
+        t.addClass('in-edit');
+        t.attr('contenteditable', true);
+        CKEDITOR.disableAutoInline = true;
+        var e = CKEDITOR.inline(t.get(0), ckeditorConfig);
+        e.on('blur', function(event) {
+          mgr.changeMode('null');
+          saveChange(t.closest('.dp-content'));
+        });
+        mgr.currentFacilities['ckeditor'] = {
+          instance: e,
+          releaseFunc: function(cke) {
+            cke.destroy();
+            t.removeAttr('contenteditable');
+          }
+        };
+        t.focus();
+      },
+
+      'null -> transform': function(mgr, callback) {
+        var t = mgr.currentTarget;
+        t.addClass('in-transform');
+        var draggie = new Draggabilly(t.get(0));
+        mgr.currentFacilities['draggie'] = {
+          instance: draggie,
+          releaseFunc: function(draggie) {
+            draggie.disable();
+          }
+        };
+      },
+
+      'transform -> edit': function(mgr, callback) {
+        mgr.changeMode(null);
+        mgr.changeMode('edit');
+      },
+
+      'edit -> null': function(mgr, callback) {
+        var t = mgr.currentTarget;
+        var f = mgr.currentFacilities['ckeditor'];
+        if (f) {
+          f.releaseFunc(f.instance);
+          mgr.currentFacilities['ckeditor'] = null;
+        }
+        t.removeClass('in-edit');
+      },
+
+      'transform -> null': function(mgr, callback) {
+        var t = mgr.currentTarget;
+        var f = mgr.currentFacilities['draggie'];
+        if (f) {
+          f.releaseFunc(f.instance);
+          mgr.currentFacilities['draggie'] = null;
+        }
+        t.removeClass('in-transform');
+      }
+    };
+  }
+
+  EditMgr.prototype.changeMode = function(mode, callback) {
+    callback = callback || function() {};
+    if (mode === null || this.curerntTargetMode === mode) {
+      callback(null);
+    }
+    var t = sprintf('%s -> %s', this.curerntTargetMode, mode);
+    if (this._modeFSM[t]) {
+      this._modeFSM[t](this, callback);
+      this.curerntTargetMode = mode;
+    } else {
+      callback(new Error('Can not:' + t));
+    }
+  };
+
+  EditMgr.prototype.setTarget = function(target) {
+    // target should be jquery obj
+    if (!target.get(0)) { return; }
+    if (this.currentTarget !== null && this.currentTarget.get(0) == target.get(0)) { return; }
+    if (this.currentTarget !== null) {
+      this.releaseCurrentTarget();
+    }
+    //console.log('will set target:', target);
+    this.currentTarget = target;
+  };
+
+  EditMgr.prototype.releaseCurrentTarget = function() {
+    this.changeMode(null);
+    _.each(this.currentFacilities, function(f) {
+      if (f && f.releaseFunc) {
+        f.releaseFunc(f.instance);
+      }
+    });
+    this.currentFacilities = {};
+    this.currentTarget = null;
+  };
+
   DPPlugins['normal'] = {
     displayName: 'Normal',
 
     init: function() {
-      return '<h2>Hello</h2>';
+      return '<div style="position: absolute;"><h2>Hello</h2></div>';
     },
 
     templateUpdated: {
       'author': function() {
-        console.log('updated me:', this, this.data.index, $('.editable'));
+        console.log('updated me');
       }
     },
 
     templateRendered: {
       'author': function() {
+        this.editmgr = new EditMgr();
         //var observerSubchild = new MutationObserver(function(items, observer) {
         //  console.log('content changed', items, observer);
         //  var v = {};
@@ -52,40 +159,30 @@
     templateEvents: {
       'author': function() {
         return {
+          'click .dp-content': function(event) {
+            if (event.target == event.currentTarget) {
+              // make sure that not a child is clicked
+              var ti = Template.instance();
+              if (ti && ti.editmgr) {
+                ti.editmgr.releaseCurrentTarget();
+              }
+            }
+          },
+
           'click .dp-content > div': function(event) {
-            var t = $(event.currentTarget);
-            if (t.hasClass('in-edit')) { return; }
-            if (t.hasClass('in-transform')) { return; }
-            t.addClass('in-transform');
-            var draggie = new Draggabilly(t.get(0));
-            t.data('draggie', draggie);
-            event.stopPropagation();
+            var ti = Template.instance();
+            if (ti && ti.editmgr) {
+              ti.editmgr.setTarget($(event.currentTarget));
+              ti.editmgr.changeMode('transform');
+            }
           },
 
           'dblclick .dp-content > div': function(event) {
-            var t = $(event.currentTarget);
-            if (t.hasClass('in-edit')) { return; }
-            if (t.hasClass('in-transform')) {
-              // exit transform if it is on
-              t.data('draggie').disable();
-              t.data('draggie', null);
-              //t.data('draggie', null);
-              t.removeClass('in-transform');
+            var ti = Template.instance();
+            if (ti && ti.editmgr) {
+              ti.editmgr.setTarget($(event.currentTarget));
+              ti.editmgr.changeMode('edit');
             }
-            t.addClass('in-edit');
-            t.attr('contenteditable', true);
-            logger.info('focusin');
-            // now start this target's inline editor
-            CKEDITOR.disableAutoInline = true;
-            var e = CKEDITOR.inline(t.get(0), { startupFocus : true, customConfig: 'js/ckeconfig.js' });
-            e.on('blur', function(event) {
-              logger.info('focusout');
-              t.removeAttr('contenteditable');
-              t.removeClass('in-edit');
-              e.destroy();
-              saveChange(t.closest('.dp-content'));
-            });
-            t.focus();
           }
         };
       }
