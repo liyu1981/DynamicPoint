@@ -154,7 +154,7 @@ Template.authorToolbar.events({
       'https://graph.facebook.com/minhua.lin.9/picture?type=large',
       function(event, value) {
         logger.info('got image URI:', value);
-        next('<img src="' + value + '"></img>');
+        next('<div style="position: absolute;"><img src="' + value + '"></img></div>');
       }).setHeader('Insert Image');
   }),
 
@@ -162,7 +162,7 @@ Template.authorToolbar.events({
     alertify.codePrompt('Paste code here',
       'console.log(\'hello,world\');',
       function(event, value) {
-        next('<code>' + value + '</code>');
+        next('<div style="position: absolute;"><code>' + value + '</code></div>');
       }).setHeader('Insert Code Block');
   }),
 
@@ -170,7 +170,7 @@ Template.authorToolbar.events({
     alertify.codePrompt('Paste media embeding code here',
       '<iframe width="320px" height="240px" src="//www.youtube.com/embed/l6k_5GHwLRA" frameborder="0" allowfullscreen></iframe>',
       function(event, value) {
-        next('<div style="text-align: center;">' + value + '</div>');
+        next('<div style="position: absolute; text-align: center;">' + value + '</div>');
       }).setHeader('Insert Embedded Media');
   })
 });
