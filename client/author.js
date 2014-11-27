@@ -78,14 +78,13 @@ Template.author.rendered = function() {
     $(document).scroll(_.debounce(function() {
       var y = $(this).scrollTop();
       if (y > 79) {
-        $('.dp-toolbar .dplogo-block').fadeIn(function() {
-          $('.dp-toolbar').transition({ 'margin-top': '-72px' });
-        });
+        $('.dp-toolbar').transition({ 'margin-top': '-72px' });
+        $('.dp-toolbar .dplogo-block').fadeIn(100);
       } else {
         $('.dp-toolbar').transition({ 'margin-top': '0px' });
         $('.dp-toolbar .dplogo-block').fadeOut(100);
       }
-    }, 200));
+    }, 100));
   });
 };
 

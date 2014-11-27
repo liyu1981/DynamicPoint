@@ -83,8 +83,6 @@ body.dp {
   }
 
   .dp-panel {
-    //min-height: 430px;
-    //max-height: 430px;
     min-height: 830px;
     max-height: 830px;
     overflow: auto;
@@ -229,15 +227,20 @@ body.dp {
 
 // optimize the 1366x768 case
 @media (min-width: 1200px) and (max-width: 1360px) {
-  .container {
-    margin-left: 20px;
-  }
-
-  body.dp-author {
+  body.dp {
     .dp-panel {
-      //min-height: 386px;
-      //max-height: 386px;
-      //overflow: auto;
+      min-height: 680px;
+      max-height: 680px;
+
+      .panel-body {
+        min-height: 623px;
+        height: 623px;
+      }
+
+      .dp-content {
+        min-height: 607px;
+        height: 607px;
+      }
     }
   }
 }
