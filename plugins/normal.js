@@ -46,10 +46,24 @@
         //    draggie.disable();
         //  }
         //};
+        t.attr('tabindex', '1');
+        t.keyup(function(event) {
+          if (event.keyCode === 46) {
+            //console.log('will delete this', event.currentTarget);
+            var e = $(event.currentTarget);
+            var dpc = e.closest('.dp-content');
+            mgr.releaseCurrentTarget(function() {
+              e.remove();
+              saveChange(dpc);
+            });
+          }
+        });
+        t.focus();
       },
 
       'transform -> edit': function(mgr, callback) {
         mgr.changeMode(null);
+        mgr.currentTarget.off('keyup');
         mgr.changeMode('edit');
       },
 
@@ -61,6 +75,7 @@
           mgr.currentFacilities['ckeditor'] = null;
         }
         t.removeClass('in-edit');
+        t.removeAttr('tabindex');
       },
 
       'transform -> null': function(mgr, callback) {
