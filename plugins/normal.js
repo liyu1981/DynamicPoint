@@ -26,10 +26,6 @@
         t.attr('contenteditable', true);
         CKEDITOR.disableAutoInline = true;
         var e = CKEDITOR.inline(t.get(0), ckeditorConfig);
-        e.on('blur', function(event) {
-          mgr.changeMode('null');
-          saveChange(t.closest('.dp-content'));
-        });
         mgr.currentFacilities['ckeditor'] = {
           instance: e,
           releaseFunc: function(cke) {
@@ -43,13 +39,13 @@
       'null -> transform': function(mgr, callback) {
         var t = mgr.currentTarget;
         t.addClass('in-transform');
-        var draggie = new Draggabilly(t.get(0));
-        mgr.currentFacilities['draggie'] = {
-          instance: draggie,
-          releaseFunc: function(draggie) {
-            draggie.disable();
-          }
-        };
+        //var draggie = new Draggabilly(t.get(0));
+        //mgr.currentFacilities['draggie'] = {
+        //  instance: draggie,
+        //  releaseFunc: function(draggie) {
+        //    draggie.disable();
+        //  }
+        //};
       },
 
       'transform -> edit': function(mgr, callback) {
@@ -104,7 +100,8 @@
     this.currentTarget = target;
   };
 
-  EditMgr.prototype.releaseCurrentTarget = function() {
+  EditMgr.prototype.releaseCurrentTarget = function(callback) {
+    if (this.currentTarget === null) { return; }
     this.changeMode(null);
     _.each(this.currentFacilities, function(f) {
       if (f && f.releaseFunc) {
@@ -113,13 +110,14 @@
     });
     this.currentFacilities = {};
     this.currentTarget = null;
+    if (callback) { callback(); }
   };
 
   DPPlugins['normal'] = {
     displayName: 'Normal',
 
     init: function() {
-      return '<div style="position: absolute;"><h2>Hello</h2></div>';
+      return '<div style=""><h2>Hello</h2></div>';
     },
 
     templateUpdated: {
@@ -164,7 +162,9 @@
               // make sure that not a child is clicked
               var ti = Template.instance();
               if (ti && ti.editmgr) {
-                ti.editmgr.releaseCurrentTarget();
+                ti.editmgr.releaseCurrentTarget(function() {
+                  saveChange($(event.currentTarget));
+                });
               }
             }
           },

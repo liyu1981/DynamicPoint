@@ -38,6 +38,15 @@ body.dp {
     max-width: 1300px;
   }
 
+  .dp-slide {
+    &-focused {
+      .panel-heading {
+        border-color: #428bca;
+        box-shadow: #428bca 0px 0px 15px;
+      }
+    }
+  }
+
   .dropdown-menu > li > a {
     padding-left: 12px;
     padding-right: 12px;
@@ -111,6 +120,7 @@ body.dp {
       min-height: 757px;
       position: relative;
       background-color: #eee;
+
     }
   }
 
@@ -220,7 +230,7 @@ body.dp {
 
   .in-transform {
     cursor: pointer;
-    border: 1px solid blue;
+    border: 1px solid #428bca;
     box-shadow: #888 0px 0px 1px;
   }
 }
