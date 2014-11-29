@@ -57,9 +57,7 @@
       /* ------- TEXT LABELS -------*/
       var text = svg.select('.labels').selectAll('text').data(pie(data), key);
 
-      text.enter().append('text').attr('dy', '.35em').text(function(d) {
-        return d.data.label;
-      });
+      text.enter().append('text').attr('dy', '.35em').text(function(d) { return d.data.label; });
 
       function midAngle(d) {
         return d.startAngle + (d.endAngle - d.startAngle)/2;
@@ -160,15 +158,23 @@
             var s = $(event.currentTarget).closest('.slide');
             var slideIndex = s.attr('slideIndex');
             var formdata = {
-              question: s.find('input#q').val(),
-              anwsers: [
-                s.find('input#a1').val(),
-                s.find('input#a2').val()
-              ]
+              question: s.find('input.q').val(),
+              anwsers: []
             };
+            s.find('input.a').each(function(index, a) { formdata.anwsers.push($(a).val()); });
             var setData = {};
             setData['slides.' + slideIndex + '.content'] = formdata;
             dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: setData });
+          },
+
+          'click #addOption': function(event) {
+            var s = $(event.currentTarget).closest('.slide');
+            var slideIndex = s.attr('slideIndex');
+            var optionName = 'option' + (dpTheDeck.slides[slideIndex].content.anwsers.length + 1);
+            var pushData = {};
+            pushData['slides.' + slideIndex + '.content.anwsers'] = optionName;
+            dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: pushData });
+            dpSaveMgr.saveNow();
           }
         };
       }

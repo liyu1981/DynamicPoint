@@ -12,10 +12,14 @@
 <template name="author-slide-poll">
 <div class="content" slideIndex="{{ index }}">
 <form id="pollForm">
-<p>Question: <input id="q" type="text" value="This talk boring ?" /></p>
-<p>A1: <input id="a1" type="text" value="Yes" /></p>
-<p>A2: <input id="a2" type="text" value="No" /></p>
+  <p>Question: <input class="q" type="text" value="{{ content.question }}" /></p>
+  <ol>
+  {{#each content.anwsers}}
+  <li><input class="a" type="text" value="{{ this }}" /></li>
+  {{/each}}
+  </ol>
 </form>
+<p><button id="addOption">Add Option</button></p>
 </div>
 </template>
 

@@ -163,7 +163,7 @@ Template.authorToolbar.rendered = function() {
 
 Template.authorToolbar.events({
   'click #newSlideBtn': function(event) {
-    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide() }});
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide('normal') }});
     dpSaveMgr.saveNow();
   },
 

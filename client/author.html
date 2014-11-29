@@ -26,8 +26,11 @@
     {{> navbarDPLogo}}
 
     <div class="collapse navbar-collapse">
-      <form class="navbar-form navbar-left">
-        <label>Title</label> <input type="text" class="form-control dp-title" value="{{ title }}" />
+      <form class="navbar-form navbar-left" style="padding-left: 22px;">
+        <div class="input-group">
+          <div class="input-group-addon"><strong>Title</strong></div>
+          <input type="text" class="form-control dp-title" value="{{ title }}" />
+        </div>
       </form>
       <ul class="nav navbar-nav navbar-right dp-navbar-menu">
         {{> loginButtons}}

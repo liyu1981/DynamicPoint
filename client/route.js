@@ -51,6 +51,7 @@ waitOnJsAndCss = (function() {
         default: break;
       }
     });
+    logger.info('will inject js & css:', assetArray);
     async.series(tasks, function() {
       callback();
     });
@@ -134,7 +135,8 @@ Router.route('/profile', {
   waitOn: function() {
     dpMode = 'profile';
     dpUrlParams = this.params;
-    return sub();
+    return _.union(sub(), waitOnJsAndCss(dpMode, [
+    ]));
   },
 
   onRerun: function() {
