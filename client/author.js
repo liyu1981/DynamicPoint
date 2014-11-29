@@ -119,7 +119,9 @@ Template.author.rendered = function() {
 Template.authorNavbar.helpers({
   dpActionInfo: function() {
     return Session.get('dpActionInfo');
-  }
+  },
+
+  currentUserDisplayName: currentUserDisplayName
 });
 
 Template.authorNavbar.events({
@@ -134,6 +136,12 @@ Template.authorNavbar.events({
 
   'click #saveBtn': function(event) {
     dpSaveMgr.saveNow();
+  },
+
+  'click #logoutBtn': function(event) {
+    Meteor.logout(function() {
+      window.location.href = '/welcome';
+    });
   },
 
   'click #importMenu': function(event) {

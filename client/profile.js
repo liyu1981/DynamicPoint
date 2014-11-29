@@ -15,7 +15,17 @@ Template.profile.rendered = function() {
   commonDPPageSetup();
 };
 
+Template.profile.helpers({
+  currentUserDisplayName: currentUserDisplayName
+});
+
 Template.profile.events({
+  'click #logoutBtn': function(event) {
+    Meteor.logout(function() {
+      window.location.href = '/welcome';
+    });
+  },
+
   'click #newDeckBtn': function(event) {
     Decks.insert(genNewDeck(), function(err, id) {
       if (err) {
