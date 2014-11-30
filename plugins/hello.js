@@ -18,7 +18,6 @@ DPPlugins['hello'] = {
   templateEvents: {
     'audience': function() {
       function changedUser(ctx) {
-        console.log('change user to:', ctx.find('#helloName').val());
         var dpprt = Template.instance().dpprt;
         var setData = {};
         var pluginDataPrefix = dpprt.getPluginDataPrefix();

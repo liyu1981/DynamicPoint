@@ -1,17 +1,8 @@
-function findVotedValue() {
-  var id = Session.get('audienceId');
-  var r = _.reduce(dpRunStatus.pluginData.poll, function(memo, v, k) {
-    if (v.indexOf(id) >= 0) {
-      memo.push(k);
-    }
-    return memo;
-  }, []);
-  return ((r.length >= 1) ? r[0] : null);
-}
-
-function genPieChartData(fields) {
-  console.log('before recalc:', fields.pluginData.poll);
-  return _.map(fields.pluginData.poll, function(v, k) {
+function genPieChartData(data, slideId) {
+  slideId = slideId || 'deck';
+  logger.info('kkkfdafa:', Template.instance());
+  var dpprt = Template.instance().dpprt;
+  return _.map(dpprt.getPluginData(data, slideId), function(v, k) {
     return { label: '' + k + '(' + v.length + ')', value: v.length };
   });
 }
@@ -103,7 +94,6 @@ function d3PieChart() {
     polyline.exit().remove();
   };
 
-  change(genPieChartData(dpRunStatus));
   d3PieChartChange = change;
 }
 
@@ -117,10 +107,13 @@ DPPlugins['poll'] = {
 
   templateRendered: {
     'speaker': function() {
+      var self = this;
+      logger.info('lyiyu:', Template.instance());
       $('.slides').on('runStatusChanged', function(event, id, fields) {
-        d3PieChartChange(genPieChartData(fields));
+        d3PieChartChange(genPieChartData({ runStatus: fields }, self.id));
       });
       d3PieChart();
+      d3PieChartChange(genPieChartData(self, self.id));
     }
   },
 
@@ -128,7 +121,16 @@ DPPlugins['poll'] = {
     'audience': function() {
       return {
         voted: function() {
-          return findVotedValue();
+          console.log('fdafda:', Template.instance());
+          var dpprt = Template.instance().dpprt;
+          var id = Session.get('audienceId');
+          var r = _.reduce(dpprt.getPluginData(dpRunStatus, this.data.id), function(memo, v, k) {
+            if (v.indexOf(id) >= 0) {
+              memo.push(k);
+            }
+            return memo;
+          }, []);
+          return ((r.length >= 1) ? r[0] : null);
         }
       };
     }
@@ -138,11 +140,13 @@ DPPlugins['poll'] = {
     'audience': function() {
       return {
         'click .poll-btn': function(event) {
+          var dpprt = Template.instance().dpprt;
           var e = $(event.currentTarget);
-          var a = e.attr('id');
+          var s = e.closest('section');
           var data = {};
-          data['pluginData.poll.' + a] = Session.get('audienceId');
-          RunStatus.update({ _id: dpRunStatus._id }, { $push: data });
+          var pluginDataPrefix = dpprt.getPluginDataPrefix(s.attr('id'));
+          data[pluginDataPrefix + e.attr('id')] = Session.get('audienceId');
+          dpprt.update({ $push: data });
         }
       };
     },
