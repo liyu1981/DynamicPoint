@@ -47,8 +47,18 @@ Template.navbarDropdownDPAbout.helpers({
   }
 });
 
+var dpAboutHTML = [
+'<center>',
+'<p><span class="fa-stack fa-3x">',
+'  <i class="fa fa-laptop fa-stack-2x"></i>',
+'  <i class="fa fa-child fa-stack-1x"></i>',
+'</span></p>',
+'<p>DynamicPoint, made by LI, Yu in Hong Kong</p>',
+'</center>'
+].join('');
+
 Template.navbarDropdownDPAbout.events({
   'click #aboutDP': function() {
-    alertify.alert('This DynamicPoint. Slides with fun! Made by @liyu.');
+    alertify.HTMLAlert(dpAboutHTML);
   }
 });
