@@ -13,6 +13,7 @@ Template.profileSlidesList.helpers({
 
 Template.profile.rendered = function() {
   commonDPPageSetup();
+  Session.set('documentTitle', formatDocumentTitle(currentUserDisplayName()));
 };
 
 Template.profile.helpers({
@@ -20,12 +21,6 @@ Template.profile.helpers({
 });
 
 Template.profile.events({
-  'click #logoutBtn': function(event) {
-    Meteor.logout(function() {
-      window.location.href = '/welcome';
-    });
-  },
-
   'click #newDeckBtn': function(event) {
     Decks.insert(genNewDeck(), function(err, id) {
       if (err) {

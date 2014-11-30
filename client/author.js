@@ -102,6 +102,7 @@ Template.author.helpers({
 Template.author.rendered = function() {
   this.slideFocusMgr = new SlideFocusMgr;
   commonDPPageSetup();
+  Session.set('documentTitle', formatDocumentTitle(this.data.title));
   $(function() {
     $(document).scroll(_.debounce(function() {
       var y = $(this).scrollTop();
@@ -136,32 +137,6 @@ Template.authorNavbar.events({
 
   'click #saveBtn': function(event) {
     dpSaveMgr.saveNow();
-  },
-
-  'click #logoutBtn': function(event) {
-    Meteor.logout(function() {
-      window.location.href = '/welcome';
-    });
-  },
-
-  'click #importMenu': function(event) {
-    $('#importMenuFileSelector')
-      .on('change', function(event) {
-        logger.info('changed', event.target.files);
-        var fr = new FileReader();
-        fr.onload = function(file) {
-          Meteor.call('importFile', fr.result, function(err, id) {
-            if (err) {
-              return alertify.alert('Oops! ' + err.error + '<br><code>' + err.reason + '</code>');
-            }
-            // not to use Router.go as we want the page refresh
-            // Router.go('/author?id=' + id);
-            window.location.href = '/author?id=' + id;
-          });
-        };
-        fr.readAsText(event.target.files[0]);
-      })
-      .click();
   }
 });
 

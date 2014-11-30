@@ -10,7 +10,6 @@ jquery
 iron:router
 mrt:external-file-loader
 mrt:bootstrap-3
-chrismbeckett:fontawesome4
 less
 peerlibrary:async
 accounts-facebook
@@ -22,4 +21,5 @@ liyu:sprintfjs
 mrt:allow-env
 livestamp
 clode:transit
+fortawesome:fontawesome
 
