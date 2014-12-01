@@ -53,7 +53,8 @@ var dpAboutHTML = [
 '  <i class="fa fa-laptop fa-stack-2x"></i>',
 '  <i class="fa fa-child fa-stack-1x"></i>',
 '</span></p>',
-'<p>DynamicPoint, made by LI, Yu in Hong Kong</p>',
+'<p>DynamicPoint</p>',
+'<p>Made by <a href="http://www.github.com/liyu1981">LI Yu</a> in Hong Kong</p>',
 '</center>'
 ].join('');
 
