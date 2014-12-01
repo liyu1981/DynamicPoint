@@ -1,10 +1,15 @@
 Template.welcome.rendered = function() {
   commonDPPageSetup();
+  Session.set('documentTitle', formatDocumentTitle('Welcome!'));
   $(function() {
     $('body').addClass('dp-welcome');
     $('#bigtext').bigtext();
   });
 };
+
+Template.welcome.helpers({
+  currentUserDisplayName: currentUserDisplayName
+});
 
 Template.welcome.events({
   'click #gotoProfile': function() {

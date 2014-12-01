@@ -51,6 +51,7 @@ waitOnJsAndCss = (function() {
         default: break;
       }
     });
+    logger.info('will inject js & css:', assetArray);
     async.series(tasks, function() {
       callback();
     });
@@ -113,7 +114,7 @@ Router.onBeforeAction((function() {
       this.next();
     } else if (!Meteor.userId()) {
       // if the user is not logged in, render the Login template
-      this.render('welcome');
+      window.location.href = '/welcome';
     } else {
       // otherwise don't hold up the rest of hooks or our route/action function from running
       this.next();
@@ -134,7 +135,8 @@ Router.route('/profile', {
   waitOn: function() {
     dpMode = 'profile';
     dpUrlParams = this.params;
-    return sub();
+    return _.union(sub(), waitOnJsAndCss(dpMode, [
+    ]));
   },
 
   onRerun: function() {

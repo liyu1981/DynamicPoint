@@ -1,5 +1,24 @@
 ;(function() {
 
+  if (!alertify.dpAbout) {
+    //define a new dialog
+    alertify.dialog('HTMLAlert', function factory() {
+      return{
+        build: function() {
+          this.setHeader('About');
+        },
+
+        setMessage: function(message) {
+          var d = document.createElement('DIV');
+          d.innerHTML = message;
+          this.elements.content.appendChild(d);
+        }
+      };
+    },
+    true,
+    'alert');
+  }
+
   if (!alertify.codePrompt) {
     alertify.dialog('codePrompt',
       function factory() {
@@ -8,7 +27,7 @@
         return {
           build: function () {
             textarea.className = alertify.defaults.theme.textarea;
-            textarea.rows = "8";
+            textarea.rows = '8';
             textarea.value = this.get('value');
             this.elements.content.appendChild(p);
             this.elements.content.appendChild(textarea);

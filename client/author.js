@@ -1,3 +1,18 @@
+function SlideFocusMgr() {
+  this.currentSlide = null;
+}
+
+SlideFocusMgr.prototype.focus = function(node) {
+  if (this.currentSlide !== null && this.currentSlide.get(0) == node.get(0)) { return; }
+  if (this.currentSlide !== null) {
+    this.currentSlide.removeClass('dp-slide-focused');
+  }
+  this.currentSlide = node;
+  this.currentSlide.addClass('dp-slide-focused');
+}
+
+var slideFocusMgr = new SlideFocusMgr();
+
 function genToolbarToggleClickHandler(target, onCb, offCb) {
   return function(event) {
     var t = $(target);
@@ -37,23 +52,35 @@ function slideOrderUpdated() {
   dpSaveMgr.saveNow();
 }
 
+//function genInsertHandler(htmlGenerator) {
+//  return function(event) {
+//    var selection = window.getSelection();
+//    var range = selection.getRangeAt(0);
+//    var lastFocusNode = selection.focusNode;
+//    if (selection && range && htmlGenerator) {
+//      htmlGenerator(function(html) {
+//        var node = range.createContextualFragment(html);
+//        range.insertNode(node);
+//        var r = document.createRange();
+//        r.setStart(lastFocusNode, 0);
+//        r.setEnd(lastFocusNode, 0);
+//        selection.removeAllRanges();
+//        selection.addRange(r);
+//       });
+//     }
+//  };
+//}
+
 function genInsertHandler(htmlGenerator) {
   return function(event) {
-    var selection = window.getSelection();
-    var range = selection.getRangeAt(0);
-    var lastFocusNode = selection.focusNode;
-    if (selection && range && htmlGenerator) {
+    console.log('insert:', Template.instance());
+    var ti = Template.instance();
+    if (ti && ti.slideFocusMgr && ti.slideFocusMgr.currentSlide) {
       htmlGenerator(function(html) {
-        var node = range.createContextualFragment(html);
-        //range.insertNode(node);
-        //var r = document.createRange();
-        //r.setStart(lastFocusNode, 0);
-        //r.setEnd(lastFocusNode, 0);
-        //selection.removeAllRanges();
-        //selection.addRange(r);
-        lastFocusNode.parentNode.appendChild(node);
-       });
-     }
+        var node = $(html);
+        ti.slideFocusMgr.currentSlide.find('.dp-content').append(node);
+      });
+    }
   };
 }
 
@@ -73,7 +100,9 @@ Template.author.helpers({
 });
 
 Template.author.rendered = function() {
+  this.slideFocusMgr = new SlideFocusMgr;
   commonDPPageSetup();
+  Session.set('documentTitle', formatDocumentTitle(this.data.title));
   $(function() {
     $(document).scroll(_.debounce(function() {
       var y = $(this).scrollTop();
@@ -91,7 +120,9 @@ Template.author.rendered = function() {
 Template.authorNavbar.helpers({
   dpActionInfo: function() {
     return Session.get('dpActionInfo');
-  }
+  },
+
+  currentUserDisplayName: currentUserDisplayName
 });
 
 Template.authorNavbar.events({
@@ -100,38 +131,22 @@ Template.authorNavbar.events({
       if (err) {
         return alertify.alert('Error: ' + JSON.stringify(err));
       }
-      Router.go('/author?id=' + id);
+      window.location.href = '/author?id=' + id;
     });
   },
 
   'click #saveBtn': function(event) {
     dpSaveMgr.saveNow();
-  },
-
-  'click #importMenu': function(event) {
-    $('#importMenuFileSelector')
-      .on('change', function(event) {
-        logger.info('changed', event.target.files);
-        var fr = new FileReader();
-        fr.onload = function(file) {
-          Meteor.call('importFile', fr.result, function(err, id) {
-            if (err) {
-              return alertify.alert('Oops! ' + err.error + '<br><code>' + err.reason + '</code>');
-            }
-            // not to use Router.go as we want the page refresh
-            // Router.go('/author?id=' + id);
-            window.location.href = '/author?id=' + id;
-          });
-        };
-        fr.readAsText(event.target.files[0]);
-      })
-      .click();
   }
 });
 
+Template.authorToolbar.rendered = function() {
+  this.slideFocusMgr = slideFocusMgr;
+};
+
 Template.authorToolbar.events({
   'click #newSlideBtn': function(event) {
-    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide() }});
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide('normal') }});
     dpSaveMgr.saveNow();
   },
 
@@ -149,12 +164,20 @@ Template.authorToolbar.events({
       slideOrderUpdated();
     }),
 
+  'click #insertTextBlockBtn': genInsertHandler(function(next) {
+    next('<div style=""><h3>Hello,world</h3></div>');
+  }),
+
+  'click #insertListBlockBtn': genInsertHandler(function(next) {
+    next('<div style=""><ul><li>hello</li><li>world</li></ul></div>');
+  }),
+
   'click #insertImageBtn': genInsertHandler(function(next) {
     alertify.prompt('The URI of image',
       'https://graph.facebook.com/minhua.lin.9/picture?type=large',
       function(event, value) {
         logger.info('got image URI:', value);
-        next('<div style="position: absolute;"><img src="' + value + '"></img></div>');
+        next('<div style=""><img src="' + value + '"></img></div>');
       }).setHeader('Insert Image');
   }),
 
@@ -162,7 +185,7 @@ Template.authorToolbar.events({
     alertify.codePrompt('Paste code here',
       'console.log(\'hello,world\');',
       function(event, value) {
-        next('<div style="position: absolute;"><code>' + value + '</code></div>');
+        next('<div style=""><code>' + value + '</code></div>');
       }).setHeader('Insert Code Block');
   }),
 
@@ -174,6 +197,10 @@ Template.authorToolbar.events({
       }).setHeader('Insert Embedded Media');
   })
 });
+
+Template.authorSlide.rendered = function() {
+  this.slideFocusMgr = slideFocusMgr;
+};
 
 Template.authorSlide.helpers({
   calcSlideTemplate: function() {
@@ -191,6 +218,13 @@ Template.authorSlide.helpers({
 });
 
 Template.authorSlide.events({
+  'click .slide': function(event) {
+    var ti = Template.instance();
+    if (ti && ti.slideFocusMgr) {
+      ti.slideFocusMgr.focus($(event.currentTarget));
+    }
+  },
+
   'click #editThisSlide': function(event) {
     var s = $(event.currentTarget).closest('.slide');
     var id = s.attr('slideId');

@@ -1,7 +1,6 @@
 <template name="author">
 <div class="container">
   <div class="row">
-    <br>
     {{> authorNavbar}}
 
     {{#if isEmpty slides}}
@@ -23,35 +22,37 @@
 <template name="authorNavbar">
 <nav class="navbar navbar-default dp-navbar" role="navigation">
   <div class="container-fluid">
-    {{> navbarDPLogo}}
+    {{> dpNavbarDPLogo}}
 
     <div class="collapse navbar-collapse">
-      <form class="navbar-form navbar-left">
-        <label>Title</label> <input type="text" class="form-control dp-title" value="{{ title }}" />
+      <form class="navbar-form navbar-left dp-author-navbar">
+        <div class="input-group">
+          <div class="input-group-addon"><strong>Title</strong></div>
+          <input type="text" class="form-control dp-title" value="{{ title }}" />
+        </div>
       </form>
       <ul class="nav navbar-nav navbar-right dp-navbar-menu">
-        {{> loginButtons}}
         <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify"></span></a>
+        {{> dpNavbarDropdownToogle}}
         <ul class="dropdown-menu" role="menu">
+          {{> dpNavbarDropdownLogout}}
           <li><a href="#" id="newDeckBtn"><i class="fa fa-file-o"></i> New Deck</a></li>
           <li class="divider"></li>
           {{#if isEmpty slides}}
           {{else}}
-          <li><a href="/qrcode?id={{ _id }}" target="_blank"><span class="glyphicon glyphicon-qrcode"></span> QR Codes</a></li>
+          <li><a href="/qrcode?id={{ _id }}" target="_blank"><i class="fa fa-qrcode"></i> QR Codes</a></li>
           <li class="divider"></li>
-          <li><a href="/export?id={{ _id }}" target="_blank"><span class="glyphicon glyphicon-floppy-save"></span> Export To File</a></li>
+          <li><a href="/export?id={{ _id }}" target="_blank"><i class="fa fa-cloud-download"></i> Export To File</a></li>
           {{/if}}
-          <li><a href="#" id="importMenu"><span class="glyphicon glyphicon-floppy-open"></span> Import From File</a>
-          <form class="hidden"><input type="file" id="importMenuFileSelector" /></form>
-          </li>
-          {{> navbarDropdownDPAbout}}
+          {{> dpNavbarDropdownImportFromFile}}
+          {{> dpNavbarDropdownAbout}}
         </ul>
         </li>
       </ul>
       <form class="navbar-form navbar-right">
         <div class="form-group">
-          <span id="dpActionInfo" class="dp-action-info">{{ dpActionInfo }}</span><button type="button" class="btn btn-success" id="saveBtn"><i class="fa fa-save"></i></button>
+          <span id="dpActionInfo" class="dp-action-info">{{ dpActionInfo }}</span>
+          <button type="button" class="btn btn-success" id="saveBtn"><i class="fa fa-save"></i></button>
         </div>
       </form>
     </div>
@@ -62,15 +63,17 @@
 <template name="authorToolbar">
 <nav class="navbar navbar-default dp-toolbar">
   <div class="dplogo-block" style="display: none;">
-    {{> navbarDPLogo}}
-  <hr>
+    {{> dpNavbarDPLogo}}
+    <hr>
   </div>
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
       <li><a href="#" id="newSlideBtn" title="New Slide"><i class="fa fa-plus-circle fa-2x"></i></a></li>
-      <!--<li><a href="#" id="sortToggle" title="Toogle Drag&Drop Sort"><i class="fa fa-arrows fa-2x"></i></a></li>-->
+      <li><a href="#" id="sortToggle" title="Start Drag&Drop Sort"><i class="fa fa-arrows fa-2x"></i></a></li>
+      <li><a href="#" id="changeBackgroundBtn" title="Change This Slide's Background"><i class="fa fa-file-image-o fa-2x"></i></a></li>
+      <li><a href="#" id="createFragmentsBtn" title="Create Fragments for This Slide"><i class="fa fa-bolt fa-2x"></i></a></li>
       <li><a href="#" id="insertTextBlockBtn" title="Insert Text Block"><i class="fa fa-font fa-2x"></i></a></li>
-      <li><a href="#" id="insertListBlockBtn" title="Insert List Block"><i class="fa fa-th-list fa-2x"></i></a></li>
+      <!--<li><a href="#" id="insertListBlockBtn" title="Insert List Block"><i class="fa fa-th-list fa-2x"></i></a></li>-->
       <li><a href="#" id="insertCodeBlockBtn" title="Insert Code Block"><i class="fa fa-code fa-2x"></i></a></li>
       <li><a href="#" id="insertImageBtn" title="Insert Image"><i class="fa fa-image fa-2x"></i></a></li>
       <li><a href="#" id="insertMediaBtn" title="Insert Media"><i class="fa fa-youtube-play fa-2x"></i></a></li>
@@ -92,10 +95,10 @@
         <div class="btn-group">
           <button type="button" class="btn btn-default">{{ index }}</button>
           <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-toggle-on"></i> {{ type }} <span class="caret"></span></button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-check-square-o"></i> {{ type }} <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
               {{#each allSlideTypes}}
-              <li><a class="change-slide-type-btn" href="#" id="{{id}}"><i class="fa fa-toggle-off"></i> {{ displayName }}</a></li>
+              <li class="dp-hover-checked"><a class="change-slide-type-btn" href="#" id="{{id}}"><i class="fa fa-square-o"></i> {{ displayName }}</a></li>
               {{/each}}
             </ul>
           </div>

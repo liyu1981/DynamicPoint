@@ -1,26 +1,21 @@
 <template name="profile">
 <div class="container">
   <div class="row">
-    <br>
-
-    <nav class="navbar navbar-default" role="navigation">
+    <nav class="navbar navbar-default dp-navbar" role="navigation">
       <div class="container-fluid">
-        {{> navbarDPLogo}}
+        {{> dpNavbarDPLogo}}
 
         <div class="collapse navbar-collapse">
           <form class="navbar-form navbar-left">
             <button type="button" class="btn btn-primary" id="newDeckBtn"><i class="fa fa-file-o"></i> New Deck</button>
           </form>
           <ul class="nav navbar-nav navbar-right dp-navbar-menu">
-            {{> loginButtons}}
             <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-align-justify"></span></a>
+            {{> dpNavbarDropdownToogle}}
             <ul class="dropdown-menu" role="menu">
-              <li>
-                <a href="#" id="importMenu"><span class="glyphicon glyphicon-floppy-open"></span> Import From File</a>
-                <form class="hidden"><input type="file" id="importMenuFileSelector" /></form>
-              </li>
-              {{> navbarDropdownDPAbout}}
+              {{> dpNavbarDropdownLogout}}
+              {{> dpNavbarDropdownImportFromFile}}
+              {{> dpNavbarDropdownAbout}}
             </ul>
             </li>
           </ul>
@@ -36,13 +31,19 @@
 
   </div>
 
+  {{> dpFooter}}
 </div>
 </template>
 
 <template name="profileSlidesList">
 <div class="list-group">
   {{#each slides}}
-  <a href="/author?id={{ id }}" target="_blank" class="list-group-item">
+  <a href="/author?id={{ id }}" target="_blank" class="list-group-item dp-deck-item" deckId="{{ id }}">
+    <div class="btn-group pull-right">
+      <a class="btn btn-default btn-lg" href="/qrcode?id={{ id }}" title="Show QRCodes of This Deck" target="_blank"><i class="fa fa-qrcode"></i></a>
+      <button class="btn btn-default btn-lg delete-this-deck" title="Delete This Deck"><i class="fa fa-trash-o"></i></button>
+      <button class="btn btn-default btn-lg duplicate-this-deck" title="Duplicate This Deck"><i class="fa fa-copy"></i></button>
+    </div>
     <h2 class="list-group-item-heading">{{ title }}</h2>
     <p class="list-group-item-text"><span class="label label-default">ID</span> {{ id }}</p>
     <p class="list-group-item-text">
