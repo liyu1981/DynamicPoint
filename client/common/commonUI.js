@@ -2,17 +2,17 @@ Template.registerHelper('isEmpty', function(target) {
   return _.isEmpty(target);
 });
 
-Template.navbarDPLogo.events({
+Template.dpNavbarDPLogo.events({
   'click .dp-brand': function() {
     window.location.href = '/welcome';
   }
 });
 
-Template.navbarDropdownToogle.helpers({
+Template.dpNavbarDropdownToogle.helpers({
   currentUserDisplayName: currentUserDisplayName
 });
 
-Template.navbarDropdownLogout.events({
+Template.dpNavbarDropdownLogout.events({
   'click .logoutBtn': function() {
     Meteor.logout(function() {
       window.location.href = '/welcome';
@@ -20,7 +20,7 @@ Template.navbarDropdownLogout.events({
   }
 });
 
-Template.navbarDropdownImportFromFile.events({
+Template.dpNavbarDropdownImportFromFile.events({
   'click #importMenu': function(event) {
     $('#importMenuFileSelector')
       .on('change', function(event) {
@@ -41,15 +41,15 @@ Template.navbarDropdownImportFromFile.events({
   }
 });
 
-Template.navbarDropdownDPAbout.helpers({
-  hasDivider: function() {
-    return (this.hasDivider === undefined) ? true : this.hasDivider;
+Template.dpNavbarDropdownAbout.helpers({
+  withDivider: function() {
+    return (this.withDivider === undefined) ? true : this.withDivider;
   }
 });
 
 var dpAboutHTML = [
 '<center>',
-'<p><span class="fa-stack fa-3x">',
+'<p class="dp-logo"><span class="fa-stack fa-3x">',
 '  <i class="fa fa-laptop fa-stack-2x"></i>',
 '  <i class="fa fa-child fa-stack-1x"></i>',
 '</span></p>',
@@ -57,7 +57,7 @@ var dpAboutHTML = [
 '</center>'
 ].join('');
 
-Template.navbarDropdownDPAbout.events({
+Template.dpNavbarDropdownAbout.events({
   'click #aboutDP': function() {
     alertify.HTMLAlert(dpAboutHTML);
   }

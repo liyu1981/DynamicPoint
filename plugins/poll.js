@@ -1,7 +1,5 @@
-function genPieChartData(data, slideId) {
+function genPieChartData(dpprt, data, slideId) {
   slideId = slideId || 'deck';
-  logger.info('kkkfdafa:', Template.instance());
-  var dpprt = Template.instance().dpprt;
   return _.map(dpprt.getPluginData(data, slideId), function(v, k) {
     return { label: '' + k + '(' + v.length + ')', value: v.length };
   });
@@ -27,6 +25,7 @@ function d3PieChart() {
   var color = d3.scale.ordinal().domain(['Yes', 'No']).range(['#98abc5', '#d0743c']);
 
   function change(data) {
+    console.log('change called:', data);
     /* ------- PIE SLICES -------*/
     var slice = svg.select('.slices').selectAll('path.slice').data(pie(data), key);
 
@@ -108,12 +107,13 @@ DPPlugins['poll'] = {
   templateRendered: {
     'speaker': function() {
       var self = this;
-      logger.info('lyiyu:', Template.instance());
+      var dpprt = Template.instance().dpprt;
+      var slideId = this.data.id;
       $('.slides').on('runStatusChanged', function(event, id, fields) {
-        d3PieChartChange(genPieChartData({ runStatus: fields }, self.id));
+        d3PieChartChange(genPieChartData(dpprt, { runStatus: fields }, slideId));
       });
       d3PieChart();
-      d3PieChartChange(genPieChartData(self, self.id));
+      d3PieChartChange(genPieChartData(dpprt, self.data, slideId));
     }
   },
 
@@ -121,10 +121,9 @@ DPPlugins['poll'] = {
     'audience': function() {
       return {
         voted: function() {
-          console.log('fdafda:', Template.instance());
           var dpprt = Template.instance().dpprt;
           var id = Session.get('audienceId');
-          var r = _.reduce(dpprt.getPluginData(dpRunStatus, this.data.id), function(memo, v, k) {
+          var r = _.reduce(dpprt.getPluginData(dpRunStatus, this.id), function(memo, v, k) {
             if (v.indexOf(id) >= 0) {
               memo.push(k);
             }

@@ -1,4 +1,4 @@
-<template name="navbarDPLogo">
+<template name="dpNavbarDPLogo">
 <div class="navbar-header">
   <a class="navbar-brand dp-brand" href="#" title="DynamicPoint">
     <span class="fa-stack fa-lg">
@@ -9,26 +9,26 @@
 </div>
 </template>
 
-<template name="navbarDropdownToogle">
+<template name="dpNavbarDropdownToogle">
 <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ currentUserDisplayName }} &nbsp;<i class="fa fa-bars fa-lg"></i></a>
 </template>
 
-<template name="navbarDropdownLogout">
+<template name="dpNavbarDropdownLogout">
 {{#if currentUser }}
 <li><a href="#" id="logoutBtn"><i class="fa fa-sign-out"></i> Logout</a></li>
 <li class="divider"></li>
 {{/if}}
 </template>
 
-<template name="navbarDropdownImportFromFile">
+<template name="dpNavbarDropdownImportFromFile">
 <li>
-  <a href="#" id="importMenu"><i class="fa fa-upload"></i> Import From File</a>
+  <a href="#" id="importMenu"><i class="fa fa-cloud-upload"></i> Import From File</a>
   <form class="hidden"><input type="file" id="importMenuFileSelector" /></form>
 </li>
 </template>
 
-<template name="navbarDropdownDPAbout">
-{{#if hasDivider}}
+<template name="dpNavbarDropdownAbout">
+{{#if withDivider}}
 <li class="divider"></li>
 {{/if}}
 <li><a id="aboutDP" href="#"><i class="fa fa-child"></i> About</a></li>

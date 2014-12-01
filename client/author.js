@@ -131,7 +131,7 @@ Template.authorNavbar.events({
       if (err) {
         return alertify.alert('Error: ' + JSON.stringify(err));
       }
-      Router.go('/author?id=' + id);
+      window.location.href = '/author?id=' + id;
     });
   },
 

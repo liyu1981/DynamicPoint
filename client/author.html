@@ -22,10 +22,10 @@
 <template name="authorNavbar">
 <nav class="navbar navbar-default dp-navbar" role="navigation">
   <div class="container-fluid">
-    {{> navbarDPLogo}}
+    {{> dpNavbarDPLogo}}
 
     <div class="collapse navbar-collapse">
-      <form class="navbar-form navbar-left" style="padding-left: 22px;">
+      <form class="navbar-form navbar-left dp-author-navbar">
         <div class="input-group">
           <div class="input-group-addon"><strong>Title</strong></div>
           <input type="text" class="form-control dp-title" value="{{ title }}" />
@@ -33,25 +33,26 @@
       </form>
       <ul class="nav navbar-nav navbar-right dp-navbar-menu">
         <li class="dropdown">
-        {{> navbarDropdownToogle}}
+        {{> dpNavbarDropdownToogle}}
         <ul class="dropdown-menu" role="menu">
-          {{> navbarDropdownLogout}}
+          {{> dpNavbarDropdownLogout}}
           <li><a href="#" id="newDeckBtn"><i class="fa fa-file-o"></i> New Deck</a></li>
           <li class="divider"></li>
           {{#if isEmpty slides}}
           {{else}}
           <li><a href="/qrcode?id={{ _id }}" target="_blank"><i class="fa fa-qrcode"></i> QR Codes</a></li>
           <li class="divider"></li>
-          <li><a href="/export?id={{ _id }}" target="_blank"><i class="fa fa-download"></i> Export To File</a></li>
+          <li><a href="/export?id={{ _id }}" target="_blank"><i class="fa fa-cloud-download"></i> Export To File</a></li>
           {{/if}}
-          {{> navbarDropdownImportFromFile}}
-          {{> navbarDropdownDPAbout}}
+          {{> dpNavbarDropdownImportFromFile}}
+          {{> dpNavbarDropdownAbout}}
         </ul>
         </li>
       </ul>
       <form class="navbar-form navbar-right">
         <div class="form-group">
-          <span id="dpActionInfo" class="dp-action-info">{{ dpActionInfo }}</span><button type="button" class="btn btn-success" id="saveBtn"><i class="fa fa-save"></i></button>
+          <span id="dpActionInfo" class="dp-action-info">{{ dpActionInfo }}</span>
+          <button type="button" class="btn btn-success" id="saveBtn"><i class="fa fa-save"></i></button>
         </div>
       </form>
     </div>
@@ -62,7 +63,7 @@
 <template name="authorToolbar">
 <nav class="navbar navbar-default dp-toolbar">
   <div class="dplogo-block" style="display: none;">
-    {{> navbarDPLogo}}
+    {{> dpNavbarDPLogo}}
   <hr>
   </div>
   <div class="collapse navbar-collapse navbar-ex1-collapse">
