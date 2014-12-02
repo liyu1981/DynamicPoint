@@ -91,13 +91,15 @@ function genInsertHandler(htmlGenerator) {
 
 function renderThumbnail(divNode, callback) {
   logger.info('will render thumb:', divNode);
+  var w = 640;
+  var h = 480;
   html2canvas(divNode, {
     onrendered: function(canvas) {
       var ec = document.createElement('canvas');
-      ec.setAttribute('width',230);
-      ec.setAttribute('height',175);
+      ec.setAttribute('width', w);
+      ec.setAttribute('height', h);
       var ctx = ec.getContext('2d');
-      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 230, 175);
+      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, w, h);
       var dataURL = ec.toDataURL();
       callback(dataURL);
     }
