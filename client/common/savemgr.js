@@ -6,7 +6,7 @@ dpSaveMgr = (function () {
     var last = null;
     _.each(queue, function(item) {
       if (last === null) {
-        result.push(last);
+        result.push(item);
       } else {
         if (last.collection === item.collection && last.action === item.action && last === documentId) {
           if (_.isEqual(last.payload, item.payload)) {
@@ -57,6 +57,7 @@ dpSaveMgr = (function () {
       this.savingQueue = optimizeQueue(this.queue);
       this.queue = [];
       logger.info('saveMgr saveNow:', this.savingQueue.length, 'items');
+      logger.info(' => ', this.savingQueue);
       cb(this.saving);
       _.each(this.savingQueue, function(item) {
         logger.info('will save:', item);

@@ -27,7 +27,7 @@ function genToolbarToggleClickHandler(target, onCb, offCb) {
 }
 
 function slideOrderUpdated() {
-  var children = $('.dp-deck').children('.slide');
+  var children = $('.dp-thumbnail').find('.thumb');
   var changes = {};
   for (var i=0; i<children.length; i++) {
     var c = $(children[i]);
@@ -39,11 +39,16 @@ function slideOrderUpdated() {
     }
   }
   logger.info('order changed:', changes);
+
+  // now restore the thumbnail divs since blaze will remember the dom nodes,
+  // and blaze will update them with correct info when data changes
+  _.each(changes, function(to, from) {
+    $(children[to]).before(children[from]); // swap dom
+  });
+
   // now manuniplate the slides array
   var newSlides = dpTheDeck.slides;
   _.each(changes, function(to, from) {
-    // swap dom as blaze will remember
-    $(children[to]).before(children[from]);
     var tmp = newSlides[to];
     newSlides[to] = newSlides[from];
     newSlides[from] = tmp;
@@ -84,6 +89,21 @@ function genInsertHandler(htmlGenerator) {
   };
 }
 
+function renderThumbnail(divNode, callback) {
+  logger.info('will render thumb:', divNode);
+  html2canvas(divNode, {
+    onrendered: function(canvas) {
+      var ec = document.createElement('canvas');
+      ec.setAttribute('width',230);
+      ec.setAttribute('height',175);
+      var ctx = ec.getContext('2d');
+      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 230, 175);
+      var dataURL = ec.toDataURL();
+      callback(dataURL);
+    }
+  });
+}
+
 dpSaveMgr.saveNowCb = function(saving) {
   if (saving) {
     Session.set('dpActionInfo', 'saving...');
@@ -91,6 +111,9 @@ dpSaveMgr.saveNowCb = function(saving) {
     Session.set('dpActionInfo', 'saved!');
     setTimeout(function() { Session.set('dpActionInfo', null); }, 1000);
   }
+};
+
+Template.author.created = function() {
 };
 
 Template.author.helpers({
@@ -152,22 +175,22 @@ Template.authorToolbar.events({
 
   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
     function on(event) {
-      //$('.dp-sortable')
-      //  .addClass('dp-sortable-enabled')
-      //  .sortable({ items: '.slide', handle: '.slide-handle' });
-      //  //.bind('sortupdate', slideOrderUpdated);
       var deck = $('.dp-deck');
       deck.find('.slide').hide(0);
       deck.find('.dp-thumbnail').show(0);
+      $('.dp-sortable')
+        .addClass('dp-sortable-enabled')
+        .sortable({ items: '.sortable-block', handle: '.sortable-handle' });
+        //.bind('sortupdate', slideOrderUpdated);
     },
     function off(event) {
       var deck = $('.dp-deck');
       deck.find('.slide').show(0);
       deck.find('.dp-thumbnail').hide(0);
-      //$('.dp-sortable')
-      //  .removeClass('dp-sortable-enabled')
-      //  .sortable('disable');
-      //slideOrderUpdated();
+      $('.dp-sortable')
+        .removeClass('dp-sortable-enabled')
+        .sortable('disable');
+      slideOrderUpdated();
     }),
 
   'click #insertTextBlockBtn': genInsertHandler(function(next) {
@@ -182,7 +205,6 @@ Template.authorToolbar.events({
     alertify.prompt('The URI of image',
       'https://graph.facebook.com/minhua.lin.9/picture?type=large',
       function(event, value) {
-        logger.info('got image URI:', value);
         next('<div style=""><img src="' + value + '"></img></div>');
       }).setHeader('Insert Image');
   }),
@@ -204,23 +226,31 @@ Template.authorToolbar.events({
   })
 });
 
+Template.authorThumbnail.helpers({
+  thumbDataURL: function() {
+    return Session.get('thumbnail-' + this.index);
+  }
+});
+
+Template.authorSlide.created = function() {
+  this.autorun(function() {
+    // depend on the currentData to be notified when slide changed
+    Template.currentData();
+    var ti = this._templateInstance;
+    // but only notify plugin after the templated is actually rendered to some nodes
+    if (ti.firstNode && ti.lastNode) {
+      renderThumbnail(ti.$('.panel-body').get(0), function(dataURL) {
+        Session.set('thumbnail-' + ti.data.index, dataURL);
+      });
+    }
+  });
+};
+
 Template.authorSlide.rendered = function() {
   var self = this;
   this.slideFocusMgr = slideFocusMgr;
-  logger.info('will render thumb:', this.data.id, this.$('.panel-body'));
-  html2canvas(this.$('.panel-body').get(0), {
-    onrendered: function(canvas) {
-      var ec = document.createElement('canvas');
-      ec.setAttribute('width',230);
-      ec.setAttribute('height',175);
-      var ctx = ec.getContext('2d');
-      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 230, 175);
-      var dataURL = ec.toDataURL();
-      var img = $(document.createElement('img'));
-      img.attr('src', dataURL);
-      logger.info('got canvas, rendered');
-      $('.dp-thumbnail .thumb[slideId="' + self.data.id + '"] .panel-body').append(img);
-    }
+  renderThumbnail(this.$('.panel-body').get(0), function(dataURL) {
+    Session.set('thumbnail-' + self.data.index, dataURL);
   });
 };
 
@@ -258,7 +288,7 @@ Template.authorSlide.events({
     var s = $(event.currentTarget).closest('.slide');
     var id = s.attr('slideId');
     var index = s.attr('slideIndex');
-    alertify.confirm('Do you want ot delete No.' + index + 'slide ?', function() {
+    alertify.confirm('Do you want ot delete slide No.' + index + ' ?', function() {
       dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $pull: { 'slides': { 'id': id }}});
       dpSaveMgr.saveNow();
     }).setHeader('Caution!');

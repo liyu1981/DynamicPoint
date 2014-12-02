@@ -75,7 +75,7 @@
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
       <li><a href="#" id="newSlideBtn" title="New Slide"><i class="fa fa-plus-circle fa-2x"></i></a></li>
-      <li><a href="#" id="sortToggle" title="Start Drag&Drop Sort"><i class="fa fa-arrows fa-2x"></i></a></li>
+      <li><a href="#" id="sortToggle" title="Start Drag&Drop Sort"><i class="fa fa-th fa-2x"></i></a></li>
       <li><a href="#" id="insertTextBlockBtn" title="Insert Text Block"><i class="fa fa-font fa-2x"></i></a></li>
       <!--<li><a href="#" id="insertListBlockBtn" title="Insert List Block"><i class="fa fa-th-list fa-2x"></i></a></li>-->
       <li><a href="#" id="insertCodeBlockBtn" title="Insert Code Block"><i class="fa fa-code fa-2x"></i></a></li>
@@ -87,12 +87,13 @@
 </template>
 
 <template name="authorThumbnail">
-<div class="col-md-3 thumb" slideId="{{ id }}" slideIndex="{{ index }}" slideType="{{ type }}">
+<div class="col-md-3 thumb sortable-block" slideId="{{ id }}" slideIndex="{{ index }}">
   <div class="panel panel-default">
-    <div class="panel-heading">
-      <center>{{ index }}</center>
+    <div class="panel-heading sortable-handle">
+      <center><strong>{{ index }}</strong></center>
     </div>
     <div class="panel-body">
+      <img src="{{ thumbDataURL }}" />
     </div>
   </div>
 </div>
