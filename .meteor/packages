@@ -22,4 +22,6 @@ mrt:allow-env
 livestamp
 clode:transit
 fortawesome:fontawesome
+reactive-dict
+reactive-var
 

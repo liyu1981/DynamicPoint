@@ -39,10 +39,21 @@
 <div class="list-group">
   {{#each slides}}
   <a href="/author?id={{ id }}" target="_blank" class="list-group-item dp-deck-item" deckId="{{ id }}">
-    <div class="btn-group pull-right">
-      <a class="btn btn-default btn-lg" href="/qrcode?id={{ id }}" title="Show QRCodes of This Deck" target="_blank"><i class="fa fa-qrcode"></i></a>
-      <button class="btn btn-default btn-lg delete-this-deck" title="Delete This Deck"><i class="fa fa-trash-o"></i></button>
-      <button class="btn btn-default btn-lg duplicate-this-deck" title="Duplicate This Deck"><i class="fa fa-copy"></i></button>
+    <div class="pull-right">
+      <div class="btn-group">
+        <a class="btn btn-default btn-lg" href="/qrcode?id={{ id }}" title="Show QRCodes of This Deck" target="_blank"><i class="fa fa-qrcode"></i></a>
+        <button class="btn btn-default btn-lg delete-this-deck" title="Delete This Deck"><i class="fa fa-trash-o"></i></button>
+        <button class="btn btn-default btn-lg duplicate-this-deck" title="Duplicate This Deck"><i class="fa fa-copy"></i></button>
+      </div>
+      <form class="form-inline" style="margin-top: 15px; text-align: right;">
+        <select class="form-control">
+          <option value="create">Create...</option>
+          {{#each runStatusList}}
+          <option {{checked}} val="{{id}}">{{displayName}}</option>
+          {{/each}}
+        </select>
+        <button class="btn btn-default view-this-runstatus" title="Check This RunStatus"><i class="fa fa-eye"></i></button>
+      </form>
     </div>
     <h2 class="list-group-item-heading">{{ title }}</h2>
     <p class="list-group-item-text"><span class="label label-default">ID</span> {{ id }}</p>

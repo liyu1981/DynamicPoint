@@ -17,5 +17,15 @@ Meteor.methods({
       curIndex : { indexh: 0, indexv: 0 },
       pluginData : { }
     });
+  },
+
+  listRunStatus: function(deckId) {
+    return _.map(RunStatus.find({ 'deckId': deckId }).fetch(), function(item) {
+      return {
+        id: item._id,
+        checked: (item.runId === 'rehearsal' ? 'checked' : ''),
+        displayName: (item.runId === 'rehearsal' ? 'rehearsal' : sprintf('Entry: %s', item._id))
+      };
+    });
   }
 });

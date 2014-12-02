@@ -1,3 +1,15 @@
+var runStatusLists = new ReactiveDict;
+
+Template.profileSlidesList.rendered = function() {
+  // query the runStatus list now
+  var ti = Template.instance();
+  _.each(ti.data, function(deck) {
+    Meteor.call('listRunStatus', deck._id, function(err, data) {
+      runStatusLists.set(deck._id, data);
+    });
+  });
+};
+
 Template.profileSlidesList.helpers({
   slides: function() {
     return _.map(_.sortBy(this, function(d) { return 0 - d.created; }), function(d) {
@@ -6,8 +18,12 @@ Template.profileSlidesList.helpers({
         title: d.title,
         created: d.created/1000,
         author: d.author
-      }
+      };
     });
+  },
+
+  runStatusList: function() {
+    return runStatusLists.get(this.id);
   }
 });
 
