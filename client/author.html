@@ -8,7 +8,13 @@
       {{> authorToolbar}}
     {{/if}}
 
-    <div class="row dp-deck sortable">
+    <div class="row dp-deck">
+      <div class="col-md-12 dp-thumbnail dp-sortable" style="display: none;">
+      {{#each indexedSlides}}
+      {{> authorThumbnail}}
+      {{/each}}
+      </div>
+
       {{#each indexedSlides}}
         {{> authorSlide}}
       {{/each}}
@@ -70,8 +76,6 @@
     <ul class="nav navbar-nav">
       <li><a href="#" id="newSlideBtn" title="New Slide"><i class="fa fa-plus-circle fa-2x"></i></a></li>
       <li><a href="#" id="sortToggle" title="Start Drag&Drop Sort"><i class="fa fa-arrows fa-2x"></i></a></li>
-      <li><a href="#" id="changeBackgroundBtn" title="Change This Slide's Background"><i class="fa fa-file-image-o fa-2x"></i></a></li>
-      <li><a href="#" id="createFragmentsBtn" title="Create Fragments for This Slide"><i class="fa fa-bolt fa-2x"></i></a></li>
       <li><a href="#" id="insertTextBlockBtn" title="Insert Text Block"><i class="fa fa-font fa-2x"></i></a></li>
       <!--<li><a href="#" id="insertListBlockBtn" title="Insert List Block"><i class="fa fa-th-list fa-2x"></i></a></li>-->
       <li><a href="#" id="insertCodeBlockBtn" title="Insert Code Block"><i class="fa fa-code fa-2x"></i></a></li>
@@ -82,12 +86,25 @@
 </nav>
 </template>
 
+<template name="authorThumbnail">
+<div class="col-md-3 thumb" slideId="{{ id }}" slideIndex="{{ index }}" slideType="{{ type }}">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <center>{{ index }}</center>
+    </div>
+    <div class="panel-body">
+    </div>
+  </div>
+</div>
+</template>
+
 <template name="authorSlide">
 <div class="col-md-12 slide" slideId="{{ id }}" slideIndex="{{ index }}" slideType="{{ type }}">
   <div class="panel panel-default dp-panel">
     <div class="panel-heading slide-handle">
       <div class="btn-group pull-right">
-        <button class="btn btn-default" id="editThisSlide" title="Edit This Slide"><i class="fa fa-edit"></i></button>
+        <button class="btn btn-default" id="changeBackground" title="Change This Slide's Background"><i class="fa fa-file-image-o"></i></button>
+        <button class="btn btn-default" id="createFragments" title="Create Fragments for This Slide"><i class="fa fa-bolt"></i></button>
         <button class="btn btn-default" id="deleteThisSlide" title="Delete This Slide"><i class="fa fa-trash-o"></i></button>
         <button class="btn btn-default" id="duplicateThisSlide" title="Duplicate This Slide"><i class="fa fa-copy"></i></button>
       </div>

@@ -152,16 +152,22 @@ Template.authorToolbar.events({
 
   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
     function on(event) {
-      $('.sortable')
-        .addClass('sortable-enabled')
-        .sortable({ items: '.slide', handle: '.slide-handle' });
-        //.bind('sortupdate', slideOrderUpdated);
+      //$('.dp-sortable')
+      //  .addClass('dp-sortable-enabled')
+      //  .sortable({ items: '.slide', handle: '.slide-handle' });
+      //  //.bind('sortupdate', slideOrderUpdated);
+      var deck = $('.dp-deck');
+      deck.find('.slide').hide(0);
+      deck.find('.dp-thumbnail').show(0);
     },
     function off(event) {
-      $('.sortable')
-        .removeClass('sortable-enabled')
-        .sortable('disable');
-      slideOrderUpdated();
+      var deck = $('.dp-deck');
+      deck.find('.slide').show(0);
+      deck.find('.dp-thumbnail').hide(0);
+      //$('.dp-sortable')
+      //  .removeClass('dp-sortable-enabled')
+      //  .sortable('disable');
+      //slideOrderUpdated();
     }),
 
   'click #insertTextBlockBtn': genInsertHandler(function(next) {
@@ -199,7 +205,23 @@ Template.authorToolbar.events({
 });
 
 Template.authorSlide.rendered = function() {
+  var self = this;
   this.slideFocusMgr = slideFocusMgr;
+  logger.info('will render thumb:', this.data.id, this.$('.panel-body'));
+  html2canvas(this.$('.panel-body').get(0), {
+    onrendered: function(canvas) {
+      var ec = document.createElement('canvas');
+      ec.setAttribute('width',230);
+      ec.setAttribute('height',175);
+      var ctx = ec.getContext('2d');
+      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, 230, 175);
+      var dataURL = ec.toDataURL();
+      var img = $(document.createElement('img'));
+      img.attr('src', dataURL);
+      logger.info('got canvas, rendered');
+      $('.dp-thumbnail .thumb[slideId="' + self.data.id + '"] .panel-body').append(img);
+    }
+  });
 };
 
 Template.authorSlide.helpers({
