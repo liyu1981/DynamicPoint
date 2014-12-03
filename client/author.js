@@ -65,6 +65,8 @@ function slideOrderUpdated() {
 
 function renderThumbnail(divNode, callback) {
   //logger.info('will render thumb:', divNode);
+  var w = 640;
+  var h = 480;
   html2canvas(divNode, {
     onrendered: function(canvas) {
       var ec = document.createElement('canvas');
