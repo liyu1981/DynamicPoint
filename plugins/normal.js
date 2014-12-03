@@ -7,7 +7,7 @@ function saveChange(e) {
   var v = {};
   var type = e.attr('slideType');
   var index = parseInt(e.attr('slideIndex'));
-  var h = e.html().trim();
+  var h = e.find('section.present').html().trim();
   v['slides.' + index + '.content'] = h;
   dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
 }
@@ -158,11 +158,20 @@ DPPlugins['normal'] = {
 
     helpers: {
       'author': function() {
+        var authorContentTpl = [
+          '<div id="content%s" class="content dp-content reveal" slideIndex="%d">',
+          '<div class="slides" style="width: 960px; height: 700px;">',
+          '<section class="present">',
+          '%s',
+          '</section>',
+          '</div>',
+          '</div>'
+        ].join('');
         return {
           authorContent: function() {
             // have to do this to overcome the contenteditable issue of meteor now
             // ref: https://github.com/meteor/meteor/issues/1964
-            return sprintf('<div id="content%s" class="content dp-content" slideIndex="%d">%s</div>', this.id, this.index, this.content);
+            return sprintf(authorContentTpl, this.id, this.index, this.content);
           }
         };
       }
@@ -183,7 +192,7 @@ DPPlugins['normal'] = {
             }
           },
 
-          'click .dp-content > div': function(event) {
+          'click .dp-content section > div': function(event) {
             var ti = Template.instance();
             if (ti && ti.editmgr) {
               ti.editmgr.setTarget($(event.currentTarget));
@@ -191,7 +200,7 @@ DPPlugins['normal'] = {
             }
           },
 
-          'dblclick .dp-content > div': function(event) {
+          'dblclick .dp-content section > div': function(event) {
             var ti = Template.instance();
             if (ti && ti.editmgr) {
               ti.editmgr.setTarget($(event.currentTarget));
@@ -227,7 +236,7 @@ DPPlugins['normal'] = {
             if (sfm && sfm.currentSlide) {
               htmlGenerator(function(html) {
                 var node = $(html);
-                sfm.currentSlide.find('.dp-content').append(node);
+                sfm.currentSlide.find('.dp-content section.present').append(node);
               });
             }
           };

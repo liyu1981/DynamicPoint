@@ -38,7 +38,7 @@ body.dp {
 
     &-focused {
       .panel-heading {
-        box-shadow: #428bca 0px 0px 15px;
+        box-shadow: #2e6da4 0px 0px 15px;
       }
     }
   }
@@ -96,8 +96,8 @@ body.dp {
   }
 
   .dp-panel {
-    min-height: 830px;
-    max-height: 830px;
+    //min-height: 830px;
+    //max-height: 830px;
     overflow: auto;
 
     .panel-heading {
@@ -106,8 +106,8 @@ body.dp {
 
     .panel-body {
       padding: 8px 8px;
-      height: 773px;
-      min-height: 773px;
+      //height: 773px;
+      min-height: 300px;
       overflow: hidden;
     }
 
@@ -121,9 +121,13 @@ body.dp {
     }
 
     .dp-content {
-      min-height: 757px;
+      margin: auto;
+      max-width: 960px;
+      min-width: 960px;
+      min-height: 700px;
+      max-height: 700px;
       position: relative;
-      background-color: #eee;
+      background-color: #fdf6e3;
 
     }
   }
@@ -251,17 +255,17 @@ body.dp {
 @media (min-width: 1200px) and (max-width: 1360px) {
   body.dp {
     .dp-panel {
-      min-height: 680px;
-      max-height: 680px;
+      //min-height: 680px;
+      //max-height: 680px;
 
       .panel-body {
-        min-height: 623px;
-        height: 623px;
+        //min-height: 623px;
+        //height: 623px;
       }
 
       .dp-content {
-        min-height: 607px;
-        height: 607px;
+        //min-height: 607px;
+        //height: 607px;
       }
     }
   }

@@ -167,7 +167,9 @@ Router.route('/author', {
       'bower_components/ckeditor/plugins/font/lang/en.js',
       'bower_components/ckeditor/plugins/colorbutton/lang/en.js',
       'bower_components/draggabilly/dist/draggabilly.pkgd.min.js',
-      'bower_components/html2canvas/build/html2canvas.min.js'
+      'bower_components/html2canvas/build/html2canvas.min.js',
+      'css/dp-reveal.css',
+      'bower_components/reveal.js/css/theme/solarized.css'
     ]));
   },
 
