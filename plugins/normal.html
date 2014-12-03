@@ -3,7 +3,13 @@
 </template>
 
 <template name="author-slide-normal-toolbar">
-<button class="btn btn-default" id="changeBackground" title="Change This Slide's Background"><i class="fa fa-file-image-o"></i></button>
+<div class="btn-group">
+  <button class="btn btn-default dropdown-toggle" id="changeBackground" title="Change This Slide's Background" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-file-image-o"></i></button>
+  <div class="dropdown-menu pull-right">
+    <div style="min-width: 480px">
+    </div>
+  </div>
+</div>
 <button class="btn btn-default" id="createFragments" title="Create Fragments for This Slide"><i class="fa fa-bolt"></i></button>
 </template>
 

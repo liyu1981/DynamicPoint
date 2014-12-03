@@ -203,6 +203,20 @@ DPPlugins['normal'] = {
     }
   },
 
+  'template-toolbar': {
+    events: {
+      'author': function() {
+        return {
+          'click #changeBackground': function(event) {
+            var e = $(event.currentTarget);
+            console.log('clicked me', e);
+            e.popoverX();
+          }
+        };
+      }
+    }
+  },
+
   'template-authortool': {
     events: {
       'author': function() {
