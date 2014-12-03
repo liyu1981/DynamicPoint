@@ -39,7 +39,7 @@ commonDPPageSetup = function() {
   $(function() {
     $('body')
       .addClass('dp') // add the global dp class
-      .addClass('dp-theme-specklednoise') // default theme
+      .addClass('dp-theme-waves') // default theme
       ;
     // alertify setup
     if (window.alertify) {

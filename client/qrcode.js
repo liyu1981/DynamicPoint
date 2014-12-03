@@ -1,9 +1,6 @@
 Template.qrcode.rendered = function() {
+  commonDPPageSetup();
   $(function() {
-    $('body')
-      .addClass('dp') // add the global dp-author class
-      .addClass('dp-theme-specklednoise') // default theme
-      ;
     waitfor('.qrcode-container', function() {
       $('.qrcode-container').each(function(index, elem) {
         var e = $(elem);
