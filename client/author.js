@@ -1,5 +1,6 @@
 function SlideFocusMgr() {
   this.currentSlide = null;
+  Session.set('focusSlideType', '');
 }
 
 SlideFocusMgr.prototype.focus = function(node) {
@@ -9,9 +10,14 @@ SlideFocusMgr.prototype.focus = function(node) {
   }
   this.currentSlide = node;
   this.currentSlide.addClass('dp-slide-focused');
-}
+  Session.set('focusSlideType', this.currentSlide.attr('slideType'));
+};
 
-var slideFocusMgr = new SlideFocusMgr();
+SlideFocusMgr.prototype.focusChangeType = function(type) {
+  Session.set('focusSlideType', this.currentSlide.attr('slideType'));
+};
+
+var slideFocusMgr = null;
 
 function genToolbarToggleClickHandler(target, onCb, offCb) {
   return function(event) {
@@ -57,42 +63,8 @@ function slideOrderUpdated() {
   dpSaveMgr.saveNow();
 }
 
-//function genInsertHandler(htmlGenerator) {
-//  return function(event) {
-//    var selection = window.getSelection();
-//    var range = selection.getRangeAt(0);
-//    var lastFocusNode = selection.focusNode;
-//    if (selection && range && htmlGenerator) {
-//      htmlGenerator(function(html) {
-//        var node = range.createContextualFragment(html);
-//        range.insertNode(node);
-//        var r = document.createRange();
-//        r.setStart(lastFocusNode, 0);
-//        r.setEnd(lastFocusNode, 0);
-//        selection.removeAllRanges();
-//        selection.addRange(r);
-//       });
-//     }
-//  };
-//}
-
-function genInsertHandler(htmlGenerator) {
-  return function(event) {
-    console.log('insert:', Template.instance());
-    var ti = Template.instance();
-    if (ti && ti.slideFocusMgr && ti.slideFocusMgr.currentSlide) {
-      htmlGenerator(function(html) {
-        var node = $(html);
-        ti.slideFocusMgr.currentSlide.find('.dp-content').append(node);
-      });
-    }
-  };
-}
-
 function renderThumbnail(divNode, callback) {
-  logger.info('will render thumb:', divNode);
-  var w = 640;
-  var h = 480;
+  //logger.info('will render thumb:', divNode);
   html2canvas(divNode, {
     onrendered: function(canvas) {
       var ec = document.createElement('canvas');
@@ -116,6 +88,10 @@ dpSaveMgr.saveNowCb = function(saving) {
 };
 
 Template.author.created = function() {
+  // create our slideFocusMgr
+  slideFocusMgr = new SlideFocusMgr();
+  // and save it in the plugin meta
+  DPPlugins._meta.slideFocusMgr = slideFocusMgr;
 };
 
 Template.author.helpers({
@@ -125,7 +101,6 @@ Template.author.helpers({
 });
 
 Template.author.rendered = function() {
-  this.slideFocusMgr = new SlideFocusMgr;
   commonDPPageSetup();
   Session.set('documentTitle', formatDocumentTitle(this.data.title));
   $(function() {
@@ -165,9 +140,12 @@ Template.authorNavbar.events({
   }
 });
 
-Template.authorToolbar.rendered = function() {
-  this.slideFocusMgr = slideFocusMgr;
-};
+Template.authorToolbar.helpers({
+  calcSlideTemplateAuthorTool: function() {
+    var fst = Session.get('focusSlideType');
+    return dpMode + '-slide-' + fst + '-authortool';
+  }
+});
 
 Template.authorToolbar.events({
   'click #newSlideBtn': function(event) {
@@ -193,39 +171,7 @@ Template.authorToolbar.events({
         .removeClass('dp-sortable-enabled')
         .sortable('disable');
       slideOrderUpdated();
-    }),
-
-  'click #insertTextBlockBtn': genInsertHandler(function(next) {
-    next('<div style=""><h3>Hello,world</h3></div>');
-  }),
-
-  'click #insertListBlockBtn': genInsertHandler(function(next) {
-    next('<div style=""><ul><li>hello</li><li>world</li></ul></div>');
-  }),
-
-  'click #insertImageBtn': genInsertHandler(function(next) {
-    alertify.prompt('The URI of image',
-      'https://graph.facebook.com/minhua.lin.9/picture?type=large',
-      function(event, value) {
-        next('<div style=""><img src="' + value + '"></img></div>');
-      }).setHeader('Insert Image');
-  }),
-
-  'click #insertCodeBlockBtn': genInsertHandler(function(next) {
-    alertify.codePrompt('Paste code here',
-      'console.log(\'hello,world\');',
-      function(event, value) {
-        next('<div style=""><code>' + value + '</code></div>');
-      }).setHeader('Insert Code Block');
-  }),
-
-  'click #insertMediaBtn': genInsertHandler(function(next) {
-    alertify.codePrompt('Paste media embeding code here',
-      '<iframe width="320px" height="240px" src="//www.youtube.com/embed/l6k_5GHwLRA" frameborder="0" allowfullscreen></iframe>',
-      function(event, value) {
-        next('<div style="position: absolute; text-align: center;">' + value + '</div>');
-      }).setHeader('Insert Embedded Media');
-  })
+    })
 });
 
 Template.authorThumbnail.helpers({
@@ -265,9 +211,24 @@ Template.authorSlide.helpers({
     }
   },
 
+  calcSlideTemplateToolBar: function() {
+    if (this.type in DPPlugins) {
+      return dpMode + '-slide-' + this.type + '-toolbar';
+    } else {
+      return 'author-slide-normal-toolbar';
+    }
+  },
+
   allSlideTypes: function() {
     var self = this;
     return _.reject(dpPluginGetAllTypes(), function(t) { return t.id === self.type; });
+  },
+
+  displayType: function() {
+    var self = this;
+    var alltypes = dpPluginGetAllTypes();
+    var t = _.find(alltypes, function(t) { return t.id === self.type });
+    return t ? t.displayName : this.type;
   }
 });
 

@@ -51,7 +51,7 @@ waitOnJsAndCss = (function() {
         default: break;
       }
     });
-    logger.info('will inject js & css:', assetArray);
+    //logger.info('will inject js & css:', assetArray);
     async.series(tasks, function() {
       callback();
     });
@@ -167,7 +167,9 @@ Router.route('/author', {
       'bower_components/ckeditor/plugins/font/lang/en.js',
       'bower_components/ckeditor/plugins/colorbutton/lang/en.js',
       'bower_components/draggabilly/dist/draggabilly.pkgd.min.js',
-      'bower_components/html2canvas/build/html2canvas.min.js'
+      'bower_components/html2canvas/build/html2canvas.min.js',
+      'css/dp-reveal.css',
+      'bower_components/reveal.js/css/theme/solarized.css'
     ]));
   },
 
@@ -176,7 +178,7 @@ Router.route('/author', {
       window.location.href = '/welcome';
     }
     // now register plugins' events
-    dpPluginRegAllTemplate(dpMode);
+    dpPluginRegAll(dpMode);
     this.next();
   },
 
@@ -203,7 +205,7 @@ Router.route('/audience', {
       window.location.href = '/welcome';
     }
     // now register plugins' events
-    dpPluginRegAllTemplate(dpMode);
+    dpPluginRegAll(dpMode);
     this.next();
   },
 
@@ -232,7 +234,7 @@ Router.route('/speaker', {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
-    dpPluginRegAllTemplate(dpMode);
+    dpPluginRegAll(dpMode);
     this.next();
   },
 

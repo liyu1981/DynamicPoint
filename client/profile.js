@@ -46,8 +46,6 @@ Template.profile.events({
   },
 
   'click .delete-this-deck': function(event) {
-    event.stopPropagation();
-    event.preventDefault();
     var e = $(event.currentTarget);
     var di = e.closest('.dp-deck-item');
     var deckId = di.attr('deckId');
@@ -57,8 +55,6 @@ Template.profile.events({
   },
 
   'click .duplicate-this-deck': function(event) {
-    event.stopPropagation();
-    event.preventDefault();
     var e = $(event.currentTarget);
     var di = e.closest('dp-deck-item');
     var deckId = di.attr('deckId');
