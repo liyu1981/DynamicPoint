@@ -10,6 +10,10 @@
     100% { -webkit-transform: scale(1); }
 }
 
+.content-left   { text-align: left; }
+.content-right  { text-align: right; }
+.content-center { text-align: center; }
+
 body.dp {
   overflow: auto !important;
 
@@ -136,6 +140,12 @@ body.dp {
     padding-left: 80px;
   }
 
+  .dp-deck-item {
+    &:hover {
+      background-color: #eee;
+    }
+  }
+
   div.sortable-placeholder {
     width: 260px;
     float: left;
@@ -189,7 +199,7 @@ body.dp {
       display: block !important;
       width: auto !important;
       padding-bottom: 0;
-      overflow: visible !important;
+      overflow: visible;
     }
     .navbar-collapse.in {
       overflow-x: visible;
@@ -235,7 +245,6 @@ body.dp {
   .dp-hover-checked:hover .fa-square-o:before {
     content: "\f046";
   }
-
 }
 
 // optimize the 1366x768 case

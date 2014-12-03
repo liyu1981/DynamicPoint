@@ -2,6 +2,19 @@
 {{{authorContent}}}
 </template>
 
+<template name="author-slide-normal-toolbar">
+<button class="btn btn-default" id="changeBackground" title="Change This Slide's Background"><i class="fa fa-file-image-o"></i></button>
+<button class="btn btn-default" id="createFragments" title="Create Fragments for This Slide"><i class="fa fa-bolt"></i></button>
+</template>
+
+<template name="author-slide-normal-authortool">
+<li><a href="#" id="insertTextBlockBtn" title="Insert Text Block"><i class="fa fa-font fa-2x"></i></a></li>
+<li><a href="#" id="insertListBlockBtn" title="Insert List Block"><i class="fa fa-th-list fa-2x"></i></a></li>
+<li><a href="#" id="insertCodeBlockBtn" title="Insert Code Block"><i class="fa fa-code fa-2x"></i></a></li>
+<li><a href="#" id="insertImageBtn" title="Insert Image"><i class="fa fa-image fa-2x"></i></a></li>
+<li><a href="#" id="insertMediaBtn" title="Insert Media"><i class="fa fa-youtube-play fa-2x"></i></a></li>
+</template>
+
 <template name="audience-slide-normal">
 <section id="{{ id }}">{{{ content }}}</section>
 </template>

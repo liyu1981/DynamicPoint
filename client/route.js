@@ -51,7 +51,7 @@ waitOnJsAndCss = (function() {
         default: break;
       }
     });
-    logger.info('will inject js & css:', assetArray);
+    //logger.info('will inject js & css:', assetArray);
     async.series(tasks, function() {
       callback();
     });
@@ -176,7 +176,7 @@ Router.route('/author', {
       window.location.href = '/welcome';
     }
     // now register plugins' events
-    dpPluginRegAllTemplate(dpMode);
+    dpPluginRegAll(dpMode);
     this.next();
   },
 
@@ -203,7 +203,7 @@ Router.route('/audience', {
       window.location.href = '/welcome';
     }
     // now register plugins' events
-    dpPluginRegAllTemplate(dpMode);
+    dpPluginRegAll(dpMode);
     this.next();
   },
 
@@ -232,7 +232,7 @@ Router.route('/speaker', {
     if (!dpUrlParams.query.id) {
       window.location.href = '/welcome';
     }
-    dpPluginRegAllTemplate(dpMode);
+    dpPluginRegAll(dpMode);
     this.next();
   },
 

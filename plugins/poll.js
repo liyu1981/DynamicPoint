@@ -97,6 +97,8 @@ function d3PieChart() {
 }
 
 DPPlugins['poll'] = {
+  displayName: 'Poll',
+
   init: function() {
     return {
       question: 'This talk is boring ?',
@@ -104,78 +106,80 @@ DPPlugins['poll'] = {
     };
   },
 
-  templateRendered: {
-    'speaker': function() {
-      var self = this;
-      var dpprt = Template.instance().dpprt;
-      var slideId = this.data.id;
-      $('.slides').on('runStatusChanged', function(event, id, fields) {
-        d3PieChartChange(genPieChartData(dpprt, { runStatus: fields }, slideId));
-      });
-      d3PieChart();
-      d3PieChartChange(genPieChartData(dpprt, self.data, slideId));
-    }
-  },
-
-  templateHelpers: {
-    'audience': function() {
-      return {
-        voted: function() {
-          var dpprt = Template.instance().dpprt;
-          var id = Session.get('audienceId');
-          var r = _.reduce(dpprt.getPluginData(dpRunStatus, this.id), function(memo, v, k) {
-            if (v.indexOf(id) >= 0) {
-              memo.push(k);
-            }
-            return memo;
-          }, []);
-          return ((r.length >= 1) ? r[0] : null);
-        }
-      };
-    }
-  },
-
-  templateEvents: {
-    'audience': function() {
-      return {
-        'click .poll-btn': function(event) {
-          var dpprt = Template.instance().dpprt;
-          var e = $(event.currentTarget);
-          var s = e.closest('section');
-          var data = {};
-          var pluginDataPrefix = dpprt.getPluginDataPrefix(s.attr('id'));
-          data[pluginDataPrefix + e.attr('id')] = Session.get('audienceId');
-          dpprt.update({ $push: data });
-        }
-      };
+  template: {
+    rendered: {
+      'speaker': function() {
+        var self = this;
+        var dpprt = Template.instance().dpprt;
+        var slideId = this.data.id;
+        $('.slides').on('runStatusChanged', function(event, id, fields) {
+          d3PieChartChange(genPieChartData(dpprt, { runStatus: fields }, slideId));
+        });
+        d3PieChart();
+        d3PieChartChange(genPieChartData(dpprt, self.data, slideId));
+      }
     },
 
-    'author': function() {
-      return {
-        'change form#pollForm': function(event) {
-          var s = $(event.currentTarget).closest('.slide');
-          var slideIndex = s.attr('slideIndex');
-          var formdata = {
-            question: s.find('input.q').val(),
-            anwsers: []
-          };
-          s.find('input.a').each(function(index, a) { formdata.anwsers.push($(a).val()); });
-          var setData = {};
-          setData['slides.' + slideIndex + '.content'] = formdata;
-          dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: setData });
-          dpSaveMgr.saveNow();
-        },
+    helpers: {
+      'audience': function() {
+        return {
+          voted: function() {
+            var dpprt = Template.instance().dpprt;
+            var id = Session.get('audienceId');
+            var r = _.reduce(dpprt.getPluginData(dpRunStatus, this.id), function(memo, v, k) {
+              if (v.indexOf(id) >= 0) {
+                memo.push(k);
+              }
+              return memo;
+            }, []);
+            return ((r.length >= 1) ? r[0] : null);
+          }
+        };
+      }
+    },
 
-        'click #addOption': function(event) {
-          var s = $(event.currentTarget).closest('.slide');
-          var slideIndex = s.attr('slideIndex');
-          var optionName = 'option' + (dpTheDeck.slides[slideIndex].content.anwsers.length + 1);
-          var pushData = {};
-          pushData['slides.' + slideIndex + '.content.anwsers'] = optionName;
-          dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: pushData });
-          dpSaveMgr.saveNow();
-        }
-      };
+    events: {
+      'audience': function() {
+        return {
+          'click .poll-btn': function(event) {
+            var dpprt = Template.instance().dpprt;
+            var e = $(event.currentTarget);
+            var s = e.closest('section');
+            var data = {};
+            var pluginDataPrefix = dpprt.getPluginDataPrefix(s.attr('id'));
+            data[pluginDataPrefix + e.attr('id')] = Session.get('audienceId');
+            dpprt.update({ $push: data });
+          }
+        };
+      },
+
+      'author': function() {
+        return {
+          'change form#pollForm': function(event) {
+            var s = $(event.currentTarget).closest('.slide');
+            var slideIndex = s.attr('slideIndex');
+            var formdata = {
+              question: s.find('input.q').val(),
+              anwsers: []
+            };
+            s.find('input.a').each(function(index, a) { formdata.anwsers.push($(a).val()); });
+            var setData = {};
+            setData['slides.' + slideIndex + '.content'] = formdata;
+            dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: setData });
+            dpSaveMgr.saveNow();
+          },
+
+          'click #addOption': function(event) {
+            var s = $(event.currentTarget).closest('.slide');
+            var slideIndex = s.attr('slideIndex');
+            var optionName = 'option' + (dpTheDeck.slides[slideIndex].content.anwsers.length + 1);
+            var pushData = {};
+            pushData['slides.' + slideIndex + '.content.anwsers'] = optionName;
+            dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: pushData });
+            dpSaveMgr.saveNow();
+          }
+        };
+      }
     }
   }
 };

@@ -34,7 +34,7 @@
       <form class="navbar-form navbar-left dp-author-navbar">
         <div class="input-group">
           <div class="input-group-addon"><strong>Title</strong></div>
-          <input type="text" class="form-control dp-title" value="{{ title }}" />
+          <input type="text" class="form-control dp-title" value="{{title}}" />
         </div>
       </form>
       <ul class="nav navbar-nav navbar-right dp-navbar-menu">
@@ -46,9 +46,9 @@
           <li class="divider"></li>
           {{#if isEmpty slides}}
           {{else}}
-          <li><a href="/qrcode?id={{ _id }}" target="_blank"><i class="fa fa-qrcode"></i> QR Codes</a></li>
+          <li><a href="/qrcode?id={{_id}}" target="_blank"><i class="fa fa-qrcode"></i> QR Codes</a></li>
           <li class="divider"></li>
-          <li><a href="/export?id={{ _id }}" target="_blank"><i class="fa fa-cloud-download"></i> Export To File</a></li>
+          <li><a href="/export?id={{_id}}" target="_blank"><i class="fa fa-cloud-download"></i> Export To File</a></li>
           {{/if}}
           {{> dpNavbarDropdownImportFromFile}}
           {{> dpNavbarDropdownAbout}}
@@ -57,7 +57,7 @@
       </ul>
       <form class="navbar-form navbar-right">
         <div class="form-group">
-          <span id="dpActionInfo" class="dp-action-info">{{ dpActionInfo }}</span>
+          <span id="dpActionInfo" class="dp-action-info">{{dpActionInfo}}</span>
           <button type="button" class="btn btn-success" id="saveBtn"><i class="fa fa-save"></i></button>
         </div>
       </form>
@@ -72,51 +72,50 @@
     {{> dpNavbarDPLogo}}
     <hr>
   </div>
-  <div class="collapse navbar-collapse navbar-ex1-collapse">
+  <div class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
       <li><a href="#" id="newSlideBtn" title="New Slide"><i class="fa fa-plus-circle fa-2x"></i></a></li>
       <li><a href="#" id="sortToggle" title="Start Drag&Drop Sort"><i class="fa fa-th fa-2x"></i></a></li>
-      <li><a href="#" id="insertTextBlockBtn" title="Insert Text Block"><i class="fa fa-font fa-2x"></i></a></li>
-      <!--<li><a href="#" id="insertListBlockBtn" title="Insert List Block"><i class="fa fa-th-list fa-2x"></i></a></li>-->
-      <li><a href="#" id="insertCodeBlockBtn" title="Insert Code Block"><i class="fa fa-code fa-2x"></i></a></li>
-      <li><a href="#" id="insertImageBtn" title="Insert Image"><i class="fa fa-image fa-2x"></i></a></li>
-      <li><a href="#" id="insertMediaBtn" title="Insert Media"><i class="fa fa-youtube-play fa-2x"></i></a></li>
+    </ul>
+  </div>
+  <div class="collapse navbar-collapse dp-navbar-authortool">
+    <ul class="nav navbar-nav">
+      {{> Template.dynamic template=calcSlideTemplateAuthorTool}}
     </ul>
   </div>
 </nav>
 </template>
 
 <template name="authorThumbnail">
-<div class="col-md-3 thumb sortable-block" slideId="{{ id }}" slideIndex="{{ index }}">
+<div class="col-md-3 thumb sortable-block" slideId="{{id}}" slideIndex="{{index}}">
   <div class="panel panel-default">
     <div class="panel-heading sortable-handle">
-      <center><strong>{{ index }}</strong></center>
+      <center><strong>{{index}}</strong></center>
     </div>
     <div class="panel-body">
-      <img src="{{ thumbDataURL }}" />
+      <img src="{{thumbDataURL}}" />
     </div>
   </div>
 </div>
 </template>
 
 <template name="authorSlide">
-<div class="col-md-12 slide" slideId="{{ id }}" slideIndex="{{ index }}" slideType="{{ type }}">
+<div class="col-md-12 slide" slideId="{{id}}" slideIndex="{{index}}" slideType="{{type}}">
   <div class="panel panel-default dp-panel">
     <div class="panel-heading slide-handle">
       <div class="btn-group pull-right">
-        <button class="btn btn-default" id="changeBackground" title="Change This Slide's Background"><i class="fa fa-file-image-o"></i></button>
-        <button class="btn btn-default" id="createFragments" title="Create Fragments for This Slide"><i class="fa fa-bolt"></i></button>
+        {{> Template.dynamic template=calcSlideTemplateToolBar}}
         <button class="btn btn-default" id="deleteThisSlide" title="Delete This Slide"><i class="fa fa-trash-o"></i></button>
         <button class="btn btn-default" id="duplicateThisSlide" title="Duplicate This Slide"><i class="fa fa-copy"></i></button>
       </div>
       <div>
         <div class="btn-group">
-          <button type="button" class="btn btn-default">{{ index }}</button>
+          <button type="button" class="btn btn-default">{{index}}</button>
           <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-check-square-o"></i> {{ type }} <span class="caret"></span></button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-check-square-o"></i> {{displayType}} <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
               {{#each allSlideTypes}}
-              <li class="dp-hover-checked"><a class="change-slide-type-btn" href="#" id="{{id}}"><i class="fa fa-square-o"></i> {{ displayName }}</a></li>
+              <li class="dp-hover-checked"><a class="change-slide-type-btn" href="#" id="{{id}}"><i class="fa fa-square-o"></i> {{displayName}}</a></li>
               {{/each}}
             </ul>
           </div>

@@ -1,147 +1,146 @@
-;(function() {
+var ckeditorConfig = {
+  customConfig: 'js/ckeconfig.js'
+};
 
-  var ckeditorConfig = {
-    customConfig: 'js/ckeconfig.js'
-  };
+function saveChange(e) {
+  // e is the jquery object of current .slide
+  var v = {};
+  var type = e.attr('slideType');
+  var index = parseInt(e.attr('slideIndex'));
+  var h = e.html().trim();
+  v['slides.' + index + '.content'] = h;
+  dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
+}
 
-  function saveChange(e) {
-    // e is the jquery object of current .slide
-    var v = {};
-    var type = e.attr('slideType');
-    var index = parseInt(e.attr('slideIndex'));
-    var h = e.html().trim();
-    v['slides.' + index + '.content'] = h;
-    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
-  }
+function EditMgr() {
+  this.currentTarget = null;
+  this.currentFacilities = {};
+  this.curerntTargetMode = null;
 
-  function EditMgr() {
-    this.currentTarget = null;
-    this.currentFacilities = {};
-    this.curerntTargetMode = null;
-
-    this._modeFSM = {
-      'null -> edit': function(mgr, callback) {
-        var t = mgr.currentTarget;
-        t.addClass('in-edit');
-        t.attr('contenteditable', true);
-        CKEDITOR.disableAutoInline = true;
-        var e = CKEDITOR.inline(t.get(0), ckeditorConfig);
-        mgr.currentFacilities['ckeditor'] = {
-          instance: e,
-          releaseFunc: function(cke) {
-            cke.destroy();
-            t.removeAttr('contenteditable');
-          }
-        };
-        t.focus();
-      },
-
-      'null -> transform': function(mgr, callback) {
-        var t = mgr.currentTarget;
-        t.addClass('in-transform');
-        //var draggie = new Draggabilly(t.get(0));
-        //mgr.currentFacilities['draggie'] = {
-        //  instance: draggie,
-        //  releaseFunc: function(draggie) {
-        //    draggie.disable();
-        //  }
-        //};
-        t.attr('tabindex', '1');
-        t.keyup(function(event) {
-          if (event.keyCode === 46) {
-            //console.log('will delete this', event.currentTarget);
-            var e = $(event.currentTarget);
-            var dpc = e.closest('.dp-content');
-            mgr.releaseCurrentTarget(function() {
-              e.remove();
-              saveChange(dpc);
-            });
-          }
-        });
-        t.focus();
-      },
-
-      'transform -> edit': function(mgr, callback) {
-        mgr.changeMode(null);
-        mgr.currentTarget.off('keyup');
-        mgr.changeMode('edit');
-      },
-
-      'edit -> null': function(mgr, callback) {
-        var t = mgr.currentTarget;
-        var f = mgr.currentFacilities['ckeditor'];
-        if (f) {
-          f.releaseFunc(f.instance);
-          mgr.currentFacilities['ckeditor'] = null;
+  this._modeFSM = {
+    'null -> edit': function(mgr, callback) {
+      var t = mgr.currentTarget;
+      t.addClass('in-edit');
+      t.attr('contenteditable', true);
+      CKEDITOR.disableAutoInline = true;
+      var e = CKEDITOR.inline(t.get(0), ckeditorConfig);
+      mgr.currentFacilities['ckeditor'] = {
+        instance: e,
+        releaseFunc: function(cke) {
+          cke.destroy();
+          t.removeAttr('contenteditable');
         }
-        t.removeClass('in-edit');
-        t.removeAttr('tabindex');
-      },
-
-      'transform -> null': function(mgr, callback) {
-        var t = mgr.currentTarget;
-        var f = mgr.currentFacilities['draggie'];
-        if (f) {
-          f.releaseFunc(f.instance);
-          mgr.currentFacilities['draggie'] = null;
-        }
-        t.removeClass('in-transform');
-      }
-    };
-  }
-
-  EditMgr.prototype.changeMode = function(mode, callback) {
-    callback = callback || function() {};
-    if (mode === null || this.curerntTargetMode === mode) {
-      callback(null);
-    }
-    var t = sprintf('%s -> %s', this.curerntTargetMode, mode);
-    if (this._modeFSM[t]) {
-      this._modeFSM[t](this, callback);
-      this.curerntTargetMode = mode;
-    } else {
-      callback(new Error('Can not:' + t));
-    }
-  };
-
-  EditMgr.prototype.setTarget = function(target) {
-    // target should be jquery obj
-    if (!target.get(0)) { return; }
-    if (this.currentTarget !== null && this.currentTarget.get(0) == target.get(0)) { return; }
-    if (this.currentTarget !== null) {
-      this.releaseCurrentTarget();
-    }
-    //console.log('will set target:', target);
-    this.currentTarget = target;
-  };
-
-  EditMgr.prototype.releaseCurrentTarget = function(callback) {
-    if (this.currentTarget === null) { return; }
-    this.changeMode(null);
-    _.each(this.currentFacilities, function(f) {
-      if (f && f.releaseFunc) {
-        f.releaseFunc(f.instance);
-      }
-    });
-    this.currentFacilities = {};
-    this.currentTarget = null;
-    if (callback) { callback(); }
-  };
-
-  DPPlugins['normal'] = {
-    displayName: 'Normal',
-
-    init: function() {
-      return '<div style=""><h2>Hello</h2></div>';
+      };
+      t.focus();
     },
 
-    templateUpdated: {
+    'null -> transform': function(mgr, callback) {
+      var t = mgr.currentTarget;
+      t.addClass('in-transform');
+      //var draggie = new Draggabilly(t.get(0));
+      //mgr.currentFacilities['draggie'] = {
+      //  instance: draggie,
+      //  releaseFunc: function(draggie) {
+      //    draggie.disable();
+      //  }
+      //};
+      t.attr('tabindex', '1');
+      t.keyup(function(event) {
+        if (event.keyCode === 46) {
+          //console.log('will delete this', event.currentTarget);
+          var e = $(event.currentTarget);
+          var dpc = e.closest('.dp-content');
+          mgr.releaseCurrentTarget(function() {
+            e.remove();
+            saveChange(dpc);
+          });
+        }
+      });
+      t.focus();
+    },
+
+    'transform -> edit': function(mgr, callback) {
+      mgr.changeMode(null);
+      mgr.currentTarget.off('keyup');
+      mgr.changeMode('edit');
+    },
+
+    'edit -> null': function(mgr, callback) {
+      var t = mgr.currentTarget;
+      var f = mgr.currentFacilities['ckeditor'];
+      if (f) {
+        f.releaseFunc(f.instance);
+        mgr.currentFacilities['ckeditor'] = null;
+      }
+      t.removeClass('in-edit');
+      t.removeAttr('tabindex');
+    },
+
+    'transform -> null': function(mgr, callback) {
+      var t = mgr.currentTarget;
+      var f = mgr.currentFacilities['draggie'];
+      if (f) {
+        f.releaseFunc(f.instance);
+        mgr.currentFacilities['draggie'] = null;
+      }
+      t.removeClass('in-transform');
+    }
+  };
+}
+
+EditMgr.prototype.changeMode = function(mode, callback) {
+  callback = callback || function() {};
+  if (mode === null || this.curerntTargetMode === mode) {
+    callback(null);
+  }
+  var t = sprintf('%s -> %s', this.curerntTargetMode, mode);
+  if (this._modeFSM[t]) {
+    this._modeFSM[t](this, callback);
+    this.curerntTargetMode = mode;
+  } else {
+    callback(new Error('Can not:' + t));
+  }
+};
+
+EditMgr.prototype.setTarget = function(target) {
+  // target should be jquery obj
+  if (!target.get(0)) { return; }
+  if (this.currentTarget !== null && this.currentTarget.get(0) == target.get(0)) { return; }
+  if (this.currentTarget !== null) {
+    this.releaseCurrentTarget();
+  }
+  //console.log('will set target:', target);
+  this.currentTarget = target;
+};
+
+EditMgr.prototype.releaseCurrentTarget = function(callback) {
+  if (this.currentTarget === null) { return; }
+  this.changeMode(null);
+  _.each(this.currentFacilities, function(f) {
+    if (f && f.releaseFunc) {
+      f.releaseFunc(f.instance);
+    }
+  });
+  this.currentFacilities = {};
+  this.currentTarget = null;
+  if (callback) { callback(); }
+};
+
+DPPlugins['normal'] = {
+  displayName: 'Normal',
+
+  init: function() {
+    return '<div style=""><h2>Hello</h2></div>';
+  },
+
+  template: {
+    updated: {
       'author': function() {
         console.log('updated me');
       }
     },
 
-    templateRendered: {
+    rendered: {
       'author': function() {
         this.editmgr = new EditMgr();
         //var observerSubchild = new MutationObserver(function(items, observer) {
@@ -157,7 +156,7 @@
       }
     },
 
-    templateHelpers: {
+    helpers: {
       'author': function() {
         return {
           authorContent: function() {
@@ -169,7 +168,7 @@
       }
     },
 
-    templateEvents: {
+    events: {
       'author': function() {
         return {
           'click .dp-content': function(event) {
@@ -202,6 +201,58 @@
         };
       }
     }
-  };
+  },
 
-})();
+  'template-authortool': {
+    events: {
+      'author': function() {
+        function genInsertHandler(htmlGenerator) {
+          return function(event) {
+            var dpprt = Template.instance().dpprt;
+            var sfm = dpprt.getSlideFocusMgr();
+            if (sfm && sfm.currentSlide) {
+              htmlGenerator(function(html) {
+                var node = $(html);
+                sfm.currentSlide.find('.dp-content').append(node);
+              });
+            }
+          };
+        }
+
+        return {
+          'click #insertTextBlockBtn': genInsertHandler(function(next) {
+            next('<div style=""><h3>Hello,world</h3></div>');
+          }),
+
+          'click #insertListBlockBtn': genInsertHandler(function(next) {
+            next('<div style=""><ul><li>hello</li><li>world</li></ul></div>');
+          }),
+
+          'click #insertImageBtn': genInsertHandler(function(next) {
+            alertify.prompt('The URI of image',
+              'https://graph.facebook.com/minhua.lin.9/picture?type=large',
+              function(event, value) {
+                next('<div style=""><img src="' + value + '"></img></div>');
+              }).setHeader('Insert Image');
+          }),
+
+          'click #insertCodeBlockBtn': genInsertHandler(function(next) {
+            alertify.codePrompt('Paste code here',
+              'console.log(\'hello,world\');',
+              function(event, value) {
+                next('<div style=""><code>' + value + '</code></div>');
+              }).setHeader('Insert Code Block');
+          }),
+
+          'click #insertMediaBtn': genInsertHandler(function(next) {
+            alertify.codePrompt('Paste media embeding code here',
+              '<iframe width="320px" height="240px" src="//www.youtube.com/embed/l6k_5GHwLRA" frameborder="0" allowfullscreen></iframe>',
+              function(event, value) {
+                next('<div style="position: absolute; text-align: center;">' + value + '</div>');
+              }).setHeader('Insert Embedded Media');
+          })
+        };
+      }
+    }
+  }
+};
