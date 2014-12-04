@@ -114,7 +114,7 @@ Template.author.rendered = function() {
   $(function() {
     $(document).scroll(_.debounce(function() {
       var y = $(this).scrollTop();
-      if (y > 79) {
+      if (y > 60) {
         $('.dp-toolbar').transition({ 'margin-top': '-72px' });
         $('.dp-toolbar .dplogo-block').fadeIn(100);
       } else {

@@ -1,12 +1,27 @@
 Meteor.methods({
+  newDeck: function() {
+    if (this.userId) {
+      var nd = genNewDeck();
+      var deckId = Decks.insert(nd);
+      Meteor.call('initRunStatus', deckId, 'rehearsal', this.userId);
+      return deckId;
+    } else {
+      throw new Meteor.Error('Can not create new deck with no user logged in.');
+    }
+  },
+
   importFile: function(blob) {
-    logger.info('importFile with blob:', blob);
-    var d = EJSON.toJSONValue(EJSON.parse(blob));
-    var nd = genNewDeck(d);
-    var deckId = Decks.insert(nd);
-    // defaultly create a rehearsal runStatus
-    Meteor.call('initRunStatus', deckId, 'rehearsal', this.userId());
-    return deckId;
+    if (this.userId) {
+      logger.info('importFile with blob:', blob);
+      var d = EJSON.toJSONValue(EJSON.parse(blob));
+      var nd = genNewDeck(d);
+      var deckId = Decks.insert(nd);
+      // defaultly create a rehearsal runStatus
+      Meteor.call('initRunStatus', deckId, 'rehearsal', this.userId);
+      return deckId;
+    } else {
+      throw new Meteor.Error('Can not create new deck with no user logged in.');
+    }
   },
 
   initRunStatus: function(deckId, runId, ownerId) {

@@ -1,6 +1,7 @@
 .dp .reveal div.slides {
   left: auto !important;
   top: auto !important;
+  background-color: #fdf6e3;
 }
 .dp .reveal section.present {
   left: auto !important;

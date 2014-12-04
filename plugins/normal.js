@@ -36,7 +36,6 @@ function EditMgr() {
 
     'null -> transform': function(mgr, callback) {
       var t = mgr.currentTarget;
-      console.log('t is:', t);
       t.addClass('in-transform');
       //var draggie = new Draggabilly(t.get(0));
       //mgr.currentFacilities['draggie'] = {
@@ -134,7 +133,7 @@ DPPlugins['normal'] = {
   init: function() {
     return [
       '<div class="sl-block">',
-      '<div class="sl-block-content">',
+      '<div class="sl-block-content" data-block-type="text">',
       '<h2>Hello</h2>',
       '</div>',
       '</div>'
@@ -189,8 +188,8 @@ DPPlugins['normal'] = {
       'author': function() {
         return {
           'click .dp-content': function(event) {
-            if ($(event.currentTarget).closest('section.present').length <=0) {
-              console.log('will clear selection:', event.currentTarget, $(event.currentTarget).closest('section.present'));
+            if ($(event.target).closest('section.present').length <=0) {
+              console.log('will clear selection', event);
               // currentTarget is not inside a section.present, so user clicked
               // somewhere of our canvas, now we clear the selection
               var ti = Template.instance();
@@ -203,7 +202,6 @@ DPPlugins['normal'] = {
           },
 
           'click .dp-content section div.sl-block': function(event) {
-            event.stopPropagation();
             var ti = Template.instance();
             if (ti && ti.editmgr) {
               ti.editmgr.setTarget($(event.currentTarget));
@@ -212,8 +210,8 @@ DPPlugins['normal'] = {
           },
 
           'dblclick .dp-content section div.sl-block': function(event) {
-            event.stopPropagation();
-            if ($(event.target).data('block-type') === 'text') {
+            console.log('dbclick me:', event);
+            if ($(event.currentTarget).attr('data-block-type') === 'text') {
               var ti = Template.instance();
               if (ti && ti.editmgr) {
                 ti.editmgr.setTarget($(event.currentTarget));
