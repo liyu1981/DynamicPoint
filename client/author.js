@@ -289,7 +289,6 @@ Template.authorSlide.events({
     var e = $(event.currentTarget);
     var toType = e.attr('id');
     var slideIndex = e.closest('.slide').attr('slideIndex');
-    logger.info('will change to:', toType);
     dpPluginChangeType(dpTheDeck._id, slideIndex, toType);
   }
 });

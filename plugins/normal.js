@@ -36,6 +36,7 @@ function EditMgr() {
 
     'null -> transform': function(mgr, callback) {
       var t = mgr.currentTarget;
+      console.log('t is:', t);
       t.addClass('in-transform');
       //var draggie = new Draggabilly(t.get(0));
       //mgr.currentFacilities['draggie'] = {
@@ -44,7 +45,7 @@ function EditMgr() {
       //    draggie.disable();
       //  }
       //};
-      t.attr('tabindex', '1');
+      //t.attr('tabindex', '1');
       t.keyup(function(event) {
         if (event.keyCode === 46) {
           //console.log('will delete this', event.currentTarget);
@@ -95,6 +96,7 @@ EditMgr.prototype.changeMode = function(mode, callback) {
   }
   var t = sprintf('%s -> %s', this.curerntTargetMode, mode);
   if (this._modeFSM[t]) {
+    logger.info('change mode:', t);
     this._modeFSM[t](this, callback);
     this.curerntTargetMode = mode;
   } else {
@@ -130,7 +132,13 @@ DPPlugins['normal'] = {
   displayName: 'Normal',
 
   init: function() {
-    return '<div style=""><h2>Hello</h2></div>';
+    return [
+      '<div class="sl-block">',
+      '<div class="sl-block-content">',
+      '<h2>Hello</h2>',
+      '</div>',
+      '</div>'
+    ].join('');
   },
 
   template: {
@@ -181,8 +189,10 @@ DPPlugins['normal'] = {
       'author': function() {
         return {
           'click .dp-content': function(event) {
-            if (event.target == event.currentTarget) {
-              // make sure that not a child is clicked
+            if ($(event.currentTarget).closest('section.present').length <=0) {
+              console.log('will clear selection:', event.currentTarget, $(event.currentTarget).closest('section.present'));
+              // currentTarget is not inside a section.present, so user clicked
+              // somewhere of our canvas, now we clear the selection
               var ti = Template.instance();
               if (ti && ti.editmgr) {
                 ti.editmgr.releaseCurrentTarget(function() {
@@ -192,7 +202,8 @@ DPPlugins['normal'] = {
             }
           },
 
-          'click .dp-content section > div': function(event) {
+          'click .dp-content section div.sl-block': function(event) {
+            event.stopPropagation();
             var ti = Template.instance();
             if (ti && ti.editmgr) {
               ti.editmgr.setTarget($(event.currentTarget));
@@ -200,7 +211,8 @@ DPPlugins['normal'] = {
             }
           },
 
-          'dblclick .dp-content section > div': function(event) {
+          'dblclick .dp-content section div.sl-block': function(event) {
+            event.stopPropagation();
             var ti = Template.instance();
             if (ti && ti.editmgr) {
               ti.editmgr.setTarget($(event.currentTarget));

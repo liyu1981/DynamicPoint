@@ -1,0 +1,24 @@
+.dp .reveal div.slides {
+  left: auto !important;
+  top: auto !important;
+}
+.dp .reveal section.present {
+  left: auto !important;
+  top: auto !important;
+}
+.dp .reveal .sl-block[data-block-type="iframe"] .sl-block-content iframe {
+  width: 100%;
+  height: 100%;
+}
+.dp .reveal .sl-block .sl-block-content .sl-block-content-preview,
+.dp .reveal .sl-block .sl-block-overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+}
+.dp .reveal .sl-block .sl-block-content > :last-child,
+.dp .reveal blockquote > :last-child {
+  margin-bottom: 0;
+}

@@ -169,6 +169,7 @@ Router.route('/author', {
       'bower_components/draggabilly/dist/draggabilly.pkgd.min.js',
       'bower_components/html2canvas/build/html2canvas.min.js',
       'css/dp-reveal.css',
+      'css/dp-reveal-overide.css',
       'bower_components/reveal.js/css/theme/solarized.css'
     ]));
   },
