@@ -216,11 +216,6 @@ DPPlugins['normal'] = {
     events: {
       'author': function() {
         return {
-          'click #changeBackground': function(event) {
-            var e = $(event.currentTarget);
-            console.log('clicked me', e);
-            e.popoverX();
-          }
         };
       }
     }

@@ -23,10 +23,15 @@ function genToolbarToggleClickHandler(target, onCb, offCb) {
   return function(event) {
     var t = $(target);
     if (t.hasClass('active')) {
+      // re-active all links
+      t.closest('.dp-toolbar').find('.navbar-collapse a').removeClass('disabled');
       t.removeClass('active');
       offCb(event);
     } else {
+      // disable all links first
+      t.closest('.dp-toolbar').find('.navbar-collapse a').addClass('disabled');
       t.addClass('active');
+      t.find('a').removeClass('disabled'); // re-active our link
       onCb(event);
     }
   };
@@ -44,23 +49,24 @@ function slideOrderUpdated() {
       }
     }
   }
-  logger.info('order changed:', changes);
+  if (!_.isEmpty(changes)) {
+    logger.info('order changed:', changes);
+    // now restore the thumbnail divs since blaze will remember the dom nodes,
+    // and blaze will update them with correct info when data changes
+    _.each(changes, function(to, from) {
+      $(children[to]).before(children[from]); // swap dom
+    });
 
-  // now restore the thumbnail divs since blaze will remember the dom nodes,
-  // and blaze will update them with correct info when data changes
-  _.each(changes, function(to, from) {
-    $(children[to]).before(children[from]); // swap dom
-  });
-
-  // now manuniplate the slides array
-  var newSlides = dpTheDeck.slides;
-  _.each(changes, function(to, from) {
-    var tmp = newSlides[to];
-    newSlides[to] = newSlides[from];
-    newSlides[from] = tmp;
-  });
-  dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: { 'slides': newSlides }});
-  dpSaveMgr.saveNow();
+    // now manuniplate the slides array
+    var newSlides = dpTheDeck.slides;
+    _.each(changes, function(to, from) {
+      var tmp = newSlides[to];
+      newSlides[to] = newSlides[from];
+      newSlides[from] = tmp;
+    });
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: { 'slides': newSlides }});
+    dpSaveMgr.saveNow();
+  }
 }
 
 function renderThumbnail(divNode, callback) {

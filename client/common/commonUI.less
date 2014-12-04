@@ -14,8 +14,17 @@
 .content-right  { text-align: right; }
 .content-center { text-align: center; }
 
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
 body.dp {
   overflow: auto !important;
+
+  * {
+    //border-radius: 0px !important;
+  }
 
   .dp-navbar {
     margin-top: 10px;
