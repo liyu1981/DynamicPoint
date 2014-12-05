@@ -145,6 +145,10 @@ Template.authorNavbar.events({
 
   'click #saveBtn': function(event) {
     dpSaveMgr.saveNow();
+  },
+
+  'change #titleInput': function(event) {
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: { 'title': $(event.currentTarget).val().trim() }});
   }
 });
 

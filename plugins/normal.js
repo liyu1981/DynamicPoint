@@ -3,20 +3,6 @@ var ckeditorConfig = {
 };
 
 function saveChange(e) {
-  //function _extractHTML(section) {
-  //  var r = '';
-  //  section.find('> div.sl-block').each(function(index, block) {
-  //    var b = $(block).clone();
-  //    logger.info('cloned:', block, b);
-  //    var oldLeft = parseInt(b.css('left'));
-  //    var oldTop = parseInt(b.css('top'));
-  //    b.css('left', oldLeft - 480);
-  //    b.css('top', oldTop - 350);
-  //    r += b.html().trim();
-  //  });
-  //  return r;
-  //}
-
   // e is the jquery object of current section.present
   var v = {};
   var s = e.closest('.slide');
