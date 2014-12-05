@@ -11,6 +11,7 @@ dpSaveMgr = (function () {
         if (last.collection === item.collection && last.action === item.action && last === documentId) {
           if (_.isEqual(last.payload, item.payload)) {
             // same, so do nothing to ignore it
+            console.log('ignore:', item.payload);
           } else {
             last = item;
             result.push(item);

@@ -1,3 +1,5 @@
+var runStatusList = new ReactiveVar;
+
 Template.speaker.helpers({
   'calcSlideTemplate': function() {
     if (this.type in DPPlugins) {
@@ -9,6 +11,15 @@ Template.speaker.helpers({
 
   'calcSlideData': function() {
     return _.extend(this, { runStatus: dpRunStatus });
+  },
+
+  'runStatusList': function() {
+    if (!runStatusList.get()) {
+      Meteor.call('listRunStatus', this._id, function(err, data) {
+        runStatusList.set(data);
+      });
+    }
+    return runStatusList.get();
   }
 });
 
@@ -25,7 +36,16 @@ Template.speaker.rendered = function() {
     dpPluginObserve('deck', Decks, dpTheDeck._id, s);
     dpPluginObserve('runStatus', RunStatus, dpRunStatus._id, s);
     // and update for starting time
-    gotoSlide(dpRunStatus.curIndex);
+    $('#sessionSetup').modal({
+      backdrop: 'static'
+    }).on('hidden.bs.modal', function() {
+      gotoSlide(dpRunStatus.curIndex);
+    });
   });
 };
 
+Template.speaker.events({
+  'click #doneSessionSetup': function(event) {
+    $('#sessionSetup').modal('hide');
+  }
+});
