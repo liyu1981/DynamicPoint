@@ -51,22 +51,26 @@
       <button class="btn btn-default btn-lg delete-this-deck" title="Delete This Deck"><i class="fa fa-trash-o"></i></button>
       <button class="btn btn-default btn-lg duplicate-this-deck" title="Duplicate This Deck"><i class="fa fa-copy"></i></button>
     </div>
-    <form class="form-inline" style="margin-top: 15px;">
-      <strong>Run Sessions:</strong>&nbsp;
-      <select class="form-control">
-        {{#each runStatusList}}
-        <option {{checked}} val="{{id}}">{{displayName}}</option>
-        {{/each}}
-      </select>
-      <button class="btn btn-default view-this-runstatus" title="Check This Run Session"><i class="fa fa-eye"></i></button>
-      <button class="btn btn-default create-new-runstatus" title="Create New Run Session"><i class="fa fa-file-o"></i></button>
-    </form>
   </div>
   <h2 class="list-group-item-heading"><a href="/author?id={{id}}" target="_blank">{{title}}</a></h2>
   <p class="list-group-item-text"><span class="label label-default">ID</span> {{id}}</p>
   <p class="list-group-item-text">
-  <span class="list-group-item-text-span"><strong>Author</strong> {{author}}</span>
-  <span class="list-group-item-text-span"><strong>Created</strong> <span data-livestamp="{{ created }}"></span></span>
-  </p>
+    <form class="form-inline pull-right">
+      <strong>Run Sessions (<a href="#">New</a>): </strong>
+      <div class="dropdown inline-dropdown">
+        <a class="dropdown-toggle" id="sessionDropdown" data-toggle="dropdown" aria-expanded="true">
+          rehearsal
+          <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu pull-right" aria-labelledby="sessionDropdown">
+          {{#each runStatusList}}
+          <li><a tabindex="-1" href="#">{{displayName}}</a></li>
+          {{/each}}
+        </ul>
+      </div>
+    </form>
+    <span class="list-group-item-text-span"><strong>Author:</strong> {{author}}</span>
+    <span class="list-group-item-text-span"><strong>Created:</strong> <span data-livestamp="{{created}}"></span></span>
+   </p>
 </div>
 </template>

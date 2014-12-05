@@ -132,8 +132,8 @@ DPPlugins['normal'] = {
 
   init: function() {
     return [
-      '<div class="sl-block">',
-      '<div class="sl-block-content" data-block-type="text">',
+      '<div class="sl-block" data-block-type="text">',
+      '<div class="sl-block-content">',
       '<h2>Hello</h2>',
       '</div>',
       '</div>'

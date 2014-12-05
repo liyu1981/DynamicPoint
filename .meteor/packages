@@ -9,7 +9,6 @@ underscore
 jquery
 iron:router
 mrt:external-file-loader
-mrt:bootstrap-3
 less
 peerlibrary:async
 accounts-facebook
@@ -24,4 +23,4 @@ clode:transit
 fortawesome:fontawesome
 reactive-dict
 reactive-var
-
+mrt:bootstrap-3

@@ -24,6 +24,7 @@
     "d3": "git@github.com:mbostock/d3.git#~3.4.13",
     "ckeditor": "~4.4.6",
     "draggabilly": "~1.1.1",
-    "html2canvas": "~0.4.1"
+    "html2canvas": "~0.4.1",
+    "bootstrap": "~3.3.1"
   }
 }

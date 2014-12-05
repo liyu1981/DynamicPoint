@@ -1,31 +1,30 @@
 var runStatusLists = new ReactiveDict;
 
-Template.profileDeckListItem.created = function() {
-  // query the runStatus list now
-  var self = this;
-  logger.info('will listRunStatus', this.id);
-  //Meteor.call('listRunStatus', this.id, function(err, data) {
-  //  logger.info('will listRunStatus set', self.id, data);
-  //  runStatusLists.set(self.id, data);
-  //});
-};
-
 Template.profileDeckListItem.helpers({
   runStatusList: function() {
-    return runStatusLists.get(this.id);
+    var self = this;
+    var l = runStatusLists.get(this.id);
+    if (!l) {
+      Meteor.call('listRunStatus', this.id, function(err, data) {
+        //logger.info('will listRunStatus set', self.id, data);
+        runStatusLists.set(self.id, data);
+      });
+    }
+    return l;
   }
 });
 
 Template.profileDeckList.helpers({
   decks: function() {
-    return _.map(_.sortBy(this, function(d) { return 0 - d.created; }), function(d) {
+    var r =  _.map(_.sortBy(this, function(d) { return 0 - d.created; }), function(d) {
       return {
         id: d._id,
         title: d.title,
-        created: d.created/1000,
+        created: Math.floor(d.created/1000),
         author: d.author
       };
     });
+    return r;
   }
 });
 
