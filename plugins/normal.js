@@ -3,11 +3,26 @@ var ckeditorConfig = {
 };
 
 function saveChange(e) {
-  // e is the jquery object of current .slide
+  //function _extractHTML(section) {
+  //  var r = '';
+  //  section.find('> div.sl-block').each(function(index, block) {
+  //    var b = $(block).clone();
+  //    logger.info('cloned:', block, b);
+  //    var oldLeft = parseInt(b.css('left'));
+  //    var oldTop = parseInt(b.css('top'));
+  //    b.css('left', oldLeft - 480);
+  //    b.css('top', oldTop - 350);
+  //    r += b.html().trim();
+  //  });
+  //  return r;
+  //}
+
+  // e is the jquery object of current section.present
   var v = {};
-  var type = e.attr('slideType');
-  var index = parseInt(e.attr('slideIndex'));
-  var h = e.find('section.present').html().trim();
+  var s = e.closest('.slide');
+  var type = s.attr('slideType');
+  var index = parseInt(s.attr('slideIndex'));
+  var h = e.html().trim();
   v['slides.' + index + '.content'] = h;
   dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
 }
@@ -37,26 +52,26 @@ function EditMgr() {
     'null -> transform': function(mgr, callback) {
       var t = mgr.currentTarget;
       t.addClass('in-transform');
-      //var draggie = new Draggabilly(t.get(0));
-      //mgr.currentFacilities['draggie'] = {
-      //  instance: draggie,
-      //  releaseFunc: function(draggie) {
-      //    draggie.disable();
-      //  }
-      //};
-      //t.attr('tabindex', '1');
-      t.keyup(function(event) {
-        if (event.keyCode === 46) {
-          //console.log('will delete this', event.currentTarget);
-          var e = $(event.currentTarget);
-          var dpc = e.closest('.dp-content');
-          mgr.releaseCurrentTarget(function() {
-            e.remove();
-            saveChange(dpc);
-          });
+      var draggie = new Draggabilly(t.get(0));
+      mgr.currentFacilities['draggie'] = {
+        instance: draggie,
+        releaseFunc: function(draggie) {
+          draggie.disable();
         }
-      });
-      t.focus();
+      };
+      //t.attr('tabindex', '1');
+      //t.keyup(function(event) {
+      //  if (event.keyCode === 46) {
+      //    //console.log('will delete this', event.currentTarget);
+      //    var e = $(event.currentTarget);
+      //    var dpc = e.closest('.dp-content');
+      //    mgr.releaseCurrentTarget(function() {
+      //      e.remove();
+      //      saveChange(dpc);
+      //    });
+      //  }
+      //});
+      //t.focus();
     },
 
     'transform -> edit': function(mgr, callback) {
@@ -187,8 +202,8 @@ DPPlugins['normal'] = {
     events: {
       'author': function() {
         return {
-          'click .dp-content': function(event) {
-            if ($(event.target).closest('section.present').length <=0) {
+          'click .dp-content section': function(event) {
+            if ($(event.target).is('section.present')) {
               console.log('will clear selection', event);
               // currentTarget is not inside a section.present, so user clicked
               // somewhere of our canvas, now we clear the selection
@@ -210,7 +225,6 @@ DPPlugins['normal'] = {
           },
 
           'dblclick .dp-content section div.sl-block': function(event) {
-            console.log('dbclick me:', event);
             if ($(event.currentTarget).attr('data-block-type') === 'text') {
               var ti = Template.instance();
               if (ti && ti.editmgr) {

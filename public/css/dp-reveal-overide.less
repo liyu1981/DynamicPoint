@@ -1,14 +1,24 @@
 .dp {
   .reveal {
     div.slides {
-      left: auto !important;
-      top: auto !important;
-      background-color: #fdf6e3;
+      //left: auto !important;
+      //top: auto !important;
     }
 
     section.present {
-      left: auto !important;
-      top: auto !important;
+      //left: auto !important;
+      //top: auto !important;
+      min-width: 960px;
+      min-height: 700px;
+    }
+
+    &:after {
+      width: 960px;
+      height: 700px;
+      top: 0px;
+      left: 0px;
+      position: absolute;
+      background-color: #fdf6e3;
     }
   }
 
@@ -32,5 +42,12 @@
     blockquote>:last-child {
       margin-bottom:0;
     }
+  }
+}
+
+.dp-reveal {
+  .slides section {
+    min-width: 960px;
+    min-height: 700px;
   }
 }

@@ -9,7 +9,8 @@ var alertifyAA = [
 var revealjsAA = [
   'bower_components/reveal.js/css/reveal.min.css',
   'bower_components/reveal.js/css/theme/solarized.css',
-  'bower_components/reveal.js/js/reveal.min.js'
+  'bower_components/reveal.js/js/reveal.min.js',
+  'css/dp-reveal-overide.css'
 ];
 
 var d3AA = [

@@ -9,6 +9,7 @@ Template.audience.helpers({
 });
 
 Template.audience.rendered = function () {
+  $('body').addClass('dp-reveal');
   waitfor('.slides section', function() {
     Session.set('audienceId', Random.id());
     logger.info('audienceId generated as:', Session.get('audienceId'));

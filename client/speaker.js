@@ -24,6 +24,7 @@ Template.speaker.helpers({
 });
 
 Template.speaker.rendered = function() {
+  $('body').addClass('dp-reveal');
   waitfor('.slides section', function() {
     Reveal.initialize();
     Reveal.addEventListener('slidechanged', function(event) {

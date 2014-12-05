@@ -1,11 +1,14 @@
-.dp .reveal div.slides {
-  left: auto !important;
-  top: auto !important;
-  background-color: #fdf6e3;
-}
 .dp .reveal section.present {
-  left: auto !important;
-  top: auto !important;
+  min-width: 960px;
+  min-height: 700px;
+}
+.dp .reveal:after {
+  width: 960px;
+  height: 700px;
+  top: 0px;
+  left: 0px;
+  position: absolute;
+  background-color: #fdf6e3;
 }
 .dp .reveal .sl-block[data-block-type="iframe"] .sl-block-content iframe {
   width: 100%;
@@ -22,4 +25,8 @@
 .dp .reveal .sl-block .sl-block-content > :last-child,
 .dp .reveal blockquote > :last-child {
   margin-bottom: 0;
+}
+.dp-reveal .slides section {
+  min-width: 960px;
+  min-height: 700px;
 }
