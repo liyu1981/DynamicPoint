@@ -13,6 +13,12 @@ function saveChange(e) {
   dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
 }
 
+var dpTransformerUIConf = {
+  'text': 'w e',
+  'image': 'all',
+  'iframe': 'all'
+};
+
 function EditMgr() {
   this.currentTarget = null;
   this.currentFacilities = {};
@@ -43,6 +49,13 @@ function EditMgr() {
         instance: draggie,
         releaseFunc: function(draggie) {
           draggie.disable();
+        }
+      };
+      var transformer = new DPTransformer(t.get(0), { ui: dpTransformerUIConf[t.attr('data-block-type')] });
+      mgr.currentFacilities['transformer'] = {
+        instance: transformer,
+        releaseFunc: function(transformer) {
+          transformer.disable();
         }
       };
       //t.attr('tabindex', '1');

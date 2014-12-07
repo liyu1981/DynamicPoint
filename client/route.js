@@ -168,6 +168,8 @@ Router.route('/author', {
       'bower_components/ckeditor/plugins/font/lang/en.js',
       'bower_components/ckeditor/plugins/colorbutton/lang/en.js',
       'bower_components/draggabilly/dist/draggabilly.pkgd.min.js',
+      'css/dptransformer.css',
+      'js/dptransformer.js',
       'bower_components/html2canvas/build/html2canvas.min.js',
       'css/dp-reveal.css',
       'css/dp-reveal-overide.css',
