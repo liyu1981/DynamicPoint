@@ -1,3 +1,6 @@
 [submodule "packages/livestamp"]
 	path = packages/livestamp
 	url = https://github.com/liyu1981/livestamp.git
+[submodule "packages/bootstrapx-clickover-3/bootstrapx-clickover"]
+	path = packages/bootstrapx-clickover-3/bootstrapx-clickover
+	url = git@github.com:liyu1981/bootstrapx-clickover.git
