@@ -157,7 +157,6 @@ Router.route('/author', {
     dpMode = 'author';
     dpUrlParams = this.params;
     return _.union(sub(), waitOnJsAndCss(dpMode, [
-      'bower_components/MutationObserver-shim/dist/mutationobserver.min.js',
       'bower_components/html5sortable/jquery.sortable.js',
       'bower_components/ckeditor/ckeditor.js',
       'bower_components/ckeditor/lang/en.js',
@@ -173,7 +172,9 @@ Router.route('/author', {
       'bower_components/html2canvas/build/html2canvas.min.js',
       'css/dp-reveal.css',
       'css/dp-reveal-overide.css',
-      'bower_components/reveal.js/css/theme/solarized.css'
+      'bower_components/reveal.js/css/theme/solarized.css',
+      'bower_components/bootstrap-popover-x/css/bootstrap-popover-x.min.css',
+      'bower_components/bootstrap-popover-x/js/bootstrap-popover-x.js'
     ]));
   },
 
