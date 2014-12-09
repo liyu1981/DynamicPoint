@@ -69,22 +69,17 @@ function slideOrderUpdated() {
   }
 }
 
-//function renderThumbnail(divNode, callback) {
-//  //logger.info('will render thumb:', divNode);
-//  var w = 640;
-//  var h = 480;
-//  html2canvas(divNode, {
-//    onrendered: function(canvas) {
-//      var ec = document.createElement('canvas');
-//      ec.setAttribute('width', w);
-//      ec.setAttribute('height', h);
-//      var ctx = ec.getContext('2d');
-//      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, w, h);
-//      var dataURL = ec.toDataURL();
-//      callback(dataURL);
-//    }
-//  });
-//}
+function addNewSlide(layoutId, callback) {
+  var c = DPConf.findOne({}, { layouts: 1 });
+  if (c && c.layouts) {
+    var l = _.find(c.layouts, function(layout) { return layout.id === layoutId; });
+    var data = {};
+    if (l) { data['content'] = l.content; }
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide('normal', data) } });
+    dpSaveMgr.saveNow();
+  }
+  callback();
+}
 
 dpSaveMgr.saveNowCb = function(saving) {
   if (saving) {
@@ -159,14 +154,8 @@ Template.authorToolbar.helpers({
   },
 
   slideLayouts: function() {
-    var r = [];
-    for (var i=0; i<10; i++) {
-      r.push({
-        id: i,
-        content: sprintf('<section class="present"><div class="sl-block" data-block-type="text"><div class="sl-block-content"><h2>Template %d</h2></div></div></section>', i)
-      });
-    }
-    return r;
+    var conf = DPConf.findOne({}, { layouts: 1 });
+    return conf.layouts || [];
   }
 });
 
@@ -176,21 +165,23 @@ Template.authorToolbar.events({
       var t = $(event.currentTarget);
       var option = _.extend({}, t.data());
       option['$target'] = t;
-      $(t.attr('data-target'))
-        .off('shown.bs.modal').on('shown.bs.modal', function(e) {
-          //dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide('normal') }});
-          //dpSaveMgr.saveNow();
-        })
-        //.off('hidden.bs.modal').on('hidden.bs.modal', function(e) {
-        //  t.click();
-        //})
-        .popoverX(option)
-        .popoverX('show');
+      $(t.attr('data-target')).data('toggle', t).popoverX(option).popoverX('show');
     },
     function off(event) {
       var t = $(event.currentTarget);
       $(t.attr('data-target')).popoverX('hide');
     }),
+
+  'click .dp-slide-layout-thumb': function(event) {
+    var t = $(event.currentTarget);
+    var p = t.closest('.popover');
+    var tg = p.data('toggle');
+    logger.info('clicked:', t, tg);
+    addNewSlide(t.attr('layoutId'), function() {
+      p.data('toggle', null);
+      tg && tg.click();
+    });
+  },
 
   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
     function on(event) {
@@ -222,7 +213,7 @@ Template.authorThumbnail.helpers({
     var thumbTpl = [
       '<div class="dp-slide-preview-thumb">',
       '<div class="dp-slide-preview-thumb-content reveal">',
-      '<div class="slides" style="width: 960px; height: 700px; left: -390px; top: -290px;">',
+      '<div class="slides dp-slides" style="left: -390px; top: -290px;">',
       '%s',
       '</div>',
       '</div>',
@@ -237,25 +228,11 @@ Template.authorThumbnail.helpers({
 });
 
 Template.authorSlide.created = function() {
-  //this.autorun(function() {
-  //  // depend on the currentData to be notified when slide changed
-  //  Template.currentData();
-  //  var ti = this._templateInstance;
-  //  // but only notify plugin after the templated is actually rendered to some nodes
-  //  if (ti.firstNode && ti.lastNode) {
-  //    renderThumbnail(ti.$('.panel-body').get(0), function(dataURL) {
-  //      Session.set('thumbnail-' + ti.data.index, dataURL);
-  //    });
-  //  }
-  //});
 };
 
 Template.authorSlide.rendered = function() {
   var self = this;
   this.slideFocusMgr = slideFocusMgr;
-  //renderThumbnail(this.$('.panel-body').get(0), function(dataURL) {
-  //  Session.set('thumbnail-' + self.data.index, dataURL);
-  //});
 };
 
 Template.authorSlide.helpers({

@@ -82,11 +82,9 @@
       <div class="popover-title"><strong>Choose The Page Layout</strong></div>
       <div class="popover-content dp-slide-layout-thumb-container" data-dpscroll="stop">
         {{#each slideLayouts}}
-        <div class="dp-slide-layout-thumb">
-          <div class="dp-slide-layout-thumb-content reveal">
-            <div class="slides" style="width: 960px; height: 700px;">
-              {{{content}}}
-            </div>
+        <div class="dp-slide-layout-thumb" layoutId="{{id}}">
+          <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+            <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
           </div>
         </div>
         {{/each}}

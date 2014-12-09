@@ -1,3 +1,8 @@
+Meteor.publish('DPConf', function() {
+  logger.info('now try pub DPConf:', { userId: this.userId });
+  return DPConf.find({});
+});
+
 Meteor.publish('Decks', function(deckId) {
   logger.info('now try pub Decks:', { userId: this.userId, deckId: deckId });
   if (this.userId) {
