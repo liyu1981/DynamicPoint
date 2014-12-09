@@ -231,7 +231,7 @@ Template.authorThumbnail.helpers({
     if (this.type === 'normal') {
       return sprintf(thumbTpl, this.content);
     } else {
-      return sprintf('<h2><i class="fa fa-child"></i></h2>');
+      return sprintf('<div class="dp-slide-preview-thumb"><h2><i class="fa fa-child"></i></h2></div>');
     }
   }
 });
