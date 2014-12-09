@@ -74,22 +74,25 @@
   </div>
   <div class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
-      <li><a href="#" id="newSlidePopover" title="New Slide" data-toggle="popover-x" data-target="#newSlideLayouts" data-placement="right right-top" data-backdrop="true"><i class="fa fa-plus-circle fa-2x"></i></a></li>
-      <div id="newSlideLayouts" class="popover popover-default popover-lg fade">
-        <div class="arrow"></div>
-        <div class="popover-title"><span class="close" data-dismiss="popover-x">&times;</span>Choose The Page Layout</div>
-        <div class="popover-content">
-          When deciding if a configuration of an ATM is accepting or rejecting using the above definition, it is not necessary to examine all configurations reachable from the current configuration. In particular, an existential configuration can be labelled as accepting if any successor configuration is found to be accepting, and a universal configuration can be labelled as rejecting if any successor configuration is found to be rejecting.
-
-          An ATM decides a formal language in time t(n) if, on any input of length n, examining configurations only up to t(n) steps is sufficient to label the initial configuration as accepting or rejecting. An ATM decides a language in space s(n) if examining configurations which do not modify tape cells beyond the s(n) cell from the left is sufficient.
-        </div>
-        <div class="popover-footer">
-          <button type="submit" class="btn btn-sm btn-primary">This is It!</button>
-        </div>
-      </div>
-
+      <li><a href="#" id="newSlideToggle" title="New Slide" data-target="#newSlideLayouts" data-placement="right right-top" data-backdrop="true"><i class="fa fa-plus-circle fa-2x"></i></a></li>
       <li><a href="#" id="sortToggle" title="Start Drag&Drop Sort"><i class="fa fa-th fa-2x"></i></a></li>
     </ul>
+    <div id="newSlideLayouts" class="popover popover-default popover-lg fade">
+      <div class="arrow"></div>
+      <div class="popover-title"><strong>Choose The Page Layout</strong></div>
+      <div class="popover-content dp-slide-layout-thumb-container">
+        {{#each slideLayouts}}
+        <div class="dp-slide-layout-thumb">
+          <div class="dp-slide-layout-thumb-content reveal">
+            <div class="slides" style="width: 960px; height: 700px;">
+              {{{content}}}
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+      <div class="popover-footer"></div>
+    </div>
   </div>
   <div class="collapse navbar-collapse dp-navbar-authortool">
     <ul class="nav navbar-nav">
@@ -105,8 +108,8 @@
     <div class="panel-heading sortable-handle">
       <center><strong>{{index}}</strong> - <strong>{{type}}</strong></center>
     </div>
-    <div class="panel-body content-center">
-      <img width="100%" src="{{thumbDataURL}}" />
+    <div class="panel-body content-center" style="height: 160px;">
+      {{{thumbContent}}}
     </div>
   </div>
 </div>

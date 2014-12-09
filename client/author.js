@@ -69,22 +69,22 @@ function slideOrderUpdated() {
   }
 }
 
-function renderThumbnail(divNode, callback) {
-  //logger.info('will render thumb:', divNode);
-  var w = 640;
-  var h = 480;
-  html2canvas(divNode, {
-    onrendered: function(canvas) {
-      var ec = document.createElement('canvas');
-      ec.setAttribute('width', w);
-      ec.setAttribute('height', h);
-      var ctx = ec.getContext('2d');
-      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, w, h);
-      var dataURL = ec.toDataURL();
-      callback(dataURL);
-    }
-  });
-}
+//function renderThumbnail(divNode, callback) {
+//  //logger.info('will render thumb:', divNode);
+//  var w = 640;
+//  var h = 480;
+//  html2canvas(divNode, {
+//    onrendered: function(canvas) {
+//      var ec = document.createElement('canvas');
+//      ec.setAttribute('width', w);
+//      ec.setAttribute('height', h);
+//      var ctx = ec.getContext('2d');
+//      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, w, h);
+//      var dataURL = ec.toDataURL();
+//      callback(dataURL);
+//    }
+//  });
+//}
 
 dpSaveMgr.saveNowCb = function(saving) {
   if (saving) {
@@ -156,14 +156,41 @@ Template.authorToolbar.helpers({
   calcSlideTemplateAuthorTool: function() {
     var fst = Session.get('focusSlideType');
     return dpMode + '-slide-' + fst + '-authortool';
+  },
+
+  slideLayouts: function() {
+    var r = [];
+    for (var i=0; i<10; i++) {
+      r.push({
+        id: i,
+        content: sprintf('<section class="present"><div class="sl-block" data-block-type="text"><div class="sl-block-content"><h2>Template %d</h2></div></div></section>', i)
+      });
+    }
+    return r;
   }
 });
 
 Template.authorToolbar.events({
-  'click #newSlideBtn': function(event) {
-    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide('normal') }});
-    dpSaveMgr.saveNow();
-  },
+  'click #newSlideToggle': genToolbarToggleClickHandler('li:has(#newSlideToggle)',
+    function on(event) {
+      var t = $(event.currentTarget);
+      var option = _.extend({}, t.data());
+      option['$target'] = t;
+      $(t.attr('data-target'))
+        .off('shown.bs.modal').on('shown.bs.modal', function(e) {
+          //dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $push: { 'slides': genEmptySlide('normal') }});
+          //dpSaveMgr.saveNow();
+        })
+        //.off('hidden.bs.modal').on('hidden.bs.modal', function(e) {
+        //  t.click();
+        //})
+        .popoverX(option)
+        .popoverX('show');
+    },
+    function off(event) {
+      var t = $(event.currentTarget);
+      $(t.attr('data-target')).popoverX('hide');
+    }),
 
   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
     function on(event) {
@@ -189,29 +216,46 @@ Template.authorToolbar.events({
 Template.authorThumbnail.helpers({
   thumbDataURL: function() {
     return Session.get('thumbnail-' + this.index);
+  },
+
+  thumbContent: function() {
+    var thumbTpl = [
+      '<div class="dp-slide-preview-thumb">',
+      '<div class="dp-slide-preview-thumb-content reveal">',
+      '<div class="slides" style="width: 960px; height: 700px; left: -390px; top: -290px;">',
+      '%s',
+      '</div>',
+      '</div>',
+      '</div>'
+    ].join('');
+    if (this.type === 'normal') {
+      return sprintf(thumbTpl, this.content);
+    } else {
+      return sprintf('<h2><i class="fa fa-child"></i></h2>');
+    }
   }
 });
 
 Template.authorSlide.created = function() {
-  this.autorun(function() {
-    // depend on the currentData to be notified when slide changed
-    Template.currentData();
-    var ti = this._templateInstance;
-    // but only notify plugin after the templated is actually rendered to some nodes
-    if (ti.firstNode && ti.lastNode) {
-      renderThumbnail(ti.$('.panel-body').get(0), function(dataURL) {
-        Session.set('thumbnail-' + ti.data.index, dataURL);
-      });
-    }
-  });
+  //this.autorun(function() {
+  //  // depend on the currentData to be notified when slide changed
+  //  Template.currentData();
+  //  var ti = this._templateInstance;
+  //  // but only notify plugin after the templated is actually rendered to some nodes
+  //  if (ti.firstNode && ti.lastNode) {
+  //    renderThumbnail(ti.$('.panel-body').get(0), function(dataURL) {
+  //      Session.set('thumbnail-' + ti.data.index, dataURL);
+  //    });
+  //  }
+  //});
 };
 
 Template.authorSlide.rendered = function() {
   var self = this;
   this.slideFocusMgr = slideFocusMgr;
-  renderThumbnail(this.$('.panel-body').get(0), function(dataURL) {
-    Session.set('thumbnail-' + self.data.index, dataURL);
-  });
+  //renderThumbnail(this.$('.panel-body').get(0), function(dataURL) {
+  //  Session.set('thumbnail-' + self.data.index, dataURL);
+  //});
 };
 
 Template.authorSlide.helpers({

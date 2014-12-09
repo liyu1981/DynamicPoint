@@ -251,6 +251,57 @@ body.dp {
   .dp-hover-checked:hover .fa-square-o:before {
     content: "\f046";
   }
+
+  .dp-slide-layout-thumb-container {
+    max-height: 530px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 4px;
+    text-align: center;
+  }
+
+  .dp-slide-layout-thumb {
+    width: 49%;
+    height: 169px;
+    border: 1px solid #bbb;
+    display: inline-block;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid #999;
+    }
+
+    .reveal {
+      &:after {
+        background-color: transparent;
+      }
+    }
+
+    .dp-slide-layout-thumb-content {
+      position: relative;
+      left: 0px;
+      top: 0px;
+      transform: scale(0.23);
+    }
+  }
+
+  .dp-slide-preview-thumb {
+    width: 100%;
+    height: 137px;
+
+    .reveal {
+      &:after {
+        background-color: transparent;
+      }
+    }
+
+    .dp-slide-preview-thumb-content {
+      position: relative;
+      left: 0px;
+      top: 0px;
+      transform: scale(0.192);
+    }
+  }
 }
 
 // optimize the 1366x768 case
