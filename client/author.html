@@ -74,20 +74,22 @@
   </div>
   <div class="collapse navbar-collapse">
     <ul class="nav navbar-nav">
-      <li><a href="#" id="testNewSlide" title="New Slide Test" data-toggle="popover-x" data-target="#myPopover2" data-placement="right right-top" data-backdrop="true"><i class="fa fa-plus-circle fa-2x"></i></a></li>
-      <li><a href="#" id="newSlideBtn" title="New Slide"><i class="fa fa-plus-circle fa-2x"></i></a></li>
+      <li><a href="#" id="newSlidePopover" title="New Slide" data-toggle="popover-x" data-target="#newSlideLayouts" data-placement="right right-top" data-backdrop="true"><i class="fa fa-plus-circle fa-2x"></i></a></li>
+      <div id="newSlideLayouts" class="popover popover-default popover-lg fade">
+        <div class="arrow"></div>
+        <div class="popover-title"><span class="close" data-dismiss="popover-x">&times;</span>Choose The Page Layout</div>
+        <div class="popover-content">
+          When deciding if a configuration of an ATM is accepting or rejecting using the above definition, it is not necessary to examine all configurations reachable from the current configuration. In particular, an existential configuration can be labelled as accepting if any successor configuration is found to be accepting, and a universal configuration can be labelled as rejecting if any successor configuration is found to be rejecting.
+
+          An ATM decides a formal language in time t(n) if, on any input of length n, examining configurations only up to t(n) steps is sufficient to label the initial configuration as accepting or rejecting. An ATM decides a language in space s(n) if examining configurations which do not modify tape cells beyond the s(n) cell from the left is sufficient.
+        </div>
+        <div class="popover-footer">
+          <button type="submit" class="btn btn-sm btn-primary">This is It!</button>
+        </div>
+      </div>
+
       <li><a href="#" id="sortToggle" title="Start Drag&Drop Sort"><i class="fa fa-th fa-2x"></i></a></li>
     </ul>
-    <div id="myPopover2" class="popover popover-default popover-lg fade">
-      <div class="arrow"></div>
-      <div class="popover-title"><span class="close" data-dismiss="popover-x">&times;</span>Title</div>
-      <div class="popover-content">
-        <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-      </div>
-      <div class="popover-footer">
-        <button type="submit" class="btn btn-sm btn-primary">Submit</button><button type="reset" class="btn btn-sm btn-default">Reset</button>
-      </div>
-    </div>
   </div>
   <div class="collapse navbar-collapse dp-navbar-authortool">
     <ul class="nav navbar-nav">
@@ -139,4 +141,3 @@
   </div>
 </div>
 </template>
-

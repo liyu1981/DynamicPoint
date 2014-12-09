@@ -1,3 +1,6 @@
 [submodule "packages/livestamp"]
 	path = packages/livestamp
 	url = https://github.com/liyu1981/livestamp.git
+[submodule "public/bower_components/bootstrap-popover-x"]
+	path = public/bower_components/bootstrap-popover-x
+	url = git@github.com:liyu1981/bootstrap-popover-x.git
