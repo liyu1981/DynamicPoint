@@ -24,3 +24,5 @@ reactive-dict
 reactive-var
 mrt:bootstrap-3
 lauricio:less-autoprefixer
+mousetrap:mousetrap
+

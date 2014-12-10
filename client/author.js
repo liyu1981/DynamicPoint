@@ -122,6 +122,20 @@ Template.author.rendered = function() {
         $(this).scrollTop(166);
       }
     });
+
+    Mousetrap.bind('right', function() {
+      var csi = Session.get('currentSlideIndex');
+      var total = _.isArray(dpTheDeck.slides) ? dpTheDeck.slides.length : 0;
+      if (_.isNumber(csi) && csi + 1 < total) {
+        Session.set('currentSlideIndex', csi+1);
+      }
+    });
+    Mousetrap.bind('left', function() {
+      var csi = Session.get('currentSlideIndex');
+      if (_.isNumber(csi) && csi - 1 >= 0) {
+        Session.set('currentSlideIndex', csi-1);
+      }
+    });
   });
 };
 
