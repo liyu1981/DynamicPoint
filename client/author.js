@@ -1,6 +1,7 @@
 function SlideFocusMgr() {
   this.currentSlide = null;
   Session.set('focusSlideType', '');
+  Session.set('currentSlideIndex', 0);
 }
 
 SlideFocusMgr.prototype.focus = function(node) {
@@ -262,6 +263,30 @@ Template.authorSlide.helpers({
     var alltypes = dpPluginGetAllTypes();
     var t = _.find(alltypes, function(t) { return t.id === self.type });
     return t ? t.displayName : this.type;
+  },
+
+  calcDpPositionClass: function() {
+    var csi = Session.get('currentSlideIndex');
+    if (this.index === csi) {
+      return 'dp-slide-current';
+    } else if (this.index < csi && this.index + 1 === csi) {
+      return 'dp-slide-prev';
+    } else if (this.index > csi && this.index - 1 === csi) {
+      return 'dp-slide-next';
+    } else {
+      return 'dp-slide-other';
+    }
+  },
+
+  calcDpPositionStyle: function() {
+    var csi = Session.get('currentSlideIndex');
+    if (this.index === csi) {
+      return '';
+    } else if (this.index < csi) {
+      return '';
+    } else {
+      return '';
+    }
   }
 });
 
@@ -315,5 +340,27 @@ Template.authorSlide.events({
     var toType = e.attr('id');
     var slideIndex = e.closest('.slide').attr('slideIndex');
     dpPluginChangeType(dpTheDeck._id, slideIndex, toType);
+  }
+});
+
+Template.authorPager.helpers({
+  pagers: function() {
+    return _.map(this.slides, function(e, i) { return _.extend(e, { index: i }) });
+  },
+
+  calcDpPositionClass: function() {
+    var csi = Session.get('currentSlideIndex');
+    if (this.index === csi) {
+      return 'badge-active';
+    } else {
+      return '';
+    }
+  }
+});
+
+Template.authorPager.events({
+  'click .badge': function(event) {
+    var t = $(event.currentTarget);
+    Session.set('currentSlideIndex', parseInt(t.attr('slideIndex')));
   }
 });

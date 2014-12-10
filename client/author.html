@@ -1,26 +1,23 @@
 <template name="author">
+<div class="dp-deck">
+  {{#each indexedSlides}}
+  {{> authorSlide}}
+  {{/each}}
+</div>
 <div class="container">
   <div class="row">
     {{> authorNavbar}}
-
-    {{#if isEmpty slides}}
-    {{else}}
-      {{> authorToolbar}}
-    {{/if}}
-
-    <div class="row dp-deck">
+    {{> authorToolbar}}
+    <div class="row dp-deck-thumb">
       <div class="col-md-12 dp-thumbnail dp-sortable" style="display: none;">
       {{#each indexedSlides}}
       {{> authorThumbnail}}
       {{/each}}
       </div>
-
-      {{#each indexedSlides}}
-        {{> authorSlide}}
-      {{/each}}
     </div>
-
+    <div class="dp-slide-placeholder"></div>
   </div>
+  {{> authorPager}}
   {{> dpFooter}}
 </div>
 </template>
@@ -82,7 +79,7 @@
       <div class="popover-title"><strong>Choose The Page Layout</strong></div>
       <div class="popover-content dp-slide-layout-thumb-container" data-dpscroll="stop">
         {{#each slideLayouts}}
-        <div class="dp-slide-layout-thumb" layoutId="{{id}}">
+        <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
           <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
             <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
           </div>
@@ -114,31 +111,44 @@
 </template>
 
 <template name="authorSlide">
-<div class="col-md-12 slide" slideId="{{id}}" slideIndex="{{index}}" slideType="{{type}}">
-  <div class="panel panel-default dp-panel">
-    <div class="panel-heading slide-handle">
-      <div class="btn-group pull-right">
-        {{> Template.dynamic template=calcSlideTemplateToolBar}}
-        <button class="btn btn-default" id="deleteThisSlide" title="Delete This Slide"><i class="fa fa-trash-o"></i></button>
-        <button class="btn btn-default" id="duplicateThisSlide" title="Duplicate This Slide"><i class="fa fa-copy"></i></button>
-      </div>
-      <div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-default">{{index}}</button>
+<div class="dp-slide-container {{calcDpPositionClass}}" style="{{calcDpPositionStyle}}">
+  <div class="dp-slide slide" slideId="{{id}}" slideIndex="{{index}}" slideType="{{type}}">
+    <!--<div class="col-md-12 slide" slideId="{{id}}" slideIndex="{{index}}" slideType="{{type}}">-->
+    <div class="panel panel-default dp-panel">
+      <div class="panel-heading slide-handle">
+        <div class="btn-group pull-right">
+          {{> Template.dynamic template=calcSlideTemplateToolBar}}
+          <button class="btn btn-default" id="deleteThisSlide" title="Delete This Slide"><i class="fa fa-trash-o"></i></button>
+          <button class="btn btn-default" id="duplicateThisSlide" title="Duplicate This Slide"><i class="fa fa-copy"></i></button>
+        </div>
+        <div>
           <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-check-square-o"></i> {{displayType}} <span class="caret"></span></button>
-            <ul class="dropdown-menu" role="menu">
-              {{#each allSlideTypes}}
-              <li class="dp-hover-checked"><a class="change-slide-type-btn" href="#" id="{{id}}"><i class="fa fa-square-o"></i> {{displayName}}</a></li>
-              {{/each}}
-            </ul>
+            <button type="button" class="btn btn-default">{{index}}</button>
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-check-square-o"></i> {{displayType}} <span class="caret"></span></button>
+              <ul class="dropdown-menu" role="menu">
+                {{#each allSlideTypes}}
+                <li class="dp-hover-checked"><a class="change-slide-type-btn" href="#" id="{{id}}"><i class="fa fa-square-o"></i> {{displayName}}</a></li>
+                {{/each}}
+              </ul>
+            </div>
           </div>
         </div>
       </div>
+      <div class="panel-body">
+        {{> Template.dynamic template=calcSlideTemplate}}
+      </div>
     </div>
-    <div class="panel-body">
-    {{> Template.dynamic template=calcSlideTemplate}}
-    </div>
+  </div>
+</div>
+</template>
+
+<template name="authorPager">
+<div class="row">
+  <div class="col-md-8 col-md-offset-2 content-center dp-pager">
+    {{#each pagers}}
+    <span class="badge {{calcDpPositionClass}}" slideId="{{id}}" slideIndex="{{index}}">{{index}}</span>&nbsp;
+    {{/each}}
   </div>
 </div>
 </template>
