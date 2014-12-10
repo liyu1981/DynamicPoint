@@ -9,7 +9,6 @@ underscore
 jquery
 iron:router
 mrt:external-file-loader
-less
 peerlibrary:async
 accounts-facebook
 accounts-github
@@ -24,3 +23,4 @@ fortawesome:fontawesome
 reactive-dict
 reactive-var
 mrt:bootstrap-3
+lauricio:less-autoprefixer

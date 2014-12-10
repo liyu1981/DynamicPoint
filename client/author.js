@@ -108,16 +108,20 @@ Template.author.rendered = function() {
   commonDPPageSetup();
   Session.set('documentTitle', formatDocumentTitle(this.data.title));
   $(function() {
-    $(document).scroll(_.debounce(function() {
+    //$(document).scroll(_.debounce(function() {
+    $(document).scroll(function() {
       var y = $(this).scrollTop();
-      if (y > 60) {
-        $('.dp-toolbar').transition({ 'margin-top': '-72px' });
-        $('.dp-toolbar .dplogo-block').fadeIn(100);
-      } else {
-        $('.dp-toolbar').transition({ 'margin-top': '0px' });
-        $('.dp-toolbar .dplogo-block').fadeOut(100);
+      //if (y > 60) {
+      //  $('.dp-toolbar').transition({ 'margin-top': '-72px' });
+      //  $('.dp-toolbar .dplogo-block').fadeIn(100);
+      //} else {
+      //  $('.dp-toolbar').transition({ 'margin-top': '0px' });
+      //  $('.dp-toolbar .dplogo-block').fadeOut(100);
+      //}
+      if (y > 166) {
+        $(this).scrollTop(166);
       }
-    }, 100));
+    });
   });
 };
 
@@ -186,18 +190,18 @@ Template.authorToolbar.events({
 
   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
     function on(event) {
-      var deck = $('.dp-deck');
-      deck.find('.slide').hide(0);
-      deck.find('.dp-thumbnail').show(0);
+      var dc = $('.dp-container');
+      dc.find('.dp-deck').hide(0);
+      dc.find('.dp-deck-thumb').show(0);
       $('.dp-sortable')
         .addClass('dp-sortable-enabled')
         .sortable({ items: '.sortable-block', handle: '.sortable-handle' });
         //.bind('sortupdate', slideOrderUpdated);
     },
     function off(event) {
-      var deck = $('.dp-deck');
-      deck.find('.slide').show(0);
-      deck.find('.dp-thumbnail').hide(0);
+      var dc = $('.dp-container');
+      dc.find('.dp-deck').show(0);
+      dc.find('.dp-deck-thumb').hide(0);
       $('.dp-sortable')
         .removeClass('dp-sortable-enabled')
         .sortable('disable');
@@ -295,6 +299,18 @@ Template.authorSlide.events({
     var ti = Template.instance();
     if (ti && ti.slideFocusMgr) {
       ti.slideFocusMgr.focus($(event.currentTarget));
+    }
+  },
+
+  'click .dp-slide-container': function(event) {
+    var t = $(event.currentTarget);
+    if (t.hasClass('dp-slide-prev') || t.hasClass('dp-slide-next')) {
+      var s = t.find('.slide');
+      Session.set('currentSlideIndex', parseInt(s.attr('slideIndex')));
+      var ti = Template.instance();
+      if (ti && ti.slideFocusMgr) {
+        ti.slideFocusMgr.focus(s);
+      }
     }
   },
 

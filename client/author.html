@@ -1,24 +1,29 @@
 <template name="author">
-<div class="dp-deck">
-  {{#each indexedSlides}}
-  {{> authorSlide}}
-  {{/each}}
-</div>
 <div class="container">
   <div class="row">
     {{> authorNavbar}}
+  </div>
+</div>
+<div class="dp-container">
+  <div class="dp-deck">
+    {{#each indexedSlides}}
+    {{> authorSlide}}
+    {{/each}}
+  </div>
+  <div class="container dp-tools-container">
     {{> authorToolbar}}
-    <div class="row dp-deck-thumb">
-      <div class="col-md-12 dp-thumbnail dp-sortable" style="display: none;">
+    <div class="col-md-12 dp-deck-thumb dp-sortable" style="display: none;">
       {{#each indexedSlides}}
       {{> authorThumbnail}}
       {{/each}}
-      </div>
     </div>
-    <div class="dp-slide-placeholder"></div>
   </div>
+</div>
+<div class="container">
+  <div class="row">
   {{> authorPager}}
   {{> dpFooter}}
+  </div>
 </div>
 </template>
 

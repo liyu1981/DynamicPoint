@@ -4,12 +4,6 @@
   100% { transform: scale(1); }
 }
 
-@-webkit-keyframes pulse {
-  0% { -webkit-transform: scale(1); }
-  50% { -webkit-transform: scale(1.1); }
-  100% { -webkit-transform: scale(1); }
-}
-
 body.dp {
   overflow-x: hidden !important;
   overflow-y: auto !important;
@@ -37,6 +31,10 @@ body.dp {
     max-width: 1058px;
   }
 
+  .dp-container {
+    min-height: 720px;
+  }
+
   .dp-slide {
     .panel-heading {
       box-shadow: #bbb 0px 0px 15px;
@@ -60,7 +58,6 @@ body.dp {
   }
 
   .dp-navbar {
-    //z-index: 1100;
   }
 
   .dp-brand {
@@ -94,11 +91,6 @@ body.dp {
     animation-timing-function: ease-in-out;
     animation-iteration-count:infinite;
     animation-name: pulse;
-    -webkit-animation-duration: 1s;
-    -webkit-animation-fill-mode: both;
-    -webkit-animation-timing-function: ease-in-out;
-    -webkit-animation-iteration-count:infinite;
-    -webkit-animation-name: pulse;
   }
 
   .dp-action-info {
@@ -147,14 +139,13 @@ body.dp {
   }
 
   .dp-deck {
+    position: absolute;
     width: 100%;
-    height: 90%;
-    position: fixed;
+    height: 1000px;
+    min-height: 1000px;
     left: 0px;
-    top: 82px;
+    top: 0px;
     overflow-x: hidden;
-    pointer-events: none;
-    z-index: 400;
 
     .dp-slide {
       overflow: hidden;
@@ -181,14 +172,12 @@ body.dp {
 
       &-prev, &-next {
         opacity: 0.7;
-        -webkit-filter: blur(1px);
         filter: blur(1px);
         cursor: pointer;
         margin-left: 50%;
 
         &:hover {
           opacity: 0.9;
-          -webkit-filter: none;
           filter: none;
         }
       }
@@ -232,10 +221,16 @@ body.dp {
     min-height: 238px;
   }
 
+  .dp-tools-container {
+    padding: 0px 0px;
+  }
+
   .dp-toolbar {
-    position: fixed;
+    max-width: 58px;
     padding-left: 0px;
     padding-right: 0px;
+    float: left;
+    clear: none;
 
     .dplogo-block {
       hr {
@@ -294,6 +289,12 @@ body.dp {
     .navbar-collapse .navbar-nav.navbar-right:last-child {
       margin-right: 0;
     }
+  }
+
+  .dp-deck-thumb {
+    padding-left: 0px;
+    padding-right: 0px;
+    width: 94.1%;
   }
 
   .list-group-item {
@@ -376,10 +377,10 @@ body.dp {
   }
 
   .dp-pager {
-    background-color: #e7e7e7;
-    opacity: 0.8;
-    border-radius: 8px;
+    background-color: rgba(231,231,231,0.8);
+    border-radius: 4px;
     padding: 4px;
+    border: 1px solid #e7e7e7;
 
     .badge {
       cursor: pointer;
@@ -401,11 +402,49 @@ body.dp {
 // optimize the 1366x768 case
 @media (min-width: 1200px) and (max-width: 1360px) {
   body.dp {
+    .dp-navbar {
+      margin-top: 2px;
+      margin-bottom: 4px;
+    }
     .dp-panel {
+      max-width: 966px;
+      min-width: 966px;
+
       .panel-body {
+        max-width: 920px;
+        min-height: 642px;
       }
-      .dp-content {
+    }
+    .container {
+      min-width: 1028px;
+      max-width: 1028px;
+    }
+    .dp-container {
+      max-height: 702px;
+      min-height: 702px;
+    }
+    .dp-slide-container {
+      max-height: 720px;
+      overflow-y: hidden;
+    }
+    .dp-tools-container {
+      min-width: 1028px;
+      max-width: 1028px;
+    }
+    .dp-deck {
+      top: 58px;
+
+      .dp-panel {
+        .panel-body {
+          max-height: 642px;
+        }
       }
+    }
+    .dp-slide-placeholder {
+      min-height: 616px;
+    }
+    .dp-content {
+      transform: scale(0.894) translateY(-38px);
     }
   }
 }
