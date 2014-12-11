@@ -83,15 +83,22 @@
       <div class="arrow"></div>
       <div class="popover-title"><strong>Choose The Page Layout</strong></div>
       <div class="popover-content dp-slide-layout-thumb-container" data-dpscroll="stop">
-        {{#each slideLayouts}}
-        <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
-          <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
-            <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
+        <div class="dp-slide-layout-thumb-container">
+          {{#each slideLayouts}}
+          <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
+            <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+              <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
+            </div>
           </div>
+          {{/each}}
         </div>
-        {{/each}}
       </div>
-      <div class="popover-footer"></div>
+      <div class="popover-footer">
+        <ul class="nav nav-tabs">
+          <li style="width: 50%;" class="active"><a href="#"><strong>System</strong></a></li>
+          <li style="width: 50%;"><a href="#"><strong>My</strong></a></li>
+        </ul>
+      </div>
     </div>
   </div>
   <div class="collapse navbar-collapse dp-navbar-authortool">
