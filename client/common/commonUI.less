@@ -108,7 +108,7 @@ body.dp {
 
     .panel-body {
       padding: 8px 8px;
-      min-height: 300px;
+      min-height: 716px;
       overflow: hidden;
     }
 
@@ -185,11 +185,11 @@ body.dp {
       }
 
       &-prev {
-        transform: translateX(-153%) scale(0.95) rotateY(5deg);
+        transform: translateX(-143%) scale(0.95) rotateY(1.5deg);
       }
 
       &-next {
-        transform: translateX(53%) scale(0.95) rotateY(-5deg);
+        transform: translateX(43%) scale(0.95) rotateY(-1.5deg);
       }
 
       &-prev-placeholder {
@@ -371,13 +371,14 @@ body.dp {
   }
 
   .dp-pager {
-    background-color: rgba(231,231,231,0.8);
-    border-radius: 4px;
+    //background-color: rgba(231,231,231,0.8);
+    //border-radius: 4px;
     padding: 4px;
-    border: 1px solid #e7e7e7;
+    //border: 1px solid #e7e7e7;
 
     .badge {
       cursor: pointer;
+      transition: all .3s ease-in-out;
 
       &:hover {
         background-color: #428bca;
@@ -390,6 +391,12 @@ body.dp {
         transform: scale(1.3);
       }
     }
+  }
+
+  .dp-footer {
+    color: #fff;
+    text-shadow: #000 0px 0px 5px;
+    margin-top: 10px;
   }
 }
 

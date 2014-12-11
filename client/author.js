@@ -109,19 +109,19 @@ Template.author.rendered = function() {
   Session.set('documentTitle', formatDocumentTitle(this.data.title));
   $(function() {
     //$(document).scroll(_.debounce(function() {
-    $(document).scroll(function() {
-      var y = $(this).scrollTop();
-      //if (y > 60) {
-      //  $('.dp-toolbar').transition({ 'margin-top': '-72px' });
-      //  $('.dp-toolbar .dplogo-block').fadeIn(100);
-      //} else {
-      //  $('.dp-toolbar').transition({ 'margin-top': '0px' });
-      //  $('.dp-toolbar .dplogo-block').fadeOut(100);
+    /*$(document).scroll(function() {*/
+      //var y = $(this).scrollTop();
+      ////if (y > 60) {
+      ////  $('.dp-toolbar').transition({ 'margin-top': '-72px' });
+      ////  $('.dp-toolbar .dplogo-block').fadeIn(100);
+      ////} else {
+      ////  $('.dp-toolbar').transition({ 'margin-top': '0px' });
+      ////  $('.dp-toolbar .dplogo-block').fadeOut(100);
+      ////}
+      //if (y > 166) {
+        //$(this).scrollTop(166);
       //}
-      if (y > 166) {
-        $(this).scrollTop(166);
-      }
-    });
+    //});
 
     Mousetrap.bind('right', function() {
       var csi = Session.get('currentSlideIndex');

@@ -1,10 +1,14 @@
+<template name="dpLogo">
+<span class="fa-stack fa-lg">
+  <i class="fa fa-laptop fa-stack-2x"></i>
+  <i class="fa fa-child fa-stack-1x"></i>
+</span>
+</template>
+
 <template name="dpNavbarDPLogo">
 <div class="navbar-header">
   <a class="navbar-brand dp-brand" href="#" title="DynamicPoint">
-    <span class="fa-stack fa-lg">
-      <i class="fa fa-laptop fa-stack-2x"></i>
-      <i class="fa fa-child fa-stack-1x"></i>
-    </span>
+    {{> dpLogo}}
   </a>
 </div>
 </template>
@@ -41,9 +45,11 @@
 <template name="dpFooter">
 <footer>
 <div class="row">
-  <div class="col-md-12" style="color: #e7e7e7;">
-    <p><center>DynamicPoint <i class="fa fa-copyright"></i>2014</center></p>
-    <p><center>Made with <i class="fa fa-heart"></i> by <a href="http://liyu1981.github.io">LI, Yu</a> in Hong Kong</center></p>
+  <div class="col-md-12 dp-footer">
+    <center>
+    <p>DynamicPoint <i class="fa fa-copyright"></i>2014</p>
+    <p>Made with <i class="fa fa-heart"></i> in Hong Kong</p>
+    </center>
     <br>
   </div>
 </div>

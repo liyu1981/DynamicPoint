@@ -37,6 +37,9 @@
 .dp-thumb .reveal blockquote > :last-child {
   margin-bottom: 0;
 }
+.dp-reveal .reveal .sl-block {
+  position: absolute;
+}
 .dp-reveal .slides section {
   min-width: 960px;
   min-height: 700px;
