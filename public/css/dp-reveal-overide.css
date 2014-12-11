@@ -39,6 +39,7 @@
 }
 .dp-reveal {
   perspective: 400px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .dp-reveal-container {
   height: 100%;

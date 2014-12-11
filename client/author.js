@@ -122,6 +122,22 @@ Template.author.rendered = function() {
         //$(this).scrollTop(166);
       //}
     //});
+    function dpLayoutTabActive($tab, $trigger, callback) {
+      var p = $tab.parent();
+      var bg = $trigger.parent(); // should be .dp-btn-group
+      bg.find('.btn').removeClass('active');
+      var l = $tab.prev().length || 0;
+      var w = $tab.outerWidth(true);
+      p.find('.dp-slide-layout-tab').css('transform', sprintf('translateX(-%dpx)', l*w));
+      callback && callback();
+    }
+
+    $(document).on('click.dpLayoutTab', '[data-dp-toggle="dpLayoutTab"]', function(event) {
+      var t = $(event.currentTarget);
+      dpLayoutTabActive($(t.attr('data-dp-target')), t, function() {
+        t.toggleClass('active');
+      });
+    });
 
     Mousetrap.bind('right', function() {
       var csi = Session.get('currentSlideIndex');

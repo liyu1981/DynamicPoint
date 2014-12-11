@@ -26,7 +26,7 @@ Template.speaker.helpers({
 Template.speaker.rendered = function() {
   $('body')
     .addClass('dp-reveal')
-    .addClass('dp-theme-waves') // default theme
+    .addClass('dp-theme-dp') // default theme
     ;
 
   waitfor('.slides section', function() {

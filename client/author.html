@@ -82,22 +82,44 @@
     <div id="newSlideLayouts" class="popover popover-default popover-lg fade">
       <div class="arrow"></div>
       <div class="popover-title"><strong>Choose The Page Layout</strong></div>
-      <div class="popover-content dp-slide-layout-thumb-container" data-dpscroll="stop">
-        <div class="dp-slide-layout-thumb-container">
-          {{#each slideLayouts}}
-          <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
-            <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
-              <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
+      <div class="popover-content dp-popover" data-dpscroll="stop">
+        <div class="dp-slide-layout-tab-container">
+          <div id="layoutTabDP" class="dp-slide-layout-tab">
+            <div class="dp-slide-layout-thumb-container">
+              {{#each slideLayouts}}
+              <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
+                <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+                  <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
+                </div>
+              </div>
+              {{/each}}
+              {{#each slideLayouts}}
+              <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
+                <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+                  <div class="slides dp-slides"><section class="present">My</section></div>
+                </div>
+              </div>
+              {{/each}}
             </div>
           </div>
-          {{/each}}
+          <div id="layoutTabMy" class="dp-slide-layout-tab">
+            <div class="dp-slide-layout-thumb-container">
+              {{#each slideLayouts}}
+              <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
+                <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+                  <div class="slides dp-slides"><section class="present">My</section></div>
+                </div>
+              </div>
+              {{/each}}
+            </div>
+          </div>
         </div>
       </div>
       <div class="popover-footer">
-        <ul class="nav nav-tabs">
-          <li style="width: 50%;" class="active"><a href="#"><strong>DynamicPoint</strong></a></li>
-          <li style="width: 50%;"><a href="#"><strong>My</strong></a></li>
-        </ul>
+        <div class="btn-group dp-btn-group dp-btn-group-block-2">
+          <button class="btn btn-default active" data-dp-toggle="dpLayoutTab" data-dp-target="#layoutTabDP"><strong>DynamicPoint</strong></button>
+          <button class="btn btn-default" data-dp-toggle="dpLayoutTab" data-dp-target="#layoutTabMy"><strong>My</strong></button>
+        </div>
       </div>
     </div>
   </div>

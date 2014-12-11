@@ -39,7 +39,7 @@ commonDPPageSetup = function() {
   $(function() {
     $('body')
       .addClass('dp') // add the global dp class
-      .addClass('dp-theme-waves') // default theme
+      .addClass('dp-theme-dp') // default theme
       ;
 
     // fix the scroll parent issue
