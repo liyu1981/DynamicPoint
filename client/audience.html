@@ -1,11 +1,23 @@
 <template name="audience">
-<div class="reveal">
-  <div class="slides">
-    {{#each slides}}
+<div class="modal fade" id="sessionSetup" tabindex="-1" aria-hidden="true" data-backdrop="false">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <center><p>
+          <h2>Not Ready Yet!</h2>
+          Please wait speaker to start this session.
+        </p></center>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="dp-reveal-container dp-reveal-container-wait reveal-theme-solarized">
+  <div class="reveal">
+    <div class="slides">
+      {{#each slides}}
       {{> Template.dynamic template=calcSlideTemplate}}
-    {{/each}}
+      {{/each}}
+    </div>
   </div>
 </div>
 </template>
-
-

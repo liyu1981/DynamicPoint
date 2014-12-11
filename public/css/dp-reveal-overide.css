@@ -37,10 +37,29 @@
 .dp-thumb .reveal blockquote > :last-child {
   margin-bottom: 0;
 }
+.dp-reveal {
+  perspective: 400px;
+}
+.dp-reveal-container {
+  height: 100%;
+  box-shadow: #333 0px 0px 20px;
+  transition: all 0.3s ease-in-out;
+  opacity: 1;
+}
+.dp-reveal-container-wait {
+  transform: rotateX(8deg) scale(0.78);
+  opacity: 0.5;
+}
+.dp-reveal .reveal {
+  height: 100%;
+}
 .dp-reveal .reveal .sl-block {
   position: absolute;
 }
 .dp-reveal .slides section {
   min-width: 960px;
   min-height: 700px;
+}
+.dp-reveal .reveal-theme-solarized {
+  background-color: #fdf6e3;
 }

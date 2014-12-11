@@ -9,7 +9,11 @@ Template.audience.helpers({
 });
 
 Template.audience.rendered = function () {
-  $('body').addClass('dp-reveal');
+  $('body')
+    .addClass('dp-reveal')
+    .addClass('dp-theme-waves') // default theme
+    ;
+
   waitfor('.slides section', function() {
     Session.set('audienceId', Random.id());
     logger.info('audienceId generated as:', Session.get('audienceId'));
@@ -21,11 +25,18 @@ Template.audience.rendered = function () {
       var s = $('.slides');
       dpPluginObserve('deck', Decks, dpTheDeck._id, s);
       dpPluginObserve('runStatus', RunStatus, dpRunStatus._id, s);
+      //dpPluginObserve('sessionSetup');
       s.on('runStatusChanged', function(event, id, fields) {
         gotoSlide(fields.curIndex);
       });
-      // and update for starting time
-      gotoSlide(dpRunStatus.curIndex);
+      dpSessionControl.on('kickOff', function() {
+        $('#sessionSetup').modal('hide');
+      });
+      $('#sessionSetup').modal().on('hidden.bs.modal', function() {
+        $('.dp-reveal-container').removeClass('dp-reveal-container-wait');
+        // and update for starting time
+        gotoSlide(dpRunStatus.curIndex);
+      });
     }
   });
 };

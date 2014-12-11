@@ -24,7 +24,11 @@ Template.speaker.helpers({
 });
 
 Template.speaker.rendered = function() {
-  $('body').addClass('dp-reveal');
+  $('body')
+    .addClass('dp-reveal')
+    .addClass('dp-theme-waves') // default theme
+    ;
+
   waitfor('.slides section', function() {
     Reveal.initialize();
     Reveal.addEventListener('slidechanged', function(event) {
@@ -37,9 +41,8 @@ Template.speaker.rendered = function() {
     dpPluginObserve('deck', Decks, dpTheDeck._id, s);
     dpPluginObserve('runStatus', RunStatus, dpRunStatus._id, s);
     // and update for starting time
-    $('#sessionSetup').modal({
-      backdrop: 'static'
-    }).on('hidden.bs.modal', function() {
+    $('#sessionSetup').modal().on('hidden.bs.modal', function() {
+      $('.dp-reveal-container').removeClass('dp-reveal-container-wait');
       gotoSlide(dpRunStatus.curIndex);
     });
   });
@@ -47,6 +50,7 @@ Template.speaker.rendered = function() {
 
 Template.speaker.events({
   'click #doneSessionSetup': function(event) {
+    dpSessionControl.emit('kickOff');
     $('#sessionSetup').modal('hide');
   }
 });

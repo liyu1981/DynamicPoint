@@ -1,32 +1,31 @@
 <template name="speaker">
-<div class="modal fade" id="sessionSetup" tabindex="-1" aria-hidden="true">
+<div class="modal fade" id="sessionSetup" tabindex="-1" aria-hidden="true" data-backdrop="false">
   <div class="modal-dialog">
     <div class="modal-content">
-      <div class="modal-header">
-        <h2 class="modal-title">Setup This Presentation</h2>
-      </div>
       <div class="modal-body">
-        <p>
-        <h4>Select the run session to use:</h4>
-        <select class="form-control">
-          {{#each runStatusList}}
-          <option val="{{id}}" {{checked}}>{{displayName}}</option>
-          {{/each}}
-        </select>
-        </p>
-      </div>
-      <div class="modal-footer">
-        <button id="doneSessionSetup" type="button" class="btn btn-success btn-block">Start !</button>
+        <center>
+        <h2>Setup This Presentation</h2>
+<!--        <p>-->
+        <!--<h4>Select the run session to use:</h4>-->
+        <!--<select class="form-control">-->
+          <!--{{#each runStatusList}}-->
+          <!--<option val="{{id}}" {{checked}}>{{displayName}}</option>-->
+          <!--{{/each}}-->
+        <!--</select>-->
+        <!--</p>-->
+        <button id="doneSessionSetup" type="button" class="btn btn-success btn-lg">Start !</button>
+        </center>
       </div>
     </div>
   </div>
 </div>
-<div class="reveal">
-  <div class="slides">
-    {{#each slides}}
-    {{> Template.dynamic template=calcSlideTemplate data=calcSlideData}}
-    {{/each}}
+<div class="dp-reveal-container dp-reveal-container-wait reveal-theme-solarized">
+  <div class="reveal">
+    <div class="slides">
+      {{#each slides}}
+      {{> Template.dynamic template=calcSlideTemplate data=calcSlideData}}
+      {{/each}}
+    </div>
   </div>
 </div>
 </template>
-
