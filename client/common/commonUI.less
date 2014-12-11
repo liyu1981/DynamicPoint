@@ -4,9 +4,20 @@
   100% { transform: scale(1); }
 }
 
+@keyframes dpFoldIn {
+  0% { transform: rotateX(0deg); }
+  99% { transform: rotateX(90deg); }
+  100% { transform: rotateX(90deg); display: none; }
+}
+
+html {
+  min-height: 100%;
+}
+
 body.dp {
   overflow-x: hidden !important;
   overflow-y: auto !important;
+  min-height: 100%;
 
   * {
     //border-radius: 0px !important;
@@ -33,6 +44,7 @@ body.dp {
 
   .dp-container {
     min-height: 780px;
+    perspective: 400px;
   }
 
   .dp-slide {
@@ -136,6 +148,16 @@ body.dp {
       color: white;
       cursor: move;
     }
+
+    .sortable-block {
+      padding-right: 0px;
+      padding-left: 4px;
+    }
+  }
+
+  .dp-deck-zoom-out {
+    transform: scale(10);
+    opacity: 0.00001;
   }
 
   .dp-deck {
@@ -144,10 +166,10 @@ body.dp {
     height: 776px;
     min-height: 776px;
     left: 0px;
-    top: 82px;
     overflow-x: hidden;
     overflow-y: hidden;
     perspective: 400px;
+    transition: all 0.5s ease;
 
     .dp-slide {
       overflow: hidden;
@@ -212,7 +234,7 @@ body.dp {
   }
 
   div.sortable-placeholder {
-    width: 260px;
+    width: 25%;
     float: left;
     position: relative;
     margin-top: 5px;
@@ -220,7 +242,7 @@ body.dp {
     padding-left: 15px;
     border: 2px dashed #e7e7e7;
     border-radius: 8px;
-    min-height: 238px;
+    min-height: 200px;
   }
 
   .dp-tools-container {
@@ -231,8 +253,8 @@ body.dp {
     max-width: 58px;
     padding-left: 0px;
     padding-right: 0px;
-    float: left;
-    clear: none;
+    top: 0px;
+    position: absolute;
 
     .dplogo-block {
       hr {
@@ -293,10 +315,15 @@ body.dp {
     }
   }
 
-  .dp-deck-thumb {
-    padding-left: 0px;
+  .dp-deck-thumb-container {
+    padding-left: 78px;
     padding-right: 0px;
-    width: 94.1%;
+    pointer-events: none;
+
+    .dp-deck-thumb {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
   }
 
   .list-group-item {
@@ -465,9 +492,15 @@ body.dp {
       max-width: 1028px;
     }
 
-    .dp-deck {
-      top: 58px;
+    .dp-author-navbar {
+      padding-left: 2px;
+    }
 
+    .dp-deck-thumb-container {
+      padding-left: 58px;
+    }
+
+    .dp-deck {
       .dp-panel {
         .panel-body {
           max-height: 642px;

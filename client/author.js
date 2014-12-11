@@ -211,7 +211,6 @@ Template.authorToolbar.events({
     var t = $(event.currentTarget);
     var p = t.closest('.popover');
     var tg = p.data('toggle');
-    logger.info('clicked:', t, tg);
     addNewSlide(t.attr('layoutId'), function() {
       p.data('toggle', null);
       tg && tg.click();
@@ -221,8 +220,11 @@ Template.authorToolbar.events({
   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
     function on(event) {
       var dc = $('.dp-container');
-      dc.find('.dp-deck').hide(0);
-      dc.find('.dp-deck-thumb').show(0);
+      dc.find('.dp-deck-thumb').show(0, function() {
+        dc.find('.dp-deck').addClass('dp-deck-zoom-out').afterTransition(function() {
+          dc.find('.dp-deck').hide(0);
+        });
+      });
       $('.dp-sortable')
         .addClass('dp-sortable-enabled')
         .sortable({ items: '.sortable-block', handle: '.sortable-handle' });
@@ -230,8 +232,9 @@ Template.authorToolbar.events({
     },
     function off(event) {
       var dc = $('.dp-container');
-      dc.find('.dp-deck').show(0);
-      dc.find('.dp-deck-thumb').hide(0);
+      dc.find('.dp-deck-thumb').hide(0, function() {
+        dc.find('.dp-deck').show(0).removeClass('dp-deck-zoom-out');
+      });
       $('.dp-sortable')
         .removeClass('dp-sortable-enabled')
         .sortable('disable');

@@ -26,4 +26,5 @@ mrt:bootstrap-3
 lauricio:less-autoprefixer
 mousetrap:mousetrap
 lepozepo:streams
+liyu:jquery-transition-events
 

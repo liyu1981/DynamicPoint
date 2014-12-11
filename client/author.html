@@ -12,10 +12,12 @@
   </div>
   <div class="container dp-tools-container">
     {{> authorToolbar}}
-    <div class="col-md-12 dp-deck-thumb dp-sortable" style="display: none;">
-      {{#each indexedSlides}}
-      {{> authorThumbnail}}
-      {{/each}}
+    <div class="dp-deck-thumb-container">
+      <div class="col-md-12 dp-deck-thumb dp-sortable" style="display: none;">
+        {{#each indexedSlides}}
+        {{> authorThumbnail}}
+        {{/each}}
+      </div>
     </div>
   </div>
 </div>
