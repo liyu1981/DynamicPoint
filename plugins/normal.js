@@ -262,22 +262,22 @@ DPPlugins['normal'] = {
           };
         }
 
-        var blockTpl = '<div class="sl-block" data-block-type="%s"><div class="sl-block-content">%s</div></div>';
+        var blockTpl = '<div class="sl-block" data-block-type="%s" %s><div class="sl-block-content">%s</div></div>';
 
         return {
           'click #insertTextBlockBtn': genInsertHandler(function(next) {
-            next(sprintf(blockTpl, 'text', '<h3>Hello,world</h3>'));
+            next(sprintf(blockTpl, 'text', 'style="left: 386px; top: 276px;"', '<h3>Hello,world</h3>'));
           }),
 
           'click #insertListBlockBtn': genInsertHandler(function(next) {
-            next(sprintf(blockTpl, 'text', '<ul><li>hello</li><li>world</li></ul>'));
+            next(sprintf(blockTpl, 'text', 'style="left: 386px; top: 276px;"', '<ul><li>hello</li><li>world</li></ul>'));
           }),
 
           'click #insertImageBtn': genInsertHandler(function(next) {
             alertify.prompt('The URI of image',
               'https://graph.facebook.com/minhua.lin.9/picture?type=large',
               function(event, value) {
-                next(sprintf(blockTpl, 'image', '<img src="' + value + '"></img>'));
+                next(sprintf(blockTpl, 'image', '', '<img src="' + value + '"></img>'));
               }).setHeader('Insert Image');
           }),
 
@@ -285,7 +285,7 @@ DPPlugins['normal'] = {
             alertify.codePrompt('Paste code here',
               'console.log(\'hello,world\');',
               function(event, value) {
-                next(sprintf(blockTpl, 'text', '<code>' + value + '</code>'));
+                next(sprintf(blockTpl, 'text', '', '<code>' + value + '</code>'));
               }).setHeader('Insert Code Block');
           }),
 
@@ -293,7 +293,7 @@ DPPlugins['normal'] = {
             alertify.codePrompt('Paste media embeding code here',
               '<iframe width="320px" height="240px" src="//www.youtube.com/embed/l6k_5GHwLRA" frameborder="0" allowfullscreen></iframe>',
               function(event, value) {
-                next(sprintf(blockTpl, 'iframe', value));
+                next(sprintf(blockTpl, 'iframe', '', value));
               }).setHeader('Insert Embedded Media');
           })
         };

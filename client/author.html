@@ -5,21 +5,23 @@
   </div>
 </div>
 <div class="dp-container">
-  <div class="dp-deck">
+  <div class="dp-deck dp-zoom">
     {{#each indexedSlides}}
     {{> authorSlide}}
     {{/each}}
   </div>
   <div class="container dp-tools-container">
-    {{> authorToolbar}}
-    <div class="dp-deck-thumb-container">
-      <div class="col-md-12 dp-deck-thumb dp-sortable" style="display: none;">
+    <div class="dp-deck-thumb-container" style="display: none;">
+      <ul class="col-md-12 dp-deck-thumb dp-sortable">
         {{#each indexedSlides}}
         {{> authorThumbnail}}
         {{/each}}
-      </div>
+      </ul>
     </div>
   </div>
+</div>
+<div class="container">
+  {{> authorToolbar}}
 </div>
 <div class="container">
   <div class="row">
@@ -81,75 +83,32 @@
       <li><a href="#" id="newSlideToggle" title="New Slide" data-target="#newSlideLayouts" data-placement="right right-top" data-backdrop="true"><i class="fa fa-plus-circle fa-2x"></i></a></li>
       <li><a href="#" id="sortToggle" title="Start Drag&Drop Sort"><i class="fa fa-th fa-2x"></i></a></li>
     </ul>
-    <div id="newSlideLayouts" class="popover popover-default popover-lg fade">
-      <div class="arrow"></div>
-      <div class="popover-title"><strong>Choose The Page Layout</strong></div>
-      <div class="popover-content dp-popover" data-dpscroll="stop">
-        <div class="dp-slide-layout-tab-container">
-          <div id="layoutTabDP" class="dp-slide-layout-tab">
-            <div class="dp-slide-layout-thumb-container">
-              {{#each slideLayouts}}
-              <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
-                <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
-                  <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
-                </div>
-              </div>
-              {{/each}}
-              {{#each slideLayouts}}
-              <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
-                <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
-                  <div class="slides dp-slides"><section class="present">My</section></div>
-                </div>
-              </div>
-              {{/each}}
-            </div>
-          </div>
-          <div id="layoutTabMy" class="dp-slide-layout-tab">
-            <div class="dp-slide-layout-thumb-container">
-              {{#each slideLayouts}}
-              <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
-                <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
-                  <div class="slides dp-slides"><section class="present">My</section></div>
-                </div>
-              </div>
-              {{/each}}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="popover-footer">
-        <div class="btn-group dp-btn-group dp-btn-group-block-2">
-          <button class="btn btn-default active" data-dp-toggle="dpLayoutTab" data-dp-target="#layoutTabDP"><strong>DynamicPoint</strong></button>
-          <button class="btn btn-default" data-dp-toggle="dpLayoutTab" data-dp-target="#layoutTabMy"><strong>My</strong></button>
-        </div>
-      </div>
-    </div>
   </div>
   <div class="collapse navbar-collapse dp-navbar-authortool">
     <ul class="nav navbar-nav">
       {{> Template.dynamic template=calcSlideTemplateAuthorTool}}
     </ul>
   </div>
+  {{> authorPopoverNewSlideLayouts}}
 </nav>
 </template>
 
 <template name="authorThumbnail">
-<div class="col-md-3 thumb sortable-block" slideId="{{id}}" slideIndex="{{index}}">
+<li class="col-md-3 thumb sortable-block" slideId="{{id}}" slideIndex="{{index}}">
   <div class="panel panel-default">
     <div class="panel-heading sortable-handle">
       <center><strong>{{index}}</strong> - <strong>{{type}}</strong></center>
     </div>
-    <div class="panel-body content-center" style="height: 160px;">
+    <div class="panel-body content-center">
       {{{thumbContent}}}
     </div>
   </div>
-</div>
+</li>
 </template>
 
 <template name="authorSlide">
 <div class="dp-slide-container {{calcDpPositionClass}}" style="{{calcDpPositionStyle}}">
   <div class="dp-slide slide" slideId="{{id}}" slideIndex="{{index}}" slideType="{{type}}">
-    <!--<div class="col-md-12 slide" slideId="{{id}}" slideIndex="{{index}}" slideType="{{type}}">-->
     <div class="panel panel-default dp-panel">
       <div class="panel-heading slide-handle">
         <div class="btn-group pull-right">
@@ -185,6 +144,52 @@
     {{#each pagers}}
     <span class="badge {{calcDpPositionClass}}" slideId="{{id}}" slideIndex="{{index}}">{{index}}</span>&nbsp;
     {{/each}}
+  </div>
+</div>
+</template>
+
+<template name="authorPopoverNewSlideLayouts">
+<div id="newSlideLayouts" class="popover popover-default popover-lg fade">
+  <div class="arrow"></div>
+  <div class="popover-title"><strong>Choose The Page Layout</strong></div>
+  <div class="popover-content dp-popover" data-dpscroll="stop">
+    <div class="dp-slide-layout-tab-container">
+      <div id="layoutTabDP" class="dp-slide-layout-tab">
+        <div class="dp-slide-layout-thumb-container">
+          {{#each slideLayouts}}
+          <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
+            <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+              <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
+            </div>
+          </div>
+          {{/each}}
+          {{#each slideLayouts}}
+          <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
+            <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+              <div class="slides dp-slides"><section class="present">My</section></div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+      <div id="layoutTabMy" class="dp-slide-layout-tab">
+        <div class="dp-slide-layout-thumb-container">
+          {{#each slideLayouts}}
+          <div class="dp-thumb dp-slide-layout-thumb" layoutId="{{id}}">
+            <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+              <div class="slides dp-slides"><section class="present">My</section></div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="popover-footer">
+    <div class="btn-group dp-btn-group dp-btn-group-block-2">
+      <button class="btn btn-default active" data-dp-toggle="dpLayoutTab" data-dp-target="#layoutTabDP"><strong>DynamicPoint</strong></button>
+      <button class="btn btn-default" data-dp-toggle="dpLayoutTab" data-dp-target="#layoutTabMy"><strong>My</strong></button>
+    </div>
   </div>
 </div>
 </template>
