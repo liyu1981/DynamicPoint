@@ -242,8 +242,10 @@ Template.authorThumbnail.helpers({
     var thumbTpl = [
       '<div class="dp-slide-preview-thumb">',
       '<div class="dp-slide-preview-thumb-content reveal">',
-      '<div class="slides dp-slides" style="left: -390px; top: -290px;">',
+      '<div class="slides dp-slides">',
+      '<section class="present">',
       '%s',
+      '</section>',
       '</div>',
       '</div>',
       '</div>'
@@ -251,7 +253,8 @@ Template.authorThumbnail.helpers({
     if (this.type === 'normal') {
       return sprintf(thumbTpl, this.content);
     } else {
-      return sprintf('<div class="dp-slide-preview-thumb"><h2><i class="fa fa-child"></i></h2></div>');
+      return sprintf(thumbTpl, '<div class="sl-block" data-block-type="text" style="left: 105px; top: 100px;"><div class="sl-block-content"><h1>No Preview</h1></div></div>');
+      //return sprintf('<div class="dp-slide-preview-thumb"><h2><i class="fa fa-child"></i></h2></div>');
     }
   }
 });

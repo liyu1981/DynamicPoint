@@ -340,6 +340,10 @@ body.dp {
 
       .thumb {
         //float: none;
+        //width: 24%;
+        padding-top: 20px;
+        background-color: rgba(255,255,255,0.3);
+
         .panel {
           box-shadow: #888 1px 1px 5px;
         }
@@ -349,7 +353,7 @@ body.dp {
         }
 
         .reveal:after {
-          display: none;
+          //display: none;
         }
       }
     }
@@ -445,13 +449,23 @@ body.dp {
       &:after {
         background-color: transparent;
       }
+
+      .slides {
+        left: 0;
+        top: 0;
+
+        >section {
+          left: 0;
+          top: 0;
+        }
+      }
     }
 
     .dp-slide-preview-thumb-content {
       position: relative;
       left: 0px;
       top: 0px;
-      transform: scale(0.192);
+      transform: translateX(-42%) translateY(-40%) scale(0.192);
     }
   }
 
