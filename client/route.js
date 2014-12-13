@@ -271,7 +271,8 @@ Router.route('/qrcode', {
 
   data: function() {
     return {
-      id: dpUrlParams.query.id,
+      deckId: dpUrlParams.query.id,
+      ownerId: Meteor.userId(),
       showall: (dpUrlParams.query.showall ? true : false)
     }
   }
@@ -284,14 +285,14 @@ Router.route('/pairview', {
   },
 
   onRerun: function() {
-    if (!this.params.query.id) {
+    if (!(this.params.query.id && this.params.query.ownerId)) {
       window.location.href = '/welcome';
     }
     this.next();
   },
 
   data: function() {
-    return { id: this.params.query.id };
+    return this.params.query;
   }
 });
 
@@ -302,13 +303,13 @@ Router.route('/superview', {
   },
 
   onRerun: function() {
-    if (!this.params.query.id) {
+    if (!(this.params.query.id && this.params.query.ownerId)) {
       window.location.href = '/welcome';
     }
     this.next();
   },
 
   data: function() {
-    return { id: this.params.query.id };
+    return this.params.query;
   }
 });

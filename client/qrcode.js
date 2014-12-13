@@ -5,11 +5,6 @@ Template.qrcode.rendered = function() {
       $('.qrcode-container').each(function(index, elem) {
         var e = $(elem);
         var size = Math.min(e.width(), $(document).height() * 0.8);
-        logger.info('will draw:', {
-          text: qualifyURL(e.attr('rawUrl')),
-          width: size,
-          height: size
-        });
         new QRCode(elem, {
           text: qualifyURL(e.attr('rawUrl')),
           width: size,

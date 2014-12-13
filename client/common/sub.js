@@ -26,8 +26,8 @@ sub = function() {
     case 'speaker':
       return [
         Meteor.subscribe('DPConf'),
-        Meteor.subscribe('Decks', Meteor.userId() || dpUrlParams.query.ownerId, dpUrlParams.query.id),
-        Meteor.subscribe('RunStatus', Meteor.userId() || dpUrlParams.query.ownerId, dpUrlParams.query.id, dpUrlParams.query.runId)
+        Meteor.subscribe('Decks',  dpUrlParams.query.ownerId || Meteor.userId(), dpUrlParams.query.id),
+        Meteor.subscribe('RunStatus', dpUrlParams.query.ownerId || Meteor.userId(), dpUrlParams.query.id, dpUrlParams.query.runId)
       ];
   };
 };

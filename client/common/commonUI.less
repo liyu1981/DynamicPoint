@@ -32,6 +32,11 @@ body.dp {
     border-radius: 0px !important;
   }
 
+  .container {
+    min-width: 1058px;
+    max-width: 1058px;
+  }
+
   .dp-slides {
     width: 960px;
     height: 700px;
@@ -45,11 +50,6 @@ body.dp {
   .dp-author-navbar {
     padding-left: 22px;
     width: 50%;
-  }
-
-  .container {
-    min-width: 1058px;
-    max-width: 1058px;
   }
 
   .dp-container {
@@ -271,14 +271,6 @@ body.dp {
     position: absolute;
     box-shadow: #888 1px 1px 5px;
 
-    .dplogo-block {
-      hr {
-        margin-top: 8px;
-        margin-bottom: 0px;
-        border-color: #e7e7e7;
-      }
-    }
-
     li {
       text-align: center;
     }
@@ -301,20 +293,24 @@ body.dp {
       padding-left:0;
       padding-right:0;
     }
+
     .navbar-collapse.collapse {
       display: block !important;
       width: auto !important;
       padding-bottom: 0;
       overflow: visible;
     }
+
     .navbar-collapse.in {
       overflow-x: visible;
     }
+
     .navbar {
       max-width:300px;
       margin-right: 0;
       margin-left: 0;
     }
+
     .navbar-nav,
     .navbar-nav > li,
     .navbar-left,
@@ -322,9 +318,11 @@ body.dp {
     .navbar-header {
       float:none !important;
     }
+
     .navbar-right .dropdown-menu {
       left:0;right:auto;
     }
+
     .navbar-collapse .navbar-nav.navbar-right:last-child {
       margin-right: 0;
     }
@@ -350,10 +348,6 @@ body.dp {
 
         .panel-body {
           height: 155px;
-        }
-
-        .reveal:after {
-          //display: none;
         }
       }
     }
@@ -470,10 +464,7 @@ body.dp {
   }
 
   .dp-pager {
-    //background-color: rgba(231,231,231,0.8);
-    //border-radius: 4px;
     padding: 4px;
-    //border: 1px solid #e7e7e7;
 
     .badge {
       cursor: pointer;
@@ -499,7 +490,7 @@ body.dp {
   }
 }
 
-// optimize the 1366x768 case
+// optimization for smaller screen, e.g., the 1366x768 case
 @media (min-width: 1200px) and (max-width: 1360px) {
   body.dp {
     .dp-navbar {
