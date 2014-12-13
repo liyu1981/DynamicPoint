@@ -24,8 +24,12 @@
   {{> authorToolbar}}
 </div>
 <div class="container">
+  {{#if showPager}}
   <div class="row">
-  {{> authorPager}}
+    {{> authorPager}}
+  </div>
+  {{/if}}
+  <div class="row">
   {{> dpFooter}}
   </div>
 </div>
@@ -139,12 +143,10 @@
 </template>
 
 <template name="authorPager">
-<div class="row">
-  <div class="col-md-8 col-md-offset-2 content-center dp-pager">
-    {{#each pagers}}
-    <span class="badge {{calcDpPositionClass}}" slideId="{{id}}" slideIndex="{{index}}">{{index}}</span>&nbsp;
-    {{/each}}
-  </div>
+<div class="col-md-8 col-md-offset-2 content-center dp-pager">
+  {{#each pagers}}
+  <span class="badge {{calcDpPositionClass}}" slideId="{{id}}" slideIndex="{{index}}">{{index}}</span>&nbsp;
+  {{/each}}
 </div>
 </template>
 

@@ -107,11 +107,17 @@ Template.author.created = function() {
   slideFocusMgr = new SlideFocusMgr();
   // and save it in the plugin meta
   DPPlugins._meta.slideFocusMgr = slideFocusMgr;
+  // defaultly we show pager (as we are not in thumb previewing)
+  Session.set('showPager', true);
 };
 
 Template.author.helpers({
   indexedSlides: function() {
     return _.map(this.slides, function(e, i) { return _.extend(e, { index: i }) });
+  },
+
+  showPager: function() {
+    return Session.get('showPager');
   }
 });
 
@@ -205,7 +211,7 @@ Template.authorToolbar.events({
       $(t.attr('data-target')).popoverX('hide');
     }),
 
-   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
+  'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
     function on(event) {
       var dc = $('.dp-container');
       var dd = dc.find('.dp-deck');
@@ -215,8 +221,8 @@ Template.authorToolbar.events({
           dd.hide(0);
         });
       });
+      Session.set('showPager', false);
       slideFocusMgr.defocus();
-      logger.info('will xxx: ', dc.find('.dp-sortable'));
       dc.find('.dp-sortable').addClass('dp-sortable-enabled').sortable({
         items: '.sortable-block',
         handle: '.sortable-handle'
@@ -231,6 +237,7 @@ Template.authorToolbar.events({
           dd.removeClass('dp-zoom-out');
         });
       });
+      Session.set('showPager', true);
       slideFocusMgr.focus(dd.find('.dp-slide-current .slide'));
       dc.find('.dp-sortable').removeClass('dp-sortable-enabled').sortable('disable');
       slideOrderUpdated();
