@@ -174,7 +174,8 @@ Router.route('/author', {
       'css/dp-reveal-overide.css',
       'bower_components/reveal.js/css/theme/solarized.css',
       'bower_components/bootstrap-popover-x/css/bootstrap-popover-x.min.css',
-      'bower_components/bootstrap-popover-x/js/bootstrap-popover-x.js'
+      'bower_components/bootstrap-popover-x/js/bootstrap-popover-x.js',
+      'js/dphorizontab.js'
     ]));
   },
 

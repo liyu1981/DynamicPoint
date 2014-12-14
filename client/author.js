@@ -50,7 +50,7 @@ function genToolbarToggleClickHandler(target, onCb, offCb) {
 }
 
 function slideOrderUpdated() {
-  var children = $('.dp-thumbnail').find('.thumb');
+  var children = $('.dp-deck-thumb').find('.thumb');
   var changes = {};
   for (var i=0; i<children.length; i++) {
     var c = $(children[i]);
@@ -61,6 +61,7 @@ function slideOrderUpdated() {
       }
     }
   }
+    logger.info('order changed:', changes, children);
   if (!_.isEmpty(changes)) {
     logger.info('order changed:', changes);
     // now restore the thumbnail divs since blaze will remember the dom nodes,
@@ -125,25 +126,8 @@ Template.author.rendered = function() {
   commonDPPageSetup();
   Session.set('documentTitle', formatDocumentTitle(this.data.title));
   $(function() {
-    function dpLayoutTabActive($tab, $trigger, callback) {
-      var p = $tab.parent();
-      var bg = $trigger.parent(); // should be .dp-btn-group
-      bg.find('.btn').removeClass('active');
-      var l = $tab.prev().length || 0;
-      var w = $tab.outerWidth(true);
-      p.find('.dp-slide-layout-tab').css('transform', sprintf('translateX(-%dpx)', l*w));
-      callback && callback();
-    }
-
-    $(document).on('click.dpLayoutTab', '[data-dp-toggle="dpLayoutTab"]', function(event) {
-      var t = $(event.currentTarget);
-      dpLayoutTabActive($(t.attr('data-dp-target')), t, function() {
-        t.toggleClass('active');
-      });
-    });
-
     // keyboard shortcuts
-    Mousetrap.bind('right', function() {
+    Mousetrap.bind('left', function() {
       var csi = Session.get('currentSlideIndex');
       var total = _.isArray(dpTheDeck.slides) ? dpTheDeck.slides.length : 0;
       if (_.isNumber(csi) && csi + 1 < total) {
@@ -151,7 +135,7 @@ Template.author.rendered = function() {
         slideFocusMgr.focus($(sprintf('[slideIndex="%s"]', csi+1)));
       }
     });
-    Mousetrap.bind('left', function() {
+    Mousetrap.bind('right', function() {
       var csi = Session.get('currentSlideIndex');
       if (_.isNumber(csi) && csi - 1 >= 0) {
         Session.set('currentSlideIndex', csi-1);
@@ -244,7 +228,7 @@ Template.authorToolbar.events({
     })
 });
 
-Template.authorThumbnail.helpers({
+Template.authorDeckThumb.helpers({
   thumbContent: function() {
     var thumbTpl = [
       '<div class="dp-slide-preview-thumb">',
@@ -265,9 +249,6 @@ Template.authorThumbnail.helpers({
     }
   }
 });
-
-Template.authorSlide.created = function() {
-};
 
 Template.authorSlide.rendered = function() {
   var self = this;

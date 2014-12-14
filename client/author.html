@@ -1,8 +1,6 @@
 <template name="author">
 <div class="container">
-  <div class="row">
-    {{> authorNavbar}}
-  </div>
+  {{> authorNavbar}}
 </div>
 <div class="dp-container">
   <div class="dp-deck dp-zoom">
@@ -14,7 +12,7 @@
     <div class="dp-deck-thumb-container" style="display: none;">
       <ul class="col-md-12 dp-deck-thumb dp-sortable">
         {{#each indexedSlides}}
-        {{> authorThumbnail}}
+        {{> authorDeckThumb}}
         {{/each}}
       </ul>
     </div>
@@ -36,44 +34,45 @@
 </template>
 
 <template name="authorNavbar">
-<nav class="navbar navbar-default dp-navbar" role="navigation">
-  <div class="container-fluid">
-    {{> dpNavbarDPLogo}}
-
-    <div class="collapse navbar-collapse">
-      <form class="navbar-form navbar-left dp-author-navbar">
-        <div class="input-group">
-          <div class="input-group-addon"><strong>Title</strong></div>
-          <input id="titleInput" type="text" class="form-control dp-title" value="{{title}}" />
-        </div>
-      </form>
-      <ul class="nav navbar-nav navbar-right dp-navbar-menu">
-        <li class="dropdown">
-        {{> dpNavbarDropdownToogle}}
-        <ul class="dropdown-menu" role="menu">
-          {{> dpNavbarDropdownLogout}}
-          <li><a href="#" id="newDeckBtn"><i class="fa fa-file-o"></i> New Deck</a></li>
-          <li class="divider"></li>
-          {{#if isEmpty slides}}
-          {{else}}
-          <li><a href="/qrcode?id={{_id}}" target="_blank"><i class="fa fa-qrcode"></i> QR Codes</a></li>
-          <li class="divider"></li>
-          <li><a href="/export?id={{_id}}" target="_blank"><i class="fa fa-cloud-download"></i> Export To File</a></li>
-          {{/if}}
-          {{> dpNavbarDropdownImportFromFile}}
-          {{> dpNavbarDropdownAbout}}
+<div class="row">
+  <nav class="navbar navbar-default dp-navbar" role="navigation">
+    <div class="container-fluid">
+      {{> dpNavbarDPLogo}}
+      <div class="collapse navbar-collapse">
+        <form class="navbar-form navbar-left dp-author-navbar">
+          <div class="input-group">
+            <div class="input-group-addon"><strong>Title</strong></div>
+            <input id="titleInput" type="text" class="form-control dp-title" value="{{title}}" />
+          </div>
+        </form>
+        <ul class="nav navbar-nav navbar-right dp-navbar-menu">
+          <li class="dropdown">
+          {{> dpNavbarDropdownToogle}}
+          <ul class="dropdown-menu" role="menu">
+            {{> dpNavbarDropdownLogout}}
+            <li><a href="#" id="newDeckBtn"><i class="fa fa-file-o"></i> New Deck</a></li>
+            <li class="divider"></li>
+            {{#if isEmpty slides}}
+            {{else}}
+            <li><a href="/qrcode?id={{_id}}" target="_blank"><i class="fa fa-qrcode"></i> QR Codes</a></li>
+            <li class="divider"></li>
+            <li><a href="/export?id={{_id}}" target="_blank"><i class="fa fa-cloud-download"></i> Export To File</a></li>
+            {{/if}}
+            {{> dpNavbarDropdownImportFromFile}}
+            {{> dpNavbarDropdownAbout}}
+          </ul>
+          </li>
         </ul>
-        </li>
-      </ul>
-      <form class="navbar-form navbar-right">
-        <div class="form-group">
-          <span id="dpActionInfo" class="dp-action-info">{{dpActionInfo}}</span>
-          <button type="button" class="btn btn-success" id="saveBtn"><i class="fa fa-save"></i></button>
-        </div>
-      </form>
+        <form class="navbar-form navbar-right">
+          <div class="form-group">
+            <span id="dpActionInfo" class="dp-action-info">{{dpActionInfo}}</span>
+            <button type="button" class="btn btn-success" id="saveBtn"><i class="fa fa-save"></i></button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
 </template>
 
 <template name="authorToolbar">
@@ -93,7 +92,7 @@
 </nav>
 </template>
 
-<template name="authorThumbnail">
+<template name="authorDeckThumb">
 <li class="col-md-3 thumb sortable-block" slideId="{{id}}" slideIndex="{{index}}">
   <div class="panel panel-default">
     <div class="panel-heading sortable-handle">
@@ -150,7 +149,7 @@
 <div id="newSlideLayouts" class="popover popover-default popover-lg fade">
   <div class="arrow"></div>
   <div class="popover-title"><strong>Choose The Page Layout</strong></div>
-  <div class="popover-content dp-popover" data-dpscroll="stop">
+  <div class="popover-content dp-popover">
     <div class="dp-slide-layout-tab-container">
       <div id="layoutTabDP" class="dp-slide-layout-tab">
         <div class="dp-slide-layout-thumb-container">
@@ -185,8 +184,8 @@
   </div>
   <div class="popover-footer">
     <div class="btn-group dp-btn-group dp-btn-group-block-2">
-      <button class="btn btn-default active" data-dp-toggle="dpLayoutTab" data-dp-target="#layoutTabDP"><strong>DynamicPoint</strong></button>
-      <button class="btn btn-default" data-dp-toggle="dpLayoutTab" data-dp-target="#layoutTabMy"><strong>My</strong></button>
+      <button class="btn btn-default active" data-toggle="dpHorizonTab" data-target="#layoutTabDP"><strong>DynamicPoint</strong></button>
+      <button class="btn btn-default" data-toggle="dpHorizonTab" data-target="#layoutTabMy"><strong>My</strong></button>
     </div>
   </div>
 </div>

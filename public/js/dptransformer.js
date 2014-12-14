@@ -177,6 +177,5 @@
     this.ui.remove();
   };
 
-  console.log('will define DPTransformer');
   window.DPTransformer = DPTransformer;
 })();

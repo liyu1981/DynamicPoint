@@ -24,10 +24,12 @@ html {
 }
 
 body.dp {
+  // overall hack
   overflow-x: hidden !important;
   overflow-y: auto !important;
   min-height: 100%;
 
+  // bootstrap hack
   * {
     border-radius: 0px !important;
   }
@@ -37,6 +39,26 @@ body.dp {
     max-width: 1058px;
   }
 
+  // reveal hack
+  .reveal {
+    &:after {
+      //background-color: transparent;
+    }
+
+    .slides {
+      width: 960px;
+      height: 700px;
+      left: 0;
+      top: 0;
+
+      >section {
+        left: 0;
+        top: 0;
+      }
+    }
+  }
+
+  // dp rules
   .dp-slides {
     width: 960px;
     height: 700px;
@@ -430,36 +452,21 @@ body.dp {
       position: relative;
       left: 0px;
       top: 0px;
-      transform: scale(0.23);
+      transform: translateX(-39%) translateY(-37%) scale(0.23);
     }
   }
+
 
   .dp-slide-preview-thumb {
     width: 100%;
     height: 137px;
     border: 1px dotted #aaa;
 
-    .reveal {
-      &:after {
-        background-color: transparent;
-      }
-
-      .slides {
-        left: 0;
-        top: 0;
-
-        >section {
-          left: 0;
-          top: 0;
-        }
-      }
-    }
-
     .dp-slide-preview-thumb-content {
       position: relative;
       left: 0px;
       top: 0px;
-      transform: translateX(-42%) translateY(-40%) scale(0.192);
+      transform: translateX(-41%) translateY(-41%) scale(0.192);
     }
   }
 
@@ -484,9 +491,9 @@ body.dp {
   }
 
   .dp-footer {
-    color: #fff;
-    text-shadow: #000 0px 0px 5px;
-    margin-top: 10px;
+    color: #333;
+    text-shadow: #fff 0px 0px 5px;
+    margin-top: 30px;
   }
 }
 
