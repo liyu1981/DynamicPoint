@@ -8,9 +8,11 @@ SlideFocusMgr.prototype.focus = function(node) {
   if (this.currentSlide !== null && this.currentSlide.get(0) == node.get(0)) { return; }
   if (this.currentSlide !== null) {
     this.currentSlide.removeClass('dp-slide-focused');
+    this.currentSlide.trigger('defocus.slide.dp');
   }
   this.currentSlide = node;
   this.currentSlide.addClass('dp-slide-focused');
+  this.currentSlide.trigger('focus.slide.dp');
   Session.set('focusSlideType', this.currentSlide.attr('slideType'));
 };
 
@@ -22,6 +24,7 @@ SlideFocusMgr.prototype.defocus = function() {
   var old = null;
   if (this.currentSlide) {
     this.currentSlide.removeClass('dp-slide-focused');
+    this.currentSlide.trigger('defocus.slide.dp');
     old = this.currentSlide;
     this.currentSlide = null;
   }

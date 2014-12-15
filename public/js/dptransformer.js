@@ -23,24 +23,51 @@
       e: 0,
       drag:function(v){
         v.preventDefault();
-        if (M.k === 'd') {
-          E.css({
-            left: M.X+v.pageX-M.pX,
-            top: M.Y+v.pageY-M.pY
-          });
-        } else if (M.k === 'rxy') { // resize in x and y demansion
-          E.css({
-            width: Math.max(v.pageX-M.pX+M.W, 0),
-            height: Math.max(v.pageY-M.pY+M.H, 0)
-          });
-        } else if (M.k === 'rx') { // resize in x demansion only
-          E.css({
-            width: Math.max(v.pageX-M.pX+M.W, 0)
-          });
-        } else if (M.k === 'ry') { // resize in y demansion only
-          E.css({
-            width: Math.max(v.pageY-M.pY+M.H, 0)
-          });
+        switch(M.k) {
+          case 'd': // drag
+            E.css({ left: M.X+v.pageX-M.pX, top: M.Y+v.pageY-M.pY });
+            break;
+          case 'rs-n':
+            E.css({ height: Math.max(v.pageY-M.pY-M.H, 0) });
+            break;
+          case 'rs-s':
+            E.css({ height: Math.max(v.pageY-M.pY+M.H, 0) });
+            break;
+          case 'rs-e':
+            console.log('current: ', v.pageX, M.pX, M.W);
+            E.css({ width: Math.max(v.pageX-M.pX+M.W, 0) });
+            break;
+          case 'rs-w':
+            console.log('current: ', v.pageX, M.pX, M.W);
+            E.css({
+              left: Math.max(M.X - v.pageX, 0),
+              width: Math.max(M.W - v.pageX, 1)
+            });
+            break;
+          case 'rs-nw':
+            E.css({
+              width: Math.max(v.pageX-M.pX+M.W, 0),
+              height: Math.max(v.pageY-M.pY-M.H, 0)
+            });
+            break;
+          case 'rs-ne':
+            E.css({
+              width: Math.max(v.pageX-M.pX-M.W, 0),
+              height: Math.max(v.pageY-M.pY-M.H, 0)
+            });
+            break;
+          case 'rs-sw':
+            E.css({
+              width: Math.max(v.pageX-M.pX+M.W, 0),
+              height: Math.max(v.pageY-M.pY+M.H, 0)
+            });
+            break;
+          case 'rs-se':
+            E.css({
+              width: Math.max(v.pageX-M.pX-M.W, 0),
+              height: Math.max(v.pageY-M.pY+M.H, 0)
+            });
+            break;
         }
         return false;
       },
@@ -56,20 +83,20 @@
         i=function(e,h,k){
           return e.each(function(){
             h=(h)?$(h,e):e;
-            h.on('mousedown'+eventDomain,{e:e,k:k},function(v){
+            h.on('mousedown'+eventDomain, {e:e, k:k}, function(v) {
               v.preventDefault();
-              var d=v.data,p={};E=d.e;
+              var d=v.data, p={}, E=d.e;
               // attempt utilization of dimensions plugin to fix IE issues
               // if(E.css('position') != 'relative'){try{E.position(p);}catch(e){}}
               M={
-                X:p.left||f('left')||0,
-                Y:p.top||f('top')||0,
-                W:f('width')||E[0].scrollWidth||0,
-                H:f('height')||E[0].scrollHeight||0,
-                pX:v.pageX,
-                pY:v.pageY,
-                k:d.k,
-                o:E.css('opacity')
+                X:  p.left||f('left')||0,
+                Y:  p.top||f('top')||0,
+                W:  f('width')||E[0].scrollWidth||0,
+                H:  f('height')||E[0].scrollHeight||0,
+                pX: v.pageX,
+                pY: v.pageY,
+                k:  d.k,
+                o:  E.css('opacity')
               };
               E.css({opacity:0.8});
               $(document).on('mousemove'+eventDomain, jqDnR.drag).on('mouseup'+eventDomain, jqDnR.stop);
@@ -77,7 +104,7 @@
             });
           });
         },
-        f=function(k){
+        f = function(k) {
           return parseInt(E.css(k))||false;
         };
 
@@ -133,17 +160,11 @@
       case 'ne':
       case 'sw':
       case 'se':
-        jqdnr(this.element, '.dptc-resize-' + k, 'rxy');
-        this._unbinder.push(function() { this.element.find('.dptc-resize-' + k).off('mousedown.dptransformer'); });
-        break;
       case 'n':
       case 's':
-        jqdnr(this.element, '.dptc-resize-' + k, 'ry');
-        this._unbinder.push(function() { this.element.find('.dptc-resize-' + k).off('mousedown.dptransformer'); });
-        break;
       case 'w':
       case 'e':
-        jqdnr(this.element, '.dptc-resize-' + k, 'rx');
+        jqdnr(this.element, '.dptc-resize-' + k, 'rs-' + k);
         this._unbinder.push(function() { this.element.find('.dptc-resize-' + k).off('mousedown.dptransformer'); });
         break;
       case 'r':

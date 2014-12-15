@@ -28,6 +28,16 @@
       height:100%;
     }
 
+    .sl-block[data-block-type="image"] .sl-block-content img {
+      width:100%;
+      height:100%;
+      max-width: 100%;
+      max-height: 100%;
+      padding: 0px;
+      margin: 0px;
+      border: 0px;
+    }
+
     .sl-block .sl-block-content .sl-block-content-preview,
     .sl-block .sl-block-overlay
     {
@@ -38,8 +48,7 @@
       top:0;
     }
 
-    .sl-block .sl-block-content>:last-child,
-    blockquote>:last-child {
+    .sl-block .sl-block-content>:last-child, blockquote>:last-child {
       margin-bottom:0;
     }
   }
@@ -57,7 +66,7 @@
 
     &-wait {
       transform: rotateX(8deg) scale(0.78);
-      opacity: 0.5;
+      opacity: 0.7;
     }
   }
 

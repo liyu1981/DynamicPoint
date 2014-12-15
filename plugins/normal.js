@@ -163,7 +163,16 @@ DPPlugins['normal'] = {
 
     rendered: {
       'author': function() {
+        var self = this;
         this.editmgr = new EditMgr();
+        if (this.firstNode) {
+          $(this.firstNode).closest('.slide').on('defocus.slide.dp', function() {
+            var slide = this;
+            self.editmgr.releaseCurrentTarget(function() {
+              saveChange($(slide).find('section.present'));
+            });
+          });
+        }
         //var observerSubchild = new MutationObserver(function(items, observer) {
         //  console.log('content changed', items, observer);
         //  var v = {};
