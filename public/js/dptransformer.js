@@ -2,113 +2,97 @@
 // author: LI, Yu <liyu1981@gmail.com>
 // deps: underscore (as _) and jquery (as $)
 
-;(function() {
+;(function(window, _, $) {
 
-  var eventDomain = '.dptransformer';
-
-// some code is from
-/*
- * jqDnR - Minimalistic Drag'n'Resize for jQuery.
- *
- * Copyright (c) 2007 Brice Burgess <bhb@iceburg.net>, http://www.iceburg.net
- * Licensed under the MIT License:
- * http://www.opensource.org/licenses/mit-license.php
- *
- * $Version: 2007.08.19 +r2
- */
-
+  // some code is from : jqDnR - Minimalistic Drag'n'Resize for jQuery.
+  // http://jquery.iceburg.net/jqDnR/
   var jqdnr = (function() {
-    var jqDnR={
-      dnr: {},
-      e: 0,
-      drag:function(v){
-        v.preventDefault();
-        switch(M.k) {
-          case 'd': // drag
-            E.css({ left: M.X+v.pageX-M.pX, top: M.Y+v.pageY-M.pY });
-            break;
-          case 'rs-n':
-            E.css({ height: Math.max(v.pageY-M.pY-M.H, 0) });
-            break;
-          case 'rs-s':
-            E.css({ height: Math.max(v.pageY-M.pY+M.H, 0) });
-            break;
-          case 'rs-e':
-            console.log('current: ', v.pageX, M.pX, M.W);
-            E.css({ width: Math.max(v.pageX-M.pX+M.W, 0) });
-            break;
-          case 'rs-w':
-            console.log('current: ', v.pageX, M.pX, M.W);
-            E.css({
-              left: Math.max(M.X - v.pageX, 0),
-              width: Math.max(M.W - v.pageX, 1)
-            });
-            break;
-          case 'rs-nw':
-            E.css({
-              width: Math.max(v.pageX-M.pX+M.W, 0),
-              height: Math.max(v.pageY-M.pY-M.H, 0)
-            });
-            break;
-          case 'rs-ne':
-            E.css({
-              width: Math.max(v.pageX-M.pX-M.W, 0),
-              height: Math.max(v.pageY-M.pY-M.H, 0)
-            });
-            break;
-          case 'rs-sw':
-            E.css({
-              width: Math.max(v.pageX-M.pX+M.W, 0),
-              height: Math.max(v.pageY-M.pY+M.H, 0)
-            });
-            break;
-          case 'rs-se':
-            E.css({
-              width: Math.max(v.pageX-M.pX-M.W, 0),
-              height: Math.max(v.pageY-M.pY+M.H, 0)
-            });
-            break;
-        }
-        return false;
-      },
-      stop: function() {
-        E.css('opacity', M.o);
-        $(document).off('mousemove'+eventDomain).off('mouseup'+eventDomain);
+
+    var evdomain = '.dptransformer';
+
+    function css(e, k) {
+      return parseInt(e.css(k))||false;
+    }
+
+    var jqDnR = { dnr: {}, e: 0 }, M = jqDnR.dnr, E = jqDnR.e;
+
+    jqDnR.drag = function(v) {
+      v.preventDefault();
+      switch(M.k) {
+        case 'd': // drag
+          E.css({ left: M.X+v.pageX-M.pX, top: M.Y+v.pageY-M.pY });
+        break;
+        case 'rs-n':
+          E.css({ height: Math.max(v.pageY-M.pY-M.H, 0) });
+          break;
+        case 'rs-s':
+          E.css({ height: Math.max(v.pageY-M.pY+M.H, 0) });
+          break;
+        case 'rs-e':
+          E.css({ width: Math.max(v.pageX-M.pX+M.W, 0) });
+          break;
+        case 'rs-w':
+          E.css({ left: Math.max(M.X + v.pageX - M.pX, 0), width: Math.max(M.W + M.pX - v.pageX, 0) });
+          break;
+        case 'rs-nw':
+          E.css({
+          width: Math.max(v.pageX-M.pX+M.W, 0),
+          height: Math.max(v.pageY-M.pY-M.H, 0)
+        });
+          break;
+        case 'rs-ne':
+          E.css({
+          width: Math.max(v.pageX-M.pX-M.W, 0),
+          height: Math.max(v.pageY-M.pY-M.H, 0)
+        });
+          break;
+        case 'rs-sw':
+          E.css({
+          width: Math.max(v.pageX-M.pX+M.W, 0),
+          height: Math.max(v.pageY-M.pY+M.H, 0)
+        });
+          break;
+        case 'rs-se':
+          E.css({
+          width: Math.max(v.pageX-M.pX-M.W, 0),
+          height: Math.max(v.pageY-M.pY+M.H, 0)
+        });
+          break;
       }
+      return false;
     };
 
-    var J=jqDnR,
-        M=J.dnr,
-        E=J.e,
-        i=function(e,h,k){
-          return e.each(function(){
-            h=(h)?$(h,e):e;
-            h.on('mousedown'+eventDomain, {e:e, k:k}, function(v) {
-              v.preventDefault();
-              var d=v.data, p={}, E=d.e;
-              // attempt utilization of dimensions plugin to fix IE issues
-              // if(E.css('position') != 'relative'){try{E.position(p);}catch(e){}}
-              M={
-                X:  p.left||f('left')||0,
-                Y:  p.top||f('top')||0,
-                W:  f('width')||E[0].scrollWidth||0,
-                H:  f('height')||E[0].scrollHeight||0,
-                pX: v.pageX,
-                pY: v.pageY,
-                k:  d.k,
-                o:  E.css('opacity')
-              };
-              E.css({opacity:0.8});
-              $(document).on('mousemove'+eventDomain, jqDnR.drag).on('mouseup'+eventDomain, jqDnR.stop);
-              return false;
-            });
-          });
-        },
-        f = function(k) {
-          return parseInt(E.css(k))||false;
-        };
+    jqDnR.stop = function(v) {
+      v.preventDefault();
+      v.stopPropagation();
+      E.css('opacity', M.o);
+      $(document).off('mousemove'+evdomain).off('mouseup'+evdomain);
+    };
 
-      return i;
+    return function(e, h, k) {
+      // e : jq objs
+      // h : handle
+      // k : type
+      h = (h ? $(h, e) :e);
+      h.on('mousedown'+evdomain, {e: e, k: k}, function(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        var d=ev.data;
+        E=d.e;
+        M={
+          X:  css(E, 'left')||0,
+          Y:  css(E, 'top')||0,
+          W:  css(E, 'width')||E[0].scrollWidth||0,
+          H:  css(E, 'height')||E[0].scrollHeight||0,
+          pX: ev.pageX,
+          pY: ev.pageY,
+          k:  d.k,
+          o:  E.css('opacity')
+        };
+        E.css({opacity:0.8});
+        $(document).on('mousemove'+evdomain, jqDnR.drag).on('mouseup'+evdomain, jqDnR.stop);
+      });
+    };
   })();
 
   function DPTransformer(element, options) {
@@ -199,4 +183,5 @@
   };
 
   window.DPTransformer = DPTransformer;
-})();
+
+})(window, _, jQuery);
