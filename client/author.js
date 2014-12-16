@@ -234,13 +234,11 @@ Template.authorToolbar.events({
 Template.authorDeckThumb.helpers({
   thumbContent: function() {
     var thumbTpl = [
-      '<div class="dp-slide-preview-thumb">',
       '<div class="dp-slide-preview-thumb-content reveal">',
       '<div class="slides dp-slides">',
       '<section class="present">',
       '%s',
       '</section>',
-      '</div>',
       '</div>',
       '</div>'
     ].join('');
