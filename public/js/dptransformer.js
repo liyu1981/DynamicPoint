@@ -16,50 +16,40 @@
 
     var jqDnR = { dnr: {}, e: 0 }, M = jqDnR.dnr, E = jqDnR.e;
 
+    var dragActions = {
+      //  case 'd': // drag
+      //    E.css({ left: M.X+v.pageX-M.pX, top: M.Y+v.pageY-M.pY });
+      //  case 'rs-n':
+      //    E.css({ top: Math.max(M.Y + v.pageY - M.pY, 0), height: Math.max(M.H + M.pY - v.pageY, 0) });
+      //    break;
+      //  case 'rs-s':
+      //    E.css({ height: Math.max(v.pageY-M.pY+M.H, 0) });
+      //    break;
+      'rs-e.text': function(v) {
+        E.css({ width: Math.max(v.pageX-M.pX+M.W, 0) });
+      },
+      'rs-w.text': function(v) {
+        E.css({ left: Math.max(M.X + v.pageX - M.pX, 0), width: Math.max(M.W + M.pX - v.pageX, 0) });
+      },
+      //  case 'rs-nw':
+      //    E.css({ width: Math.max(v.pageX-M.pX+M.W, 0), height: Math.max(v.pageY-M.pY-M.H, 0) });
+      //    break;
+      //  case 'rs-ne':
+      //    E.css({ width: Math.max(v.pageX-M.pX-M.W, 0), height: Math.max(v.pageY-M.pY-M.H, 0) });
+      //    break;
+      //  case 'rs-sw':
+      //    E.css({ width: Math.max(v.pageX-M.pX+M.W, 0), height: Math.max(v.pageY-M.pY+M.H, 0) });
+      //    break;
+      //  case 'rs-se':
+      //    E.css({ width: Math.max(v.pageX-M.pX-M.W, 0), height: Math.max(v.pageY-M.pY+M.H, 0) });
+      //    break;
+    };
+
     jqDnR.drag = function(v) {
       v.preventDefault();
-      switch(M.k) {
-        case 'd': // drag
-          E.css({ left: M.X+v.pageX-M.pX, top: M.Y+v.pageY-M.pY });
-        break;
-        case 'rs-n':
-          E.css({ height: Math.max(v.pageY-M.pY-M.H, 0) });
-          break;
-        case 'rs-s':
-          E.css({ height: Math.max(v.pageY-M.pY+M.H, 0) });
-          break;
-        case 'rs-e':
-          E.css({ width: Math.max(v.pageX-M.pX+M.W, 0) });
-          break;
-        case 'rs-w':
-          E.css({ left: Math.max(M.X + v.pageX - M.pX, 0), width: Math.max(M.W + M.pX - v.pageX, 0) });
-          break;
-        case 'rs-nw':
-          E.css({
-          width: Math.max(v.pageX-M.pX+M.W, 0),
-          height: Math.max(v.pageY-M.pY-M.H, 0)
-        });
-          break;
-        case 'rs-ne':
-          E.css({
-          width: Math.max(v.pageX-M.pX-M.W, 0),
-          height: Math.max(v.pageY-M.pY-M.H, 0)
-        });
-          break;
-        case 'rs-sw':
-          E.css({
-          width: Math.max(v.pageX-M.pX+M.W, 0),
-          height: Math.max(v.pageY-M.pY+M.H, 0)
-        });
-          break;
-        case 'rs-se':
-          E.css({
-          width: Math.max(v.pageX-M.pX-M.W, 0),
-          height: Math.max(v.pageY-M.pY+M.H, 0)
-        });
-          break;
-      }
-      return false;
+      v.stopPropagation();
+      var a = dragActions[sprintf('%s.%s', M.k, M.t)];
+      a && a(v);
     };
 
     jqDnR.stop = function(v) {
@@ -69,12 +59,13 @@
       $(document).off('mousemove'+evdomain).off('mouseup'+evdomain);
     };
 
-    return function(e, h, k) {
+    return function(e, h, k, t) {
       // e : jq objs
       // h : handle
-      // k : type
-      h = (h ? $(h, e) :e);
-      h.on('mousedown'+evdomain, {e: e, k: k}, function(ev) {
+      // k : kind of direction
+      // t : block type
+      h = (h ? $(h, e) : e);
+      h.on('mousedown'+evdomain, {e: e, k: k, t: t}, function(ev) {
         ev.preventDefault();
         ev.stopPropagation();
         var d=ev.data;
@@ -87,6 +78,7 @@
           pX: ev.pageX,
           pY: ev.pageY,
           k:  d.k,
+          t:  d.t,
           o:  E.css('opacity')
         };
         E.css({opacity:0.8});
@@ -139,6 +131,8 @@
   };
 
   DPTransformer.prototype._eventBinder = function(k) {
+    // k: kind of direction
+    var t = this.element.attr('data-block-type') || 'text';
     switch(k) {
       case 'nw':
       case 'ne':
@@ -148,7 +142,7 @@
       case 's':
       case 'w':
       case 'e':
-        jqdnr(this.element, '.dptc-resize-' + k, 'rs-' + k);
+        jqdnr(this.element, '.dptc-resize-' + k, 'rs-' + k, t);
         this._unbinder.push(function() { this.element.find('.dptc-resize-' + k).off('mousedown.dptransformer'); });
         break;
       case 'r':
