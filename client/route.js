@@ -6,12 +6,16 @@ var alertifyAA = [
   'js/alertifyext.js'
 ];
 
-var revealjsAA = [
+var revealjsCSSAA = [
   'bower_components/reveal.js/css/reveal.min.css',
-  'bower_components/reveal.js/css/theme/solarized.css',
-  'bower_components/reveal.js/js/reveal.min.js',
-  'css/dp-reveal-overide.css'
+  'bower_components/reveal.js/css/dp-reveal-overide.css',
+  'bower_components/reveal.js/css/dp-theme/dp-reveal-themes.css'
+  //'bower_components/reveal.js/css/dp-theme/solarized.css'
 ];
+
+var revealjsAA = _.union(revealjsCSSAA, [
+  'bower_components/reveal.js/js/reveal.min.js'
+]);
 
 var d3AA = [
   'bower_components/d3/d3.min.js'
@@ -64,7 +68,7 @@ waitOnJsAndCss = (function() {
       case 'welcome':
       case 'profile':
       case 'author':
-        commonAA = _.union(alertifyAA);
+        commonAA = _.union(revealjsCSSAA, alertifyAA);
         break;
       case 'audience':
       case 'speaker':
@@ -170,10 +174,6 @@ Router.route('/author', {
       'css/dptransformer.css',
       'js/dptransformer.js',
       'bower_components/html2canvas/build/html2canvas.min.js',
-      'css/dp-reveal.css',
-      'css/dp-reveal-overide.css',
-      //'bower_components/reveal.js/css/theme/solarized.css',
-      'css/dp-reveal-themes.css',
       'bower_components/bootstrap-popover-x/css/bootstrap-popover-x.min.css',
       'bower_components/bootstrap-popover-x/js/bootstrap-popover-x.js',
       'js/dphorizontab.js'

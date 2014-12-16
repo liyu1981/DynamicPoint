@@ -4,3 +4,6 @@
 [submodule "public/bower_components/bootstrap-popover-x"]
 	path = public/bower_components/bootstrap-popover-x
 	url = git@github.com:liyu1981/bootstrap-popover-x.git
+[submodule "public/bower_components/reveal.js"]
+	path = public/bower_components/reveal.js
+	url = git@github.com:liyu1981/reveal.js.git

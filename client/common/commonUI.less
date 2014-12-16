@@ -38,7 +38,9 @@ body.dp {
 
   // reveal hack
   .reveal {
-    border: 0px !important;
+    border: 1px dashed #999;
+    //border: 0px !important;
+
     &:after {
       //background-color: transparent;
     }
@@ -80,13 +82,13 @@ body.dp {
   .dp-slide {
 
     .panel-heading {
-      box-shadow: #bbb 0px 0px 15px;
+      //box-shadow: #bbb 0px 0px 15px;
     }
 
     &-focused {
       .panel-heading {
         //box-shadow: #2e6da4 0px 0px 15px;
-        box-shadow: #777 0px 0px 15px;
+        //box-shadow: #777 0px 0px 15px;
       }
     }
 
@@ -446,6 +448,8 @@ body.dp {
     }
 
     .reveal {
+      border: 0px;
+
       &:after {
         background-color: transparent;
       }
@@ -464,6 +468,10 @@ body.dp {
     width: 100%;
     height: 137px;
     border: 1px dotted #aaa;
+
+    .reveal {
+      border: 0px;
+    }
 
     .dp-slide-preview-thumb-content {
       position: relative;
@@ -513,7 +521,7 @@ body.dp {
       min-width: 966px;
 
       .panel-body {
-        max-width: 920px;
+        //max-width: 920px;
         min-height: 642px;
       }
     }
