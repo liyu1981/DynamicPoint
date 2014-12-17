@@ -4,7 +4,9 @@
 
 <template name="author-slide-normal-toolbar">
 <div class="btn-group">
-  <button class="btn btn-default dropdown-toggle" id="changeBackground" title="Change This Slide's Background" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-file-image-o"></i></button>
+  <button class="btn btn-default" id="setBackgroundImage" title="Set Background Image"><i class="fa fa-file-image-o"></i></button>
+  <button class="btn btn-default" id="createFragments" title="Create Fragments for This Slide"><i class="fa fa-bolt"></i></button>
+  <button class="btn btn-default dropdown-toggle" id="changeTheme" title="Change This Slide's Theme" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-magic"></i></button>
   <div class="dropdown-menu pull-right">
     <div style="min-width: 490px;">
       <div class="dp-slide-layout-thumb-container dp-themes-container" data-dpscroll="stop">
@@ -13,7 +15,7 @@
           <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
             <div class="slides dp-slides">
               <section class="present">
-                <div class="sl-block" data-block-type="text" style="left: 350px; top: 267px;">
+                <div class="sl-block" data-block-type="text" style="left: 10px; top: 267px; width: 980px;">
                   <div class="sl-block-content"><h1>{{displayName}}</h1></div>
                 </div>
               </section>
@@ -25,7 +27,6 @@
     </div>
   </div>
 </div>
-<button class="btn btn-default" id="createFragments" title="Create Fragments for This Slide"><i class="fa fa-bolt"></i></button>
 </template>
 
 <template name="author-slide-normal-authortool">

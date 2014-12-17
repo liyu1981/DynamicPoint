@@ -4,12 +4,6 @@
   100% { transform: scale(1); }
 }
 
-@keyframes dpFoldIn {
-  0% { transform: rotateX(0deg); }
-  99% { transform: rotateX(90deg); }
-  100% { transform: rotateX(90deg); display: none; }
-}
-
 .dp-zoom {
   transition: all 0.4s ease-in-out;
 
@@ -233,10 +227,6 @@ body.dp {
         transition: all .3s ease-in-out;
       }
 
-      &-other {
-        display: none;
-      }
-
       &-current {
         margin-left: 50%;
         transform: translateX(-50%);
@@ -259,10 +249,20 @@ body.dp {
 
       &-prev {
         transform: translateX(-143%) scale(0.95) rotateY(1.5deg);
+        &-hidden {
+          pointer-events: none;
+          transform: translateX(-200%) scale(0.95) rotateY(1.5deg);
+          opacity: 0;
+        }
       }
 
       &-next {
         transform: translateX(43%) scale(0.95) rotateY(-1.5deg);
+        &-hidden {
+          pointer-events: none;
+          transform: translateX(100%) scale(0.95) rotateY(-1.5deg);
+          opacity: 0;
+        }
       }
 
       &-prev-placeholder {

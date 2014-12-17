@@ -293,8 +293,10 @@ Template.authorSlide.helpers({
       return 'dp-slide-prev';
     } else if (this.index > csi && this.index - 1 === csi) {
       return 'dp-slide-next';
+    } else if (this.index < csi) {
+      return 'dp-slide-prev dp-slide-prev-hidden';
     } else {
-      return 'dp-slide-other';
+      return 'dp-slide-next dp-slide-next-hidden';
     }
   },
 
