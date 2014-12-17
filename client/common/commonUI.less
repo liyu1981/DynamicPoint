@@ -243,13 +243,16 @@ body.dp {
 
       &-prev, &-next {
         opacity: 0.5;
-        //filter: blur(1px);
         cursor: pointer;
         margin-left: 50%;
+        pointer-events: none;
+
+        .dp-slide {
+          pointer-events: auto;
+        }
 
         &:hover {
           opacity: 0.9;
-          //filter: none;
         }
       }
 
@@ -359,8 +362,6 @@ body.dp {
       padding-right: 0px;
 
       .thumb {
-        //float: none;
-        //width: 24%;
         padding-top: 20px;
         background-color: rgba(255,255,255,0.3);
 
