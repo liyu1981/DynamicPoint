@@ -11,8 +11,25 @@ Template.profileDeckListItem.helpers({
       });
     }
     return l;
-  }
-});
+  },
+
+  thumbContent: function() {
+    var thumbTpl = [
+      '<div class="dp-slide-preview-thumb-content reveal">',
+      '<div class="slides dp-slides">',
+      '<section class="present">',
+      '%s',
+      '</section>',
+      '</div>',
+      '</div>'
+    ].join('');
+    var s = this.slides[0] || {};
+    if (s.type === 'normal') {
+      return sprintf(thumbTpl, s.content);
+    } else {
+      return sprintf(thumbTpl, '<div class="sl-block" data-block-type="text" style="left: 105px; top: 100px;"><div class="sl-block-content"><h1>No Preview</h1></div></div>');
+    }
+  }});
 
 Template.profileDeckList.helpers({
   decks: function() {
@@ -21,7 +38,8 @@ Template.profileDeckList.helpers({
         id: d._id,
         title: d.title,
         created: Math.floor(d.created/1000),
-        author: d.author
+        author: d.author,
+        slides: d.slides
       };
     });
     return r;
