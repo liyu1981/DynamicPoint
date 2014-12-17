@@ -6,7 +6,22 @@
 <div class="btn-group">
   <button class="btn btn-default dropdown-toggle" id="changeBackground" title="Change This Slide's Background" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-file-image-o"></i></button>
   <div class="dropdown-menu pull-right">
-    <div style="min-width: 480px">
+    <div style="min-width: 490px;">
+      <div class="dp-slide-layout-thumb-container dp-themes-container" data-dpscroll="stop">
+        {{#each themes}}
+        <div class="dp-thumb dp-slide-layout-thumb dp-reveal-theme {{className}} dp-reveal-theme-selector" data-dptheme="{{className}}">
+          <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+            <div class="slides dp-slides">
+              <section class="present">
+                <div class="sl-block" data-block-type="text" style="left: 350px; top: 267px;">
+                  <div class="sl-block-content"><h1>{{displayName}}</h1></div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
     </div>
   </div>
 </div>

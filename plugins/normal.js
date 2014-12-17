@@ -247,9 +247,39 @@ DPPlugins['normal'] = {
   },
 
   'template-toolbar': {
+    helpers: {
+      'author': function() {
+        return {
+          'themes': function() {
+            var a = [];
+            _.each([
+              'beige',
+              'blood',
+              'default',
+              'moon',
+              'night',
+              'serif',
+              'simple',
+              'sky',
+              'solarized'
+            ], function(t) { a.push({ className: 'dp-reveal-theme-'+t, displayName: t }); });
+            return a;
+          }
+        };
+      }
+    },
+
     events: {
       'author': function() {
         return {
+          'click .dp-reveal-theme-selector': function(event) {
+            var t = $(event.currentTarget);
+            var s = t.closest('.dp-slide');
+            var pb = s.find('.panel-body');
+            var newtheme = t.attr('data-dptheme');
+            var oldtheme = pb.attr('data-dptheme');
+            pb.removeClass(oldtheme).addClass(newtheme).attr('data-dptheme', newtheme);
+          }
         };
       }
     }
