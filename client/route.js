@@ -10,7 +10,6 @@ var revealjsCSSAA = [
   'bower_components/reveal.js/css/reveal.min.css',
   'bower_components/reveal.js/css/dp-reveal-overide.css',
   'bower_components/reveal.js/css/dp-theme/dp-reveal-themes.css'
-  //'bower_components/reveal.js/css/dp-theme/solarized.css'
 ];
 
 var revealjsAA = _.union(revealjsCSSAA, [

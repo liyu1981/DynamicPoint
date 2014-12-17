@@ -5,21 +5,21 @@
       <div class="modal-body">
         <center>
         <h2>Setup This Presentation</h2>
-<!--        <p>-->
-        <!--<h4>Select the run session to use:</h4>-->
-        <!--<select class="form-control">-->
-          <!--{{#each runStatusList}}-->
-          <!--<option val="{{id}}" {{checked}}>{{displayName}}</option>-->
-          <!--{{/each}}-->
-        <!--</select>-->
-        <!--</p>-->
+        <!--<p>
+        <h4>Select the run session to use:</h4>
+        <select class="form-control">
+          {{#each runStatusList}}
+          <option val="{{id}}" {{checked}}>{{displayName}}</option>
+          {{/each}}
+        </select>
+        </p>-->
         <button id="doneSessionSetup" type="button" class="btn btn-success btn-lg">Start !</button>
         </center>
       </div>
     </div>
   </div>
 </div>
-<div class="dp-reveal-container dp-reveal-container-wait reveal-theme-solarized">
+<div class="dp-reveal-container dp-reveal-container-wait dp-reveal-theme dp-reveal-theme-solarized" data-dptheme="dp-reveal-theme-solarized">
   <div class="reveal">
     <div class="slides">
       {{#each slides}}

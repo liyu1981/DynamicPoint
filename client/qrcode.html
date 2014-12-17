@@ -30,11 +30,14 @@
 
     <div class="col-md-4">
       <div class="thumbnail"><center>
-          <div class="qrcode-container" rawUrl="/superview?id={{ id }}"></div>
+          <div class="qrcode-container" rawUrl="/superview?id={{deckId}}"></div>
           <div class="caption"><h3><a href="/superview?id={{deckId}}&ownerId={{ownerId}}" target="_blank">Super View</a></h3></div>
       </center></div>
     </div>
-
+  </div>
+  {{else}}
+  <div class="row">
+    <div class="col-md-10 col-md-offset-1"><center><a href="/qrcode?id={{deckId}}&showall=1" target="_self">show all</a></center></div>
   </div>
   {{/if}}
 
