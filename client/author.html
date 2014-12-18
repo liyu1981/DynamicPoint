@@ -98,9 +98,15 @@
     <div class="panel-heading sortable-handle">
       <center><strong>{{index}}</strong> - <strong>{{type}}</strong></center>
     </div>
-    <div class="panel-body content-center dp-reveal-theme dp-reveal-theme-solarized">
-      <div class="dp-slide-preview-thumb dp-reveal-theme dp-reveal-theme-solarized">
-        {{{thumbContent}}}
+    <div class="panel-body content-center dp-reveal-theme dp-reveal-theme-solarized" data-dptheme="dp-reveal-theme-solarized">
+      <div class="dp-slide-preview-thumb">
+        <div class="dp-slide-preview-thumb-content reveal">
+          <div class="slides dp-slides">
+            <section class="present">
+              {{{thumbContent}}}
+            </section>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -156,7 +162,7 @@
       <div id="layoutTabDP" class="dp-slide-layout-tab">
         <div class="dp-slide-layout-thumb-container">
           {{#each slideLayouts}}
-          <div class="dp-thumb dp-slide-layout-thumb dp-reveal-theme dp-reveal-theme-solarized" layoutId="{{id}}">
+          <div class="dp-thumb dp-slide-layout-thumb dp-reveal-theme dp-reveal-theme-solarized" data-dptheme="dp-reveal-theme-solarized" layoutId="{{id}}">
             <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
               <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
             </div>

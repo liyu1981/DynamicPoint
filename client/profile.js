@@ -14,20 +14,11 @@ Template.profileDeckListItem.helpers({
   },
 
   thumbContent: function() {
-    var thumbTpl = [
-      '<div class="dp-slide-preview-thumb-content reveal">',
-      '<div class="slides dp-slides">',
-      '<section class="present">',
-      '%s',
-      '</section>',
-      '</div>',
-      '</div>'
-    ].join('');
     var s = this.slides[0] || {};
     if (s.type === 'normal') {
-      return sprintf(thumbTpl, s.content);
+      return s.content;
     } else {
-      return sprintf(thumbTpl, '<div class="sl-block" data-block-type="text" style="left: 105px; top: 100px;"><div class="sl-block-content"><h1>No Preview</h1></div></div>');
+      return '<div class="sl-block" data-block-type="text" style="left: 0px; top: 100px; width: 960px;"><div class="sl-block-content"><h2>Preview N/A</h2></div></div>';
     }
   }});
 

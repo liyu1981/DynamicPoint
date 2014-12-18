@@ -75,18 +75,6 @@ body.dp {
   }
 
   .dp-slide {
-
-    .panel-heading {
-      //box-shadow: #bbb 0px 0px 15px;
-    }
-
-    &-focused {
-      .panel-heading {
-        //box-shadow: #2e6da4 0px 0px 15px;
-        //box-shadow: #777 0px 0px 15px;
-      }
-    }
-
     &-placeholder {
       min-height: 800px;
       z-index: -1;
@@ -96,9 +84,6 @@ body.dp {
   .dropdown-menu > li > a {
     padding-left: 12px;
     padding-right: 12px;
-  }
-
-  .dp-navbar {
   }
 
   .dp-brand {
@@ -172,7 +157,6 @@ body.dp {
   }
 
   .dp-sortable-enabled {
-
     .sortable-handle {
       background-color: #428bca;
       color: white;
@@ -182,8 +166,6 @@ body.dp {
     .sortable-block {
       list-style-type: none;
       display: inline-block;
-      //padding-right: 0px;
-      //padding-left: 4px;
     }
 
     .sortable-placeholder {
@@ -272,9 +254,6 @@ body.dp {
         float: left;
         margin-left: -865px;
       }
-    }
-
-    .slide {
     }
 
     &-item {
@@ -415,25 +394,22 @@ body.dp {
     width: 100%;
     > button {
       width: 50%;
-
-      &:hover {
-      }
     }
   }
 
-  .dp-slide-layout-tab-container {
-    height: 518px;
-    max-height: 518px;
-    overflow-y: hidden;
-    width: 10000px;
-
-    .dp-slide-layout-tab {
-      float: left;
-      width: 450px;
-      height: auto;
-      margin-right: 15px;
-      transition: all 0.4s ease;
+  .dp-slide-layout-tab {
+    &-container {
+      height: 518px;
+      max-height: 518px;
+      overflow-y: hidden;
+      width: 10000px;
     }
+
+    float: left;
+    width: 450px;
+    height: auto;
+    margin-right: 15px;
+    transition: all 0.4s ease;
   }
 
   .dp-slide-layout-thumb {
@@ -457,7 +433,7 @@ body.dp {
       }
     }
 
-    .dp-slide-layout-thumb-content {
+    &-content {
       position: relative;
       left: 0px;
       top: 0px;
@@ -475,7 +451,7 @@ body.dp {
       border: 0px;
     }
 
-    .dp-slide-preview-thumb-content {
+    &-content {
       position: relative;
       left: 0px;
       top: 0px;
@@ -517,6 +493,27 @@ body.dp {
     overflow-y: scroll;
     .dp-thumb {
       margin-top: 4px;
+    }
+  }
+
+  .dp-profile-thumb {
+    &-container {
+      width: 188px;
+      margin-top: -18px;
+      margin-left: -28px;
+      margin-right: 28px;
+    }
+
+    .dp-slide-preview-thumb();
+    height: 146px;
+    border: 0px;
+    border-right: 1px solid #ccc;
+
+    &-content {
+      position: relative;
+      left: 0px;
+      top: 0px;
+      transform: translateX(-41%) translateY(-38%) scale(0.2);
     }
   }
 }

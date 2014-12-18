@@ -233,20 +233,10 @@ Template.authorToolbar.events({
 
 Template.authorDeckThumb.helpers({
   thumbContent: function() {
-    var thumbTpl = [
-      '<div class="dp-slide-preview-thumb-content reveal">',
-      '<div class="slides dp-slides">',
-      '<section class="present">',
-      '%s',
-      '</section>',
-      '</div>',
-      '</div>'
-    ].join('');
     if (this.type === 'normal') {
-      return sprintf(thumbTpl, this.content);
+      return this.content;
     } else {
-      return sprintf(thumbTpl, '<div class="sl-block" data-block-type="text" style="left: 105px; top: 100px;"><div class="sl-block-content"><h1>No Preview</h1></div></div>');
-      //return sprintf('<div class="dp-slide-preview-thumb"><h2><i class="fa fa-child"></i></h2></div>');
+      return '<div class="sl-block" data-block-type="text" style="left: 0px; top: 120px; width: 960px;"><div class="sl-block-content"><h2>Preview: N/A</h2></div></div>';
     }
   }
 });
