@@ -55,12 +55,15 @@ function genToolbarToggleClickHandler(target, onCb, offCb) {
 function dpPopoverX($trigger, method) {
   var option = _.extend({}, $trigger.data());
   option['$target'] = $trigger;
+  var t = $($trigger.attr('data-target'));
   switch(method) {
     case 'show':
-      $($trigger.attr('data-target')).data('toggle', $trigger).popoverX(option).popoverX('show');
+      t.data('toggle', $trigger).popoverX(option).popoverX('show');
+      t.css('top', '-2px');
+      t.find('.arrow').css('transform', 'translateY(' + ($trigger.offset().top - 80) + 'px)');
       break;
     case 'hide':
-      $($trigger.attr('data-target')).popoverX('hide');
+      t.popoverX('hide');
       break;
   }
 }
