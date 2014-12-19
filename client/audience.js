@@ -5,6 +5,10 @@ Template.audience.helpers({
     } else {
       return 'audience-slide-normal';
     }
+  },
+
+  'calcDeckTheme': function() {
+    return deepGet(this, ['conf', 'theme'], 'dp-reveal-theme-solarized');
   }
 });
 

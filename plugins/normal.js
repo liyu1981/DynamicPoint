@@ -2,15 +2,29 @@ var ckeditorConfig = {
   customConfig: 'js/ckeconfig.js'
 };
 
-function saveChange(e) {
+function withCurrentSlide(callback) {
+  var dpprt = Template.instance().dpprt;
+  var sfm = dpprt.getSlideFocusMgr();
+  if (sfm && sfm.currentSlide) {
+    callback && callback(sfm.currentSlide);
+  }
+}
+
+function saveSlideChange(e, data) {
   // e is the jquery object of current section.present
-  var v = {};
+  if (!e) { return; }
+  data = data || {};
   var s = e.closest('.slide');
-  var type = s.attr('slideType');
-  var index = parseInt(s.attr('slideIndex'));
-  var h = e.html().trim();
-  v['slides.' + index + '.content'] = h;
-  dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: v });
+  var mongoSlidePrefix = sprintf('slides.%d.', parseInt(s.attr('slideIndex')));
+  var setData = {};
+  setData[mongoSlidePrefix + 'content'] = e.html().trim();
+  _.each(data, function(v, k) { setData[mongoSlidePrefix + k] = v; });
+  dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: setData });
+}
+
+function saveSlideChangeNow(e, data) {
+  saveSlideChange(e, data);
+  dpSaveMgr.saveNow();
 }
 
 var dpTransformerUIConf = {
@@ -66,7 +80,7 @@ function EditMgr() {
       //    var dpc = e.closest('.dp-content');
       //    mgr.releaseCurrentTarget(function() {
       //      e.remove();
-      //      saveChange(dpc);
+      //      saveSlideChange(dpc);
       //    });
       //  }
       //});
@@ -146,10 +160,8 @@ DPPlugins['normal'] = {
 
   init: function() {
     return [
-      '<div class="sl-block" data-block-type="text">',
-      '<div class="sl-block-content">',
-      '<h2>Hello</h2>',
-      '</div>',
+      '<div class="sl-block" data-block-type="text" style="left: 10px; top: 267px; width: 980px;">',
+      '<div class="sl-block-content"><h1>Hello</h1></div>',
       '</div>'
     ].join('');
   },
@@ -169,7 +181,7 @@ DPPlugins['normal'] = {
           $(this.firstNode).closest('.slide').on('defocus.slide.dp', function() {
             var slide = this;
             self.editmgr.releaseCurrentTarget(function() {
-              saveChange($(slide).find('section.present'));
+              saveSlideChange($(slide).find('section.present'));
             });
           });
         }
@@ -212,13 +224,12 @@ DPPlugins['normal'] = {
         return {
           'click .dp-content section': function(event) {
             if ($(event.target).is('section.present')) {
-              console.log('will clear selection', event);
               // currentTarget is not inside a section.present, so user clicked
               // somewhere of our canvas, now we clear the selection
               var ti = Template.instance();
               if (ti && ti.editmgr) {
                 ti.editmgr.releaseCurrentTarget(function() {
-                  saveChange($(event.currentTarget));
+                  saveSlideChange($(event.currentTarget));
                 });
               }
             }
@@ -247,42 +258,6 @@ DPPlugins['normal'] = {
   },
 
   'template-toolbar': {
-    helpers: {
-      'author': function() {
-        return {
-          'themes': function() {
-            var a = [];
-            _.each([
-              'beige',
-              'blood',
-              'default',
-              'moon',
-              'night',
-              'serif',
-              'simple',
-              'sky',
-              'solarized'
-            ], function(t) { a.push({ className: 'dp-reveal-theme-'+t, displayName: t }); });
-            return a;
-          }
-        };
-      }
-    },
-
-    events: {
-      'author': function() {
-        return {
-          'click .dp-reveal-theme-selector': function(event) {
-            var t = $(event.currentTarget);
-            var s = t.closest('.dp-slide');
-            var pb = s.find('.panel-body');
-            var newtheme = t.attr('data-dptheme');
-            var oldtheme = pb.attr('data-dptheme');
-            pb.removeClass(oldtheme).addClass(newtheme).attr('data-dptheme', newtheme);
-          }
-        };
-      }
-    }
   },
 
   'template-authortool': {
@@ -290,14 +265,12 @@ DPPlugins['normal'] = {
       'author': function() {
         function genInsertHandler(htmlGenerator) {
           return function(event) {
-            var dpprt = Template.instance().dpprt;
-            var sfm = dpprt.getSlideFocusMgr();
-            if (sfm && sfm.currentSlide) {
+            withCurrentSlide(function(currentSlide) {
               htmlGenerator(function(html) {
                 var node = $(html);
-                sfm.currentSlide.find('.dp-content section.present').append(node);
+                currentSlide.find('.dp-content section.present').append(node);
               });
-            }
+            });
           };
         }
 

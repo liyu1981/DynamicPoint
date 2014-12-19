@@ -410,6 +410,12 @@ body.dp {
     height: auto;
     margin-right: 15px;
     transition: all 0.4s ease;
+
+    .dp-slide-layout-thumb {
+      background: white !important;
+      background-color: white !important;
+      box-shadow: #888 0px 0px 2px;
+    }
   }
 
   .dp-slide-layout-thumb {
@@ -485,14 +491,21 @@ body.dp {
     margin-top: 30px;
   }
 
-  .dp-themes-container {
-    padding-left: 4px;
-    max-height: 348px;
-    min-height: 348px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-    .dp-thumb {
-      margin-top: 4px;
+  .dp-theme {
+    &-container {
+      padding-left: 4px;
+      max-height: 548px;
+      min-height: 548px;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    &-thumb {
+      .dp-slide-layout-thumb();
+
+      .dp-thumb {
+        margin-top: 4px;
+      }
     }
   }
 

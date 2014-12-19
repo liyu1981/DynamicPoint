@@ -20,18 +20,21 @@ Template.profileDeckListItem.helpers({
     } else {
       return '<div class="sl-block" data-block-type="text" style="left: 0px; top: 100px; width: 960px;"><div class="sl-block-content"><h2>Preview N/A</h2></div></div>';
     }
-  }});
+  },
+
+  calcSlideTheme: function() {
+    logger.info('this i:', this);
+    return deepGet(this, ['conf', 'theme'], 'dp-reveal-theme-solarized');
+  }
+});
 
 Template.profileDeckList.helpers({
   decks: function() {
     var r =  _.map(_.sortBy(this, function(d) { return 0 - d.created; }), function(d) {
-      return {
+      return _.extend(d, {
         id: d._id,
-        title: d.title,
         created: Math.floor(d.created/1000),
-        author: d.author,
-        slides: d.slides
-      };
+      });
     });
     return r;
   }

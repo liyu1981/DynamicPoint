@@ -52,6 +52,19 @@ function genToolbarToggleClickHandler(target, onCb, offCb) {
   };
 }
 
+function dpPopoverX($trigger, method) {
+  var option = _.extend({}, $trigger.data());
+  option['$target'] = $trigger;
+  switch(method) {
+    case 'show':
+      $($trigger.attr('data-target')).data('toggle', $trigger).popoverX(option).popoverX('show');
+      break;
+    case 'hide':
+      $($trigger.attr('data-target')).popoverX('hide');
+      break;
+  }
+}
+
 function slideOrderUpdated() {
   var children = $('.dp-deck-thumb').find('.thumb');
   var changes = {};
@@ -95,6 +108,18 @@ function addNewSlide(layoutId, callback) {
     dpSaveMgr.saveNow();
   }
   callback();
+}
+
+function changeDeckTheme(themeId, callback) {
+  if (themeId) {
+    dpSaveMgr.add(Decks, 'update', dpTheDeck._id, { $set: { 'conf.theme': themeId }});
+    dpSaveMgr.saveNow();
+  }
+  callback();
+}
+
+function calcSlideTheme() {
+  return deepGet(dpTheDeck, ['conf', 'theme'], 'dp-reveal-theme-solarized');
 }
 
 dpSaveMgr.saveNowCb = function(saving) {
@@ -188,14 +213,11 @@ Template.authorToolbar.events({
   'click #newSlideToggle': genToolbarToggleClickHandler('li:has(#newSlideToggle)',
     function on(event) {
       var t = $(event.currentTarget);
-      var option = _.extend({}, t.data());
-      option['$target'] = t;
-      logger.info('fdafad', t, $(t.attr('data-target')));
-      $(t.attr('data-target')).data('toggle', t).popoverX(option).popoverX('show');
+      dpPopoverX(t, 'show');
     },
     function off(event) {
       var t = $(event.currentTarget);
-      $(t.attr('data-target')).popoverX('hide');
+      dpPopoverX(t, 'hide');
     }),
 
   'click #sortToggle': genToolbarToggleClickHandler('li:has(#sortToggle)',
@@ -228,6 +250,16 @@ Template.authorToolbar.events({
       slideFocusMgr.focus(dd.find('.dp-slide-current .slide'));
       dc.find('.dp-sortable').removeClass('dp-sortable-enabled').sortable('disable');
       slideOrderUpdated();
+    }),
+
+  'click #changeTheme': genToolbarToggleClickHandler('li:has(#changeTheme)',
+    function on(event) {
+      var t = $(event.currentTarget);
+      dpPopoverX(t, 'show');
+    },
+    function off(event) {
+      var t = $(event.currentTarget);
+      dpPopoverX(t, 'hide');
     })
 });
 
@@ -238,7 +270,9 @@ Template.authorDeckThumb.helpers({
     } else {
       return '<div class="sl-block" data-block-type="text" style="left: 0px; top: 120px; width: 960px;"><div class="sl-block-content"><h2>Preview: N/A</h2></div></div>';
     }
-  }
+  },
+
+  calcSlideTheme: calcSlideTheme
 });
 
 Template.authorSlide.rendered = function() {
@@ -299,7 +333,9 @@ Template.authorSlide.helpers({
     } else {
       return '';
     }
-  }
+  },
+
+  calcSlideTheme: calcSlideTheme
 });
 
 Template.authorSlide.events({
@@ -389,19 +425,49 @@ Template.authorPager.events({
   }
 });
 
-Template.authorPopoverNewSlideLayouts.helpers({
+Template.authorToolbarPopovers.helpers({
   slideLayouts: function() {
     var conf = DPConf.findOne({}, { layouts: 1 });
     return conf.layouts || [];
+  },
+
+  calcLayoutTheme: function() {
+    return deepGet(dpTheDeck, ['conf', 'theme'], 'dp-reveal-theme-solarized');
+  },
+
+  deckThemes: function() {
+    var a = [];
+    _.each([
+      'beige',
+      'blood',
+      'default',
+      'moon',
+      'night',
+      'serif',
+      'simple',
+      'sky',
+      'solarized'
+    ], function(t) { a.push({ className: 'dp-reveal-theme-'+t, displayName: t }); });
+    return a;
   }
 });
 
-Template.authorPopoverNewSlideLayouts.events({
+Template.authorToolbarPopovers.events({
   'click .dp-slide-layout-thumb': function(event) {
     var t = $(event.currentTarget);
     var p = t.closest('.popover');
     var tg = p.data('toggle');
     addNewSlide(t.attr('layoutId'), function() {
+      p.data('toggle', null);
+      tg && tg.click();
+    });
+  },
+
+  'click .dp-reveal-theme-selector': function(event) {
+    var t = $(event.currentTarget);
+    var p = t.closest('.popover');
+    var tg = p.data('toggle');
+    changeDeckTheme(t.attr('data-dptheme'), function() {
       p.data('toggle', null);
       tg && tg.click();
     });

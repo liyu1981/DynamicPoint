@@ -13,6 +13,10 @@ Template.speaker.helpers({
     return _.extend(this, { runStatus: dpRunStatus });
   },
 
+  'calcDeckTheme': function() {
+    return deepGet(this, ['conf', 'theme'], 'dp-reveal-theme-solarized');
+  },
+
   'runStatusList': function() {
     if (!runStatusList.get()) {
       Meteor.call('listRunStatus', this._id, function(err, data) {
