@@ -1,6 +1,6 @@
 <template name="speaker-slide-poll">
-<section id="{{ id }}">
-  <h2>{{ content.question }}</h2>
+<section id="{{id}}">
+  <h2>{{content.question}}</h2>
   <style>
     path.slice{ stroke-width:2px; }
     polyline{ opacity: .3; stroke: black; stroke-width: 2px; fill: none; }
@@ -10,12 +10,12 @@
 </template>
 
 <template name="author-slide-poll">
-<div class="content" slideIndex="{{ index }}">
+<div class="content" slideIndex="{{index}}">
 <form id="pollForm" class="form-horizontal">
   <div class="form-group">
     <label class="col-sm-2 control-label">Question: </label>
     <div class="col-sm-8">
-      <input class="form-control q" type="text" value="{{ content.question }}" />
+      <input class="form-control q" type="text" value="{{content.question}}" />
     </div>
   </div>
   <div class="form-group">
@@ -23,7 +23,7 @@
     <div class="col-sm-8">
       <ol>
       {{#each content.anwsers}}
-        <li><input class="form-control a" type="text" value="{{ this }}" style="display: inline;" /></li>
+        <li><input class="form-control a" type="text" value="{{this}}" style="display: inline;" /></li>
         <br>
       {{/each}}
       </ol>
@@ -35,18 +35,18 @@
 </template>
 
 <template name="audience-slide-poll">
-<section id="{{ id }}">
-  <h2>{{ content.question }}</h2>
+<section id="{{id}}">
+  <h2>{{content.question}}</h2>
   <p>
     {{#if voted}}
     You voted
     <button type="button" class="btn btn-default btn-lg btn-block" disabled>
-      <span style="font-size: 2em;">{{ voted }}</span>
+      <span style="font-size: 2em;">{{voted}}</span>
     </button>
     {{else}}
       {{#each content.anwsers}}
-      <button type="button" class="poll-btn btn btn-default btn-lg btn-block" id="{{ this }}">
-        <span style="font-size: 2em;">{{ this }}</span>
+      <button type="button" class="poll-btn btn btn-default btn-lg btn-block" id="{{this}}">
+        <span style="font-size: 2em;">{{this}}</span>
       </button>
       {{/each}}
     {{/if}}

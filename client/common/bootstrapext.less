@@ -57,6 +57,13 @@
 .btn-default {
    .button-variant(#fff; darken(#999, 5%); #999);
 }
+.btn {
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    color: #fff;
+  }
+}
 
 // Components
 //@import "../../public/bower_components/bootstrap/less/component-animations.less";

@@ -116,6 +116,7 @@ DPPlugins['poll'] = {
           d3PieChartChange(genPieChartData(dpprt, { runStatus: fields }, slideId));
         });
         d3PieChart();
+        console.log('first time:', self.data);
         d3PieChartChange(genPieChartData(dpprt, self.data, slideId));
       }
     },
@@ -125,9 +126,10 @@ DPPlugins['poll'] = {
         return {
           voted: function() {
             var dpprt = Template.instance().dpprt;
-            var id = Session.get('audienceId');
-            var r = _.reduce(dpprt.getPluginData(dpRunStatus, this.id), function(memo, v, k) {
-              if (v.indexOf(id) >= 0) {
+            var aid = Session.get('audienceId');
+            console.log('calc voted:', this.id, dpprt.getPluginData(dpTheDeck, this.id), aid);
+            var r = _.reduce(dpprt.getPluginData(dpTheDeck, this.id), function(memo, v, k) {
+              if (v.indexOf(aid) >= 0) {
                 memo.push(k);
               }
               return memo;
