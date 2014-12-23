@@ -35,18 +35,28 @@ SlideFocusMgr.prototype.defocus = function() {
 var slideFocusMgr = null;
 
 function genToolbarToggleClickHandler(target, onCb, offCb) {
+  function _disable(t) {
+    // re-active all links
+    t.closest('.dp-toolbar').find('.navbar-collapse a').removeClass('disabled');
+    t.removeClass('active');
+    t.off('hide.dp.popoverx');
+  }
+  function _enable(t) {
+    // disable all links first
+    t.closest('.dp-toolbar').find('.navbar-collapse a').addClass('disabled');
+    t.addClass('active');
+    t.find('a').removeClass('disabled'); // re-active our link
+    t.on('hide.dp.popoverx', function() {
+      _disable(t);
+    });
+  }
   return function(event) {
     var t = $(target);
     if (t.hasClass('active')) {
-      // re-active all links
-      t.closest('.dp-toolbar').find('.navbar-collapse a').removeClass('disabled');
-      t.removeClass('active');
+      _disable(t);
       offCb(event);
     } else {
-      // disable all links first
-      t.closest('.dp-toolbar').find('.navbar-collapse a').addClass('disabled');
-      t.addClass('active');
-      t.find('a').removeClass('disabled'); // re-active our link
+      _enable(t);
       onCb(event);
     }
   };
@@ -56,16 +66,22 @@ function dpPopoverX($trigger, method) {
   var option = _.extend({}, $trigger.data());
   option['$target'] = $trigger;
   var t = $($trigger.attr('data-target'));
+  var nav = $trigger.closest('.nav');
   switch(method) {
     case 'show':
       t.data('toggle', $trigger).popoverX(option).popoverX('show');
       t.css('top', '-2px');
-      t.find('.arrow').css('transform', 'translateY(' + ($trigger.offset().top - 80) + 'px)');
+      t.find('.arrow').css('transform', 'translateY(' + ($trigger.offset().top - nav.offset().top) + 'px)');
+      t.on('hide.bs.modal', function() {
+        // when the popover is closed by itself, we also click the trigger to restore its state
+        t.data('toggle').trigger('hide.dp.popoverx');
+      });
       break;
     case 'hide':
       t.popoverX('hide');
       break;
   }
+  return t;
 }
 
 function slideOrderUpdated() {

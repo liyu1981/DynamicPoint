@@ -157,15 +157,24 @@
 <template name="authorToolbarPopovers">
 <div id="newSlideLayouts" class="popover popover-default popover-lg fade">
   <div class="arrow"></div>
-  <div class="popover-title"><strong>Choose The Page Layout</strong></div>
+  <div class="popover-title">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+    <strong>Choose The Page Layout</strong></div>
   <div class="popover-content dp-popover">
     <div class="dp-slide-layout-tab-container">
       <div id="layoutTabDP" class="dp-slide-layout-tab">
-        <div class="dp-slide-layout-thumb-container">
+        <div class="dp-slide-layout-thumb-container" data-dpscroll="stop">
           {{#each slideLayouts}}
           <div class="dp-thumb dp-slide-layout-thumb dp-reveal-theme {{calcLayoutTheme}}" data-dptheme="{{calcLayoutTheme}}" layoutId="{{id}}">
             <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
               <div class="slides dp-slides"><section class="present">{{{content}}}</section></div>
+            </div>
+          </div>
+          {{/each}}
+          {{#each slideLayouts}}
+          <div class="dp-thumb dp-slide-layout-thumb dp-reveal-theme {{calcLayoutTheme}}" data-dptheme="{{calcLayoutTheme}}" layoutId="{{id}}">
+            <div class="dp-slide-layout-thumb-content reveal" title="{{displayName}}">
+              <div class="slides dp-slides"><section class="present">My</section></div>
             </div>
           </div>
           {{/each}}
@@ -194,7 +203,10 @@
 
 <div id="themeSelector" class="popover popover-default popover-lg fade">
   <div class="arrow"></div>
-  <div class="popover-title"><strong>Choose Theme</strong></div>
+  <div class="popover-title">
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+    <strong>Choose Theme</strong>
+  </div>
   <div class="popover-content dp-popover">
     <div class="dp-theme-container" data-dpscroll="stop">
       {{#each deckThemes}}
