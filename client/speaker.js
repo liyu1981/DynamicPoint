@@ -1,4 +1,5 @@
 var runStatusList = new ReactiveVar;
+var started = false;
 
 Template.speaker.helpers({
   'calcSlideTemplate': function() {
@@ -49,12 +50,19 @@ Template.speaker.rendered = function() {
       $('.dp-reveal-container').removeClass('dp-reveal-container-wait');
       gotoSlide(dpRunStatus.curIndex);
     });
+    // setup the session control
+    dpSessionControl.on('started?', function() {
+      if (dpSessionControl.session.started) {
+        dpSessionControl.emit('kickOff');
+      }
+    });
   });
 };
 
 Template.speaker.events({
   'click #doneSessionSetup': function(event) {
     dpSessionControl.emit('kickOff');
+    dpSessionControl.session.started = true;
     $('#sessionSetup').modal('hide');
   }
 });
